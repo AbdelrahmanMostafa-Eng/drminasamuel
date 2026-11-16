@@ -115,7 +115,9 @@ All example content is labelled **Example** and can be removed in one click:
    ```json
    [{ "AllowedOrigins": ["https://YOUR-DOMAIN"], "AllowedMethods": ["PUT", "GET"], "AllowedHeaders": ["*"], "MaxAgeSeconds": 3600 }]
    ```
-3. **Vercel** — import this GitHub repo and add the environment variables below. Vercel runs `vercel-build`
+3. **Vercel** — import this GitHub repo and add the environment variables below. `vercel.json` pins the
+   framework to Next.js and the build/output settings, so the project works even if Vercel's dashboard
+   preset says "Other". Vercel runs `vercel-build`
    (`scripts/vercel-build.mjs`): generates Prisma, applies database migrations, then builds.
    - The database can come from `DATABASE_URL` **or** from the variables the Supabase / Neon Vercel integrations
      create (`POSTGRES_PRISMA_URL`, `POSTGRES_URL`, `POSTGRES_URL_NON_POOLING`) — no renaming needed.
