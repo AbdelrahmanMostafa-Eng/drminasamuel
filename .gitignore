@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.env
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+/storage/*
+!/storage/.gitkeep
+.DS_Store
+npm-debug.log*
+/test-results
+/playwright-report
+/public/pdf.worker.min.mjs

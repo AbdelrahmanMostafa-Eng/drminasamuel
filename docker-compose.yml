@@ -1,0 +1,45 @@
+# One-command self-hosting:  docker compose up -d --build
+# Then create the master account + example data:  docker compose exec app npm run db:seed
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bioacademy
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-this-db-password}
+      POSTGRES_DB: bioacademy
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bioacademy"]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://bioacademy:${POSTGRES_PASSWORD:-change-this-db-password}@db:5432/bioacademy
+      APP_SECRET: ${APP_SECRET:?Set APP_SECRET in .env}
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
+      LOCAL_STORAGE_DIR: /app/storage
+      S3_ENDPOINT: ${S3_ENDPOINT:-}
+      S3_REGION: ${S3_REGION:-auto}
+      S3_BUCKET: ${S3_BUCKET:-bioacademy}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+      SEED_MASTER_USERNAME: ${SEED_MASTER_USERNAME:-drmina}
+      SEED_MASTER_PASSWORD: ${SEED_MASTER_PASSWORD:-ChangeMe-2026!}
+      SEED_SAMPLE_DATA: ${SEED_SAMPLE_DATA:-true}
+    volumes:
+      - uploads:/app/storage
+
+volumes:
+  pgdata:
+  uploads:

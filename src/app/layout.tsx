@@ -1,0 +1,54 @@
+import type { Metadata, Viewport } from "next";
+import "@fontsource-variable/plus-jakarta-sans";
+import "@fontsource-variable/fraunces";
+import "./globals.css";
+import { Providers } from "@/components/app/providers";
+import { PageLoader } from "@/components/ui/loader";
+
+const url = process.env.APP_URL ?? "http://localhost:3000";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(url),
+  title: { default: "Bioacademy — ACT2 & EST Biology with Dr. Mina Samuel", template: "%s · Bioacademy" },
+  description:
+    "Premium online Biology courses for American Diploma students preparing for the EST2 and ACT2 Biology tests. Live Zoom sessions, recorded lessons, homework, chapter quizzes and progress analytics.",
+  applicationName: "Bioacademy",
+  keywords: ["ACT2 Biology", "EST2 Biology", "EST Biology", "American Diploma", "Biology course Egypt", "Dr. Mina Samuel", "Bioacademy"],
+  icons: {
+    icon: [{ url: "/brand/favicon-48.png", sizes: "48x48" }, { url: "/brand/icon-192.png", sizes: "192x192" }],
+    apple: "/brand/apple-icon.png",
+  },
+  manifest: "/manifest.webmanifest",
+  openGraph: {
+    type: "website",
+    title: "Bioacademy — ACT2 & EST Biology with Dr. Mina Samuel",
+    description: "Live sessions, recorded lessons, homework and quizzes — everything you need to ace ACT2 & EST Biology.",
+    images: [{ url: "/brand/icon-512.png", width: 512, height: 512 }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f8fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#061018" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Show the intro loader only on the first page load of a visit */}
+        <script dangerouslySetInnerHTML={{ __html: `try{if(sessionStorage.getItem("ba_loaded"))document.documentElement.classList.add("ba-noloader")}catch(e){}` }} />
+      </head>
+      <body className="min-h-dvh">
+        <Providers>
+          <PageLoader />
+          {children}
+        </Providers>
+      </body>
+    </html>
+  );
+}
