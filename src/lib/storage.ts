@@ -8,7 +8,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 export type UploadPurpose = "cover" | "course-file" | "payment-proof" | "avatar" | "question-image";
 
 const DRIVER = (process.env.STORAGE_DRIVER ?? "local") as "local" | "s3";
-const LOCAL_DIR = path.resolve(process.env.LOCAL_STORAGE_DIR ?? "./storage");
+const LOCAL_DIR = path.resolve(/* turbopackIgnore: true */ process.env.LOCAL_STORAGE_DIR ?? "./storage");
 const SECRET = process.env.APP_SECRET ?? "dev-secret";
 
 export const storageDriver = DRIVER;
@@ -122,7 +122,7 @@ export async function getUploadTarget(key: string, contentType: string, maxBytes
 }
 
 export function localPath(key: string) {
-  const p = path.resolve(LOCAL_DIR, key);
+  const p = path.resolve(/* turbopackIgnore: true */ LOCAL_DIR, key);
   if (!p.startsWith(LOCAL_DIR + path.sep)) throw new Error("Invalid key");
   return p;
 }
