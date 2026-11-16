@@ -115,15 +115,19 @@ All example content is labelled **Example** and can be removed in one click:
    ```json
    [{ "AllowedOrigins": ["https://YOUR-DOMAIN"], "AllowedMethods": ["PUT", "GET"], "AllowedHeaders": ["*"], "MaxAgeSeconds": 3600 }]
    ```
-3. **Vercel** — import this GitHub repo. Add the environment variables below. Vercel runs `vercel-build`
-   (generates Prisma, applies migrations, builds).
+3. **Vercel** — import this GitHub repo and add the environment variables below. Vercel runs `vercel-build`
+   (`scripts/vercel-build.mjs`): generates Prisma, applies database migrations, then builds.
+   - The database can come from `DATABASE_URL` **or** from the variables the Supabase / Neon Vercel integrations
+     create (`POSTGRES_PRISMA_URL`, `POSTGRES_URL`, `POSTGRES_URL_NON_POOLING`) — no renaming needed.
+   - If no database is connected yet, the deploy still succeeds and the build log says migrations were skipped;
+     connect the database and redeploy. Set `STRICT_MIGRATIONS=1` to make a failed migration fail the deploy.
 4. **Create the master account** — run once from your computer with the production `DATABASE_URL`:
    `SEED_SAMPLE_DATA=false npm run db:seed` (or keep the examples to explore, then remove them in settings).
 5. Add your domain (e.g. `bioacademy.com`) in Vercel → Domains.
 
 | Variable | Example | Notes |
 | --- | --- | --- |
-| `DATABASE_URL` | `postgresql://…` | Postgres connection string |
+| `DATABASE_URL` | `postgresql://…` | Postgres connection string (not needed if you connected Supabase/Neon through Vercel) |
 | `APP_SECRET` | 48+ random chars | `openssl rand -base64 48` |
 | `APP_URL` | `https://bioacademy.com` | Public URL |
 | `STORAGE_DRIVER` | `s3` | Must be `s3` on Vercel (its disk is temporary) |

@@ -19,7 +19,9 @@ import { Document, Page, Text, View, StyleSheet, renderToBuffer } from "@react-p
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { fromZonedTime, formatInTimeZone } from "date-fns-tz";
 
-const db = new PrismaClient();
+import { runtimeDatabaseUrl } from "../scripts/db-env.mjs";
+
+const db = new PrismaClient({ datasourceUrl: runtimeDatabaseUrl() });
 const h = React.createElement;
 const rid = () => randomBytes(5).toString("hex");
 const DAY = 86400_000;
