@@ -41,7 +41,7 @@ const studentSchema = z.object({
   fullName: z.string().trim().min(3, "Enter the full name.").max(80),
   whatsapp: z.string().trim().min(8, "Enter a WhatsApp number."),
   email: z.string().trim().toLowerCase().email("Invalid email.").optional().or(z.literal("")),
-  parentPhone: z.string().trim().optional(),
+  parentPhone: z.string().trim().min(8, "Enter the parent's phone number."),
   courseId: z.string().optional().nullable(),
   amount: z.coerce.number().int().min(0).optional(),
 });
@@ -53,6 +53,8 @@ export async function createStudentAction(input: z.input<typeof studentSchema>) 
     const d = studentSchema.parse(input);
     const whatsapp = normalizePhone(d.whatsapp);
     if (!whatsapp) throw new ActionError("Invalid WhatsApp number.");
+    const parentPhone = normalizePhone(d.parentPhone);
+    if (!parentPhone) throw new ActionError("Parent's number looks invalid.");
     const dup = await db.user.findFirst({ where: { OR: [{ whatsapp }, ...(d.email ? [{ email: d.email }] : [])] } });
     if (dup) throw new ActionError("A user with this WhatsApp number or email already exists.");
     const temp = generatePassword(10);
@@ -62,7 +64,7 @@ export async function createStudentAction(input: z.input<typeof studentSchema>) 
         fullName: d.fullName,
         whatsapp,
         email: d.email || null,
-        parentPhone: d.parentPhone ? normalizePhone(d.parentPhone) : null,
+        parentPhone,
         passwordHash: await hashPassword(temp),
         mustChangePassword: true,
       },

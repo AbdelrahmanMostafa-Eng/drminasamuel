@@ -43,7 +43,7 @@ export function AddStudentButton({ courses }: { courses: { id: string; title: st
               onSubmit={(e) => {
                 e.preventDefault();
                 const f = Object.fromEntries(new FormData(e.currentTarget)) as Record<string, string>;
-                exec(() => createStudentAction({ fullName: f.fullName ?? "", whatsapp: f.whatsapp ?? "", email: f.email, parentPhone: f.parentPhone, courseId: f.courseId || null }), { onSuccess: (d) => d && setCreds(d) });
+                exec(() => createStudentAction({ fullName: f.fullName ?? "", whatsapp: f.whatsapp ?? "", email: f.email, parentPhone: f.parentPhone ?? "", courseId: f.courseId || null }), { onSuccess: (d) => d && setCreds(d) });
               }}
               className="space-y-4"
             >
@@ -51,7 +51,7 @@ export function AddStudentButton({ courses }: { courses: { id: string; title: st
               <Field name="whatsapp" label="WhatsApp number" icon={<WhatsAppIcon />} required />
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field name="email" type="email" label="Email (optional)" />
-                <Field name="parentPhone" label="Parent's number (optional)" icon={<Phone />} />
+                <Field name="parentPhone" type="tel" label="Parent's number" icon={<Phone />} required />
               </div>
               <Select name="courseId" label="Enroll in course (marks as paid)" defaultValue="">
                 <option value="">Don't enroll yet</option>
@@ -166,7 +166,7 @@ export function StudentActions({
             <Field name="fullName" label="Full name" defaultValue={student.fullName} required />
             <Field name="whatsapp" label="WhatsApp" defaultValue={student.whatsapp ?? ""} required />
             <Field name="email" label="Email" defaultValue={student.email ?? ""} />
-            <Field name="parentPhone" label="Parent's number" defaultValue={student.parentPhone ?? ""} />
+            <Field name="parentPhone" type="tel" label="Parent's number" defaultValue={student.parentPhone ?? ""} required />
             <div className="flex justify-end">
               <Button type="submit" loading={pending}>
                 Save
