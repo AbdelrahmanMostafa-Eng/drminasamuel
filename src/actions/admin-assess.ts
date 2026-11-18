@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidatePublic } from "@/lib/revalidate";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { ActionError, actionStaff, run } from "@/lib/auth";
@@ -60,6 +61,7 @@ export async function saveAssessmentAction(courseId: string, id: string | null, 
       aid = a.id;
       await audit(me, `${d.type.toLowerCase()}.created`, d.title);
     }
+    revalidatePublic();
     revalidatePath(`/admin/courses/${courseId}`, "layout");
     revalidatePath(`/admin/assessments/${aid}`);
     return aid!;
@@ -106,6 +108,7 @@ export async function deleteAssessmentAction(id: string) {
     const a = await db.assessment.findUniqueOrThrow({ where: { id } });
     await db.assessment.delete({ where: { id } });
     await audit(me, "assessment.deleted", a.title);
+    revalidatePublic();
     revalidatePath(`/admin/courses/${a.courseId}`, "layout");
     return a.courseId;
   }, "Deleted");
@@ -171,6 +174,7 @@ export async function saveSessionAction(courseId: string, id: string | null, inp
       await audit(me, "session.created", d.title);
       await notifyCourseStudents(courseId, { title: "New live session scheduled", body: d.title, link: "/dashboard/schedule" });
     }
+    revalidatePublic();
     revalidatePath("/admin/schedule");
     revalidatePath(`/admin/courses/${courseId}`, "layout");
     return sid!;
@@ -184,6 +188,7 @@ export async function endSessionNowAction(id: string) {
     if (sessionEnd(s) <= new Date()) throw new ActionError("This session has already ended.");
     await db.liveSession.update({ where: { id }, data: { endedAt: new Date() } });
     await audit(me, "session.ended", s.title);
+    revalidatePublic();
     revalidatePath(`/admin/sessions/${id}`);
   }, "Session ended — attendance is locked");
 }
@@ -194,6 +199,7 @@ export async function deleteSessionAction(id: string) {
     const s = await db.liveSession.findUniqueOrThrow({ where: { id } });
     await db.liveSession.delete({ where: { id } });
     await audit(me, "session.deleted", s.title);
+    revalidatePublic();
     revalidatePath("/admin/schedule");
     return s.courseId;
   }, "Session deleted");

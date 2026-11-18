@@ -2,14 +2,17 @@ import "server-only";
 import { db } from "./db";
 
 export async function getPublicCourses() {
-  const courses = await db.course.findMany({
-    where: { status: { in: ["PUBLISHED", "ENDED"] } },
-    orderBy: [{ status: "asc" }, { sortOrder: "asc" }, { createdAt: "desc" }],
-    include: {
-      prerequisite: { select: { title: true } },
-      _count: { select: { chapters: { where: { isPublished: true } }, lessons: { where: { isPublished: true } } } },
-    },
-  });
+  // Public pages are prerendered at build time; without a database they render empty and refresh later.
+  const courses = await db.course
+    .findMany({
+      where: { status: { in: ["PUBLISHED", "ENDED"] } },
+      orderBy: [{ status: "asc" }, { sortOrder: "asc" }, { createdAt: "desc" }],
+      include: {
+        prerequisite: { select: { title: true } },
+        _count: { select: { chapters: { where: { isPublished: true } }, lessons: { where: { isPublished: true } } } },
+      },
+    })
+    .catch(() => []);
   return courses.map((c) => ({
     id: c.id,
     slug: c.slug,
@@ -31,11 +34,13 @@ export async function getPublicCourses() {
 
 export async function getUpcomingPublicSessions(limit = 6) {
   const now = new Date();
-  const sessions = await db.liveSession.findMany({
-    where: { endsAt: { gte: now }, course: { status: "PUBLISHED" } },
-    orderBy: { startsAt: "asc" },
-    take: limit,
-    include: { course: { select: { title: true } } },
-  });
+  const sessions = await db.liveSession
+    .findMany({
+      where: { endsAt: { gte: now }, course: { status: "PUBLISHED" } },
+      orderBy: { startsAt: "asc" },
+      take: limit,
+      include: { course: { select: { title: true } } },
+    })
+    .catch(() => []);
   return sessions.map((s) => ({ id: s.id, title: s.title, startsAt: s.startsAt, endsAt: s.endsAt, courseTitle: s.course.title }));
 }

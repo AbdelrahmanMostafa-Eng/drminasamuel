@@ -24,7 +24,7 @@ export type CourseCardData = {
   prerequisiteTitle?: string | null;
 };
 
-/** Uploaded cover, or a quiet "specimen slide" cover built from a real micrograph. */
+/** Uploaded cover, or a quiet "specimen plate" cover with the black-and-white feather study. */
 export function CourseCover({ coverKey, level, title, className, label = true }: { coverKey: string | null; level: "BASICS" | "ADVANCED"; title: string; className?: string; label?: boolean }) {
   const src = fileUrl(coverKey);
   return (
@@ -35,8 +35,9 @@ export function CourseCover({ coverKey, level, title, className, label = true }:
       ) : (
         <>
           <div className="bg-grid absolute inset-0" />
-          <div className={cn("absolute top-1/2 aspect-square -translate-y-1/2", level === "BASICS" ? "-right-[12%] w-[62%]" : "-right-[6%] w-[74%] rotate-90")}>
-            <Image src="/images/micrograph-disc.webp" alt="" fill sizes="400px" className="object-contain" />
+          {/* Sized by height so the whole feather disc always fits inside the cover. */}
+          <div className={cn("absolute right-[6%] top-1/2 aspect-square h-[82%] -translate-y-1/2", level === "ADVANCED" && "rotate-[-38deg]")}>
+            <Image src="/images/feather-disc.webp" alt="" fill sizes="320px" className="object-contain" />
           </div>
           {label && <span className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.18em] text-[#111]/45">{level === "BASICS" ? "Level 01 · Basics" : "Level 02 · Advanced"}</span>}
         </>

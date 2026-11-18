@@ -84,7 +84,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   faqs: [
     {
       q: "How do I enroll in a course?",
-      a: "Create a free account, open the course you want and press Enroll. Pay the course price with InstaPay or Vodafone Cash, upload a screenshot of the transfer, and our team will approve your seat — usually within a few hours.",
+      a: "Create an account, open the course you want and press Enroll. Pay the course price with InstaPay or Vodafone Cash, upload a screenshot of the transfer, and our team will approve your seat — usually within a few hours.",
     },
     {
       q: "Do I pay once for both Basics and Advanced?",

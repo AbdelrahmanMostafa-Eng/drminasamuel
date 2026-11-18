@@ -55,7 +55,7 @@ export default async function StudentCoursePage({ params }: { params: Promise<{ 
         <div className="relative overflow-hidden rounded-2xl border border-border bg-card">
           <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 md:block">
             <CourseCover label={false} coverKey={course.coverKey} level={course.level} title={course.title} className="absolute inset-0" />
-            <div className="absolute inset-0 bg-gradient-to-r from-card via-card/50 to-transparent" />
+            <div className="absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-card to-transparent" />
           </div>
           <div className="relative flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
             <div>

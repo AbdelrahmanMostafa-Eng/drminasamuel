@@ -39,17 +39,8 @@
   --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.03);
   --shadow-lift: 0 1px 2px rgb(0 0 0 / 0.04), 0 16px 40px -20px rgb(0 0 0 / 0.18);
 
-  --animate-marquee: marqueeLeft 40s linear infinite;
   --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
 
-  @keyframes marqueeLeft {
-    from { transform: translateX(0); }
-    to { transform: translateX(-33.333%); }
-  }
-  @keyframes marqueeRight {
-    from { transform: translateX(-33.333%); }
-    to { transform: translateX(0); }
-  }
   @keyframes pulse-dot {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.4; transform: scale(0.8); }
@@ -348,7 +339,7 @@
   50% { background-position: 100% 50%; }
 }
 
-/* ── Portfolio template: slowly rotating orb (here: a real micrograph) ─── */
+/* ── Portfolio template: slowly rotating orb (here: a black-and-white feather study) ─── */
 @keyframes orb-rotate {
   0% { transform: rotate(0deg) scale(1); }
   50% { transform: rotate(180deg) scale(1.04); }
@@ -382,6 +373,31 @@
 
 .ba-noloader #ba-loader { display: none !important; }
 /* hold hero text animations until the intro curtain lifts */
+/* Topic strip (agentic template). Plain CSS so the keyframes are always emitted —
+   inside @theme Tailwind drops keyframes that no utility class references. */
+@keyframes marqueeLeft {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-33.3333%, 0, 0); }
+}
+@keyframes marqueeRight {
+  from { transform: translate3d(-33.3333%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+.marquee-left { animation: marqueeLeft 38s linear infinite; will-change: transform; }
+.marquee-right { animation: marqueeRight 32s linear infinite; will-change: transform; }
+
+/* No visible page scrollbar — the page still scrolls with wheel, touch and keys. */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
 html[data-intro="playing"] .hero-word,
 html[data-intro="playing"] .section-title-animate {
   animation-play-state: paused;

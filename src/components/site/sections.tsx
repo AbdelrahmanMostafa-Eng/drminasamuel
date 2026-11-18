@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, BarChart3, BookMarked, ClipboardList, FileCheck2, GraduationCap, Lock, MonitorPlay, Smartphone, Upload, UserPlus, Video } from "lucide-react";
 import { HeroTitle, SectionTitle } from "./text-anim";
-import { MicroscopeOrb } from "./orb";
+import { FeatherOrb } from "./orb";
+import { ViewerLink } from "./viewer";
 import { FaqList } from "./faq";
 import { Reveal } from "@/components/ui/reveal";
 import { SpotlightCard } from "@/components/ui/card";
@@ -37,7 +38,7 @@ export function Section({ id, children, className = "", border = true, gradientB
 
 /* ─── Hero ───────────────────────────────────────────────────────────────── */
 
-export function Hero({ hero, stats, loggedIn }: { hero: SiteSettings["hero"]; stats: SiteSettings["stats"]; loggedIn: boolean }) {
+export function Hero({ hero, stats }: { hero: SiteSettings["hero"]; stats: SiteSettings["stats"] }) {
   return (
     <section className="relative overflow-hidden pt-24 md:pt-28">
       <div className="mx-auto grid max-w-[1280px] grid-cols-1 items-end gap-6 px-6 md:px-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10">
@@ -49,9 +50,13 @@ export function Hero({ hero, stats, loggedIn }: { hero: SiteSettings["hero"]; st
             <Link href="/courses" className="inline-flex items-center justify-center rounded-full bg-foreground px-8 py-4 text-base font-medium text-background transition-opacity hover:opacity-85">
               Explore courses
             </Link>
-            <Link href={loggedIn ? "/dashboard" : "/register"} className="inline-flex items-center gap-2 px-6 py-4 text-base font-medium text-brand-600 transition-colors hover:text-brand-800">
-              {loggedIn ? "Go to my dashboard" : "Create a free account"} <ArrowRight className="size-4" />
-            </Link>
+            <ViewerLink
+              guest={{ href: "/register", label: "Create an account" }}
+              member={{ href: "@dashboard", label: "Go to my dashboard" }}
+              className="inline-flex items-center gap-2 px-6 py-4 text-base font-medium text-brand-600 transition-colors hover:text-brand-800"
+            >
+              <ArrowRight className="size-4" />
+            </ViewerLink>
           </div>
           <div className="mt-14 flex flex-wrap gap-x-10 gap-y-6">
             {stats.slice(0, 3).map((s, i) => (
@@ -64,7 +69,7 @@ export function Hero({ hero, stats, loggedIn }: { hero: SiteSettings["hero"]; st
         </div>
 
         <div className="relative mx-auto w-full max-w-[540px] lg:max-w-none">
-          <MicroscopeOrb caption={false} className="absolute -right-[18%] top-[2%] w-[92%] opacity-95 lg:-right-[22%] lg:top-[4%]" />
+          <FeatherOrb className="absolute -right-[18%] top-[2%] w-[92%] opacity-95 lg:-right-[22%] lg:top-[4%]" />
           <div className="relative z-10 mx-auto w-[78%] lg:w-[74%]">
             <Image
               src="/images/dr-mina-clean.webp"
@@ -92,7 +97,7 @@ const ROW_B = ["Photosynthesis", "Cellular Respiration", "Mitosis & Meiosis", "P
 export function TopicMarquee() {
   return (
     <section className="select-none overflow-hidden border-t border-border" aria-label="Topics covered">
-      <div className="flex border-b border-border" style={{ animation: "marqueeLeft 34s linear infinite" }}>
+      <div className="marquee-left flex w-max border-b border-border">
         {[0, 1, 2].map((rep) => (
           <div key={rep} className="flex shrink-0">
             {ROW_A.map((t) => (
@@ -104,7 +109,7 @@ export function TopicMarquee() {
           </div>
         ))}
       </div>
-      <div className="flex border-b border-border" style={{ animation: "marqueeRight 28s linear infinite" }}>
+      <div className="marquee-right flex w-max border-b border-border">
         {[0, 1, 2].map((rep) => (
           <div key={rep} className="flex shrink-0">
             {ROW_B.map((t) => (
@@ -233,17 +238,21 @@ export function Features() {
       <SectionHead tag="The platform" title={<>Everything you need<br className="hidden md:block" /> to prepare properly.</>} />
       <div className="grid grid-cols-12 gap-3">
         <Reveal className="col-span-12">
-          <SpotlightCard className="relative flex min-h-[260px] flex-col justify-end overflow-hidden rounded-2xl border border-border bg-[#0b0b0a] p-8 text-white md:min-h-[300px]">
-            <Image src="/images/micrograph-endothelial.jpg" alt="Fluorescence micrograph of endothelial cells" fill sizes="100vw" className="object-cover opacity-80 [object-position:center_40%]" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b0a] via-[#0b0b0a]/70 to-transparent" />
-            <div className="relative z-10 max-w-md">
+          <SpotlightCard className="grid overflow-hidden rounded-2xl border border-border bg-[#0b0b0a] text-white md:grid-cols-12">
+            {/* The photo keeps its own 3:2 shape, so the whole iguana is always in frame. */}
+            <div className="relative aspect-[3/2] md:order-2 md:col-span-7">
+              <Image src="/images/iguana.webp" alt="Close-up of an iguana resting on a branch" fill sizes="(min-width: 768px) 60vw, 100vw" className="object-cover" />
+              {/* Slow fade into the black text panel: left edge on desktop, bottom edge when stacked on phones. */}
+              <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(to_right,#0b0b0a_0%,rgb(11_11_10/0.88)_10%,rgb(11_11_10/0.62)_24%,rgb(11_11_10/0.32)_40%,rgb(11_11_10/0.1)_54%,transparent_66%)] md:block" />
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,#0b0b0a_0%,rgb(11_11_10/0.7)_14%,rgb(11_11_10/0.25)_32%,transparent_48%)] md:hidden" />
+            </div>
+            <div className="relative z-10 flex flex-col justify-end p-8 md:order-1 md:col-span-5 md:p-10">
               <div className="mb-6 grid size-10 place-items-center rounded-xl border border-white/20">
                 <Video className="size-[18px]" />
               </div>
               <h3 className="font-display text-2xl font-light">Live sessions on Zoom — attendance taken for you</h3>
               <p className="mt-3 text-sm leading-relaxed text-white/60">Students join from the website with one tap. That click marks them present; absent students can send an excuse before the session ends.</p>
             </div>
-            <p className="absolute bottom-4 right-5 z-10 hidden font-mono text-[10px] uppercase tracking-[0.16em] text-white/40 md:block">Endothelial cells · fluorescence micrograph · NIH</p>
           </SpotlightCard>
         </Reveal>
         {FEATURES.map((f, i) => (
@@ -379,7 +388,7 @@ export function FaqSection({ faqs }: { faqs: SiteSettings["faqs"] }) {
 
 /* ─── Final call to action ───────────────────────────────────────────────── */
 
-export function CtaBand({ loggedIn }: { loggedIn: boolean }) {
+export function CtaBand() {
   return (
     <section className="relative overflow-hidden border-t border-border px-6 py-32 md:px-12">
       <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_bottom,black,transparent_70%)]" />
@@ -387,9 +396,13 @@ export function CtaBand({ loggedIn }: { loggedIn: boolean }) {
         <SectionTitle className="font-display text-4xl font-light leading-[1.05] tracking-tight md:text-6xl">Start your Biology preparation today.</SectionTitle>
         <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">Create your account, enroll in the current course and join the next live session.</p>
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link href={loggedIn ? "/dashboard/courses" : "/register"} className="inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-8 py-4 text-base font-medium text-background transition-opacity hover:opacity-85">
-            {loggedIn ? "Browse & enroll" : "Create my account"} <ArrowUpRight className="size-4" />
-          </Link>
+          <ViewerLink
+            guest={{ href: "/register", label: "Create my account" }}
+            member={{ href: "@dashboard", label: "Go to my dashboard" }}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-8 py-4 text-base font-medium text-background transition-opacity hover:opacity-85"
+          >
+            <ArrowUpRight className="size-4" />
+          </ViewerLink>
           <Link href="/courses" className="inline-flex items-center justify-center rounded-full border border-border px-8 py-4 text-base font-medium transition-colors hover:border-foreground/25">
             View courses
           </Link>

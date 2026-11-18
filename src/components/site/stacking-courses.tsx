@@ -45,11 +45,11 @@ export function StackingCourses({ courses }: { courses: CourseCardData[] }) {
             <div style={{ transform: `scale(${1 - d * SCALE_STEP}) translateY(${d * OFFSET_STEP}px)`, transformOrigin: "top center", transition: "transform 0.3s cubic-bezier(0.16,1,0.3,1)" }}>
               <Link href={`/courses/${c.slug}`} className="group relative block overflow-hidden rounded-2xl border border-border bg-[#faf9f7]">
                 <div className="relative h-52 md:hidden">
-                  <CourseCover label={false} coverKey={c.coverKey} level={c.level} title={c.title} className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_35%,transparent_90%)]" />
+                  <CourseCover label={false} coverKey={c.coverKey} level={c.level} title={c.title} className="absolute inset-0" />
                 </div>
                 <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 md:block">
                   <CourseCover label={false} coverKey={c.coverKey} level={c.level} title={c.title} className="absolute inset-0" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#faf9f7] via-[#faf9f7]/40 to-transparent" />
+                  <div className="absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-[#faf9f7] to-transparent" />
                 </div>
                 <div className="relative z-10 p-7 md:p-10">
                   <div className="md:max-w-[56%]">
