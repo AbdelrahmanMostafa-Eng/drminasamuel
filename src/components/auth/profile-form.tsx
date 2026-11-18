@@ -68,7 +68,7 @@ export function ProfileForm({
         <>
           <Field label="WhatsApp number" icon={<WhatsAppIcon />} defaultValue={user.whatsapp ?? ""} disabled hint="To change your WhatsApp number, contact an assistant." />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field name="parentPhone" label="Parent's number" icon={<Phone />} defaultValue={user.parentPhone ?? ""} />
+            <Field name="parentPhone" type="tel" label="Parent's number" icon={<Phone />} defaultValue={user.parentPhone ?? ""} required />
             <Field name="school" label="School" icon={<School />} defaultValue={user.school ?? ""} />
           </div>
         </>

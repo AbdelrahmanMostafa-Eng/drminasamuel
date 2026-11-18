@@ -1,4 +1,4 @@
-import { AboutSection, CentersSection, CtaBand, FaqSection, Features, Hero, HowItWorks, SchedulePreview, Section, SectionHead, TeamSection, TopicMarquee } from "@/components/site/sections";
+import { AboutSection, CentersSection, CtaBand, FaqSection, Features, Hero, HowItWorks, PricingSection, SchedulePreview, Section, SectionHead, TeamSection, TopicMarquee } from "@/components/site/sections";
 import { StackingCourses } from "@/components/site/stacking-courses";
 import { getSettings } from "@/lib/settings";
 import { getPublicCourses, getUpcomingPublicSessions } from "@/lib/queries";
@@ -28,6 +28,7 @@ export default async function HomePage() {
           All courses <ArrowRight className="size-4" />
         </Link>
       </Section>
+      <PricingSection courses={open} />
       <HowItWorks />
       <Features />
       {settings.showPublicSchedule && <SchedulePreview sessions={sessions} />}

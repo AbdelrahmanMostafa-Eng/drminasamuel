@@ -25,7 +25,7 @@ export function RegisterForm({ next }: { next?: string }) {
         const f = Object.fromEntries(new FormData(e.currentTarget)) as Record<string, string>;
         setError(null);
         start(async () => {
-          const res = await registerAction({ ...f, fullName: f.fullName ?? "", whatsapp: f.whatsapp ?? "", email: f.email ?? "", password: f.password ?? "", confirm: f.confirm ?? "", next });
+          const res = await registerAction({ ...f, fullName: f.fullName ?? "", whatsapp: f.whatsapp ?? "", email: f.email ?? "", parentPhone: f.parentPhone ?? "", password: f.password ?? "", confirm: f.confirm ?? "", next });
           if (res && !res.ok) {
             setError(res.error);
             toast.error(res.error);
@@ -38,7 +38,7 @@ export function RegisterForm({ next }: { next?: string }) {
       <Field name="whatsapp" type="tel" label="WhatsApp number" icon={<WhatsAppIcon />} autoComplete="tel" required hint="Used to add you to the course WhatsApp group." />
       <Field name="email" type="email" label="Email" icon={<AtSign />} autoComplete="email" required />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field name="parentPhone" type="tel" label="Parent's number (optional)" icon={<Phone />} />
+        <Field name="parentPhone" type="tel" label="Parent's number" icon={<Phone />} autoComplete="off" required />
         <Field name="school" label="School (optional)" icon={<School />} />
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

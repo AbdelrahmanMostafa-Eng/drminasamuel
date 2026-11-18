@@ -429,3 +429,82 @@ export function PageHero({ eyebrow, title, description }: { eyebrow: string; tit
 }
 
 export { Link };
+
+/* ─── Pricing (agentic: three plain cards, middle one inked) ─────────────── */
+
+type PricingCourse = { id: string; slug: string; title: string; level: "BASICS" | "ADVANCED"; price: number; chapters: number; lessons: number; enrollmentOpen: boolean; prerequisiteTitle: string | null };
+
+const egp = (n: number) => new Intl.NumberFormat("en-US").format(n);
+const shortTitle = (t: string) => t.split(" — ")[0];
+
+export function PricingSection({ courses }: { courses: PricingCourse[] }) {
+  if (!courses.length) return null;
+  const plans = courses.slice(0, 2).map((c) => ({
+    key: c.id,
+    label: c.level === "BASICS" ? "Basics · Level 01" : "Advanced · Level 02",
+    price: egp(c.price),
+    unit: "EGP / course",
+    note: c.level === "BASICS" ? "Build the foundation" : "Take it to exam level",
+    items: [
+      `${c.chapters} chapters · ${c.lessons} lessons`,
+      "Live Zoom sessions + recordings",
+      "Homework after every lesson",
+      "A quiz after every chapter",
+      "Lesson PDFs & the full book",
+      c.prerequisiteTitle ? `Requires ${shortTitle(c.prerequisiteTitle)}` : "No prerequisite",
+    ],
+    cta: { href: `/courses/${c.slug}`, label: c.enrollmentOpen ? "Enroll" : "View course" },
+  }));
+  if (courses.length >= 2) {
+    plans.push({
+      key: "path",
+      label: "Full path",
+      price: egp(courses.slice(0, 2).reduce((s, c) => s + c.price, 0)),
+      unit: "EGP in total",
+      note: "Basics, then Advanced",
+      items: ["Everything in Basics and Advanced", "Each course is paid separately", "InstaPay or Vodafone Cash", "Cash at the center is also possible", "Questions? Talk to the team"],
+      cta: { href: "/contact", label: "Contact the team" },
+    });
+  }
+  const featured = plans.length === 3 ? 1 : 0;
+  return (
+    <Section id="pricing">
+      <div className="mb-14 text-center md:mb-16">
+        <Tag>Pricing</Tag>
+        <SectionTitle className="mt-6 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">Pay per course, as you progress.</SectionTitle>
+      </div>
+      <div className={`grid grid-cols-1 gap-3 ${plans.length === 3 ? "md:grid-cols-3" : plans.length === 2 ? "md:grid-cols-2" : "mx-auto max-w-md"}`}>
+        {plans.map((p, i) => (
+          <Reveal key={p.key} delay={i * 0.06} className="h-full">
+            <SpotlightCard className="flex h-full flex-col rounded-2xl border border-border bg-card p-8">
+              <p className="font-mono text-[11px] tracking-[0.08em] text-muted-foreground">{p.label}</p>
+              <p className="mt-6 flex items-baseline gap-2">
+                <span className="font-display text-5xl font-light tracking-tight">{p.price}</span>
+                <span className="text-sm text-muted-foreground">{p.unit}</span>
+              </p>
+              <p className="mt-2 text-xs text-muted-foreground">{p.note}</p>
+              <ul className="mb-10 mt-8 flex-1 space-y-3.5 text-sm text-foreground/70">
+                {p.items.map((it) => (
+                  <li key={it} className="flex items-center gap-3">
+                    <span className="size-1 shrink-0 rounded-full bg-foreground/30" />
+                    {it}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href={p.cta.href}
+                className={
+                  i === featured
+                    ? "inline-flex h-12 items-center justify-center rounded-xl bg-foreground text-[13px] font-medium uppercase tracking-[0.12em] text-background transition-opacity hover:opacity-85"
+                    : "inline-flex h-12 items-center justify-center rounded-xl border border-border text-[13px] uppercase tracking-[0.12em] text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground"
+                }
+              >
+                {p.cta.label}
+              </Link>
+            </SpotlightCard>
+          </Reveal>
+        ))}
+      </div>
+    </Section>
+  );
+}

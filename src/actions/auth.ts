@@ -46,7 +46,7 @@ const registerSchema = z
       .refine((v) => v.split(/\s+/).filter(Boolean).length >= 2, "Please enter at least your first and last name."),
     whatsapp: z.string().trim().min(8, "Enter your WhatsApp number."),
     email: z.string().trim().toLowerCase().email("Enter a valid email address."),
-    parentPhone: z.string().trim().optional(),
+    parentPhone: z.string().trim().min(8, "Enter your parent's phone number."),
     school: z.string().trim().max(100).optional(),
     password: z.string().min(8, "Password must be at least 8 characters.").max(100),
     confirm: z.string(),
@@ -59,8 +59,8 @@ export async function registerAction(input: z.input<typeof registerSchema>) {
     const d = registerSchema.parse(input);
     const whatsapp = normalizePhone(d.whatsapp);
     if (!whatsapp) throw new ActionError("Enter a valid WhatsApp number, e.g. 01012345678.");
-    const parentPhone = d.parentPhone ? normalizePhone(d.parentPhone) : null;
-    if (d.parentPhone && !parentPhone) throw new ActionError("Parent's number looks invalid.");
+    const parentPhone = normalizePhone(d.parentPhone);
+    if (!parentPhone) throw new ActionError("Parent's number looks invalid, e.g. 01012345678.");
     const exists = await db.user.findFirst({ where: { OR: [{ email: d.email }, { whatsapp }] }, select: { email: true } });
     if (exists) throw new ActionError(exists.email === d.email ? "An account with this email already exists. Try signing in." : "This WhatsApp number is already registered. Try signing in.");
     const user = await db.user.create({
@@ -156,6 +156,7 @@ export async function updateProfileAction(input: z.input<typeof profileSchema>) 
       if (taken) throw new ActionError("That email is used by another account.");
     }
     const parentPhone = d.parentPhone ? normalizePhone(d.parentPhone) : null;
+    if (me.role === "STUDENT" && !parentPhone) throw new ActionError("Enter a valid parent's phone number.");
     await db.user.update({
       where: { id: me.id },
       data: {
