@@ -42,12 +42,12 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
       <Link href="/admin/students" className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" /> Students
       </Link>
-      <div className="mb-6 flex flex-col gap-5 rounded-3xl border border-border bg-card p-6 shadow-soft lg:flex-row lg:items-center lg:justify-between">
+      <div className="mb-6 flex flex-col gap-5 rounded-2xl border border-border bg-card p-6 shadow-soft lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-4">
           <Avatar name={s.fullName} src={fileUrl(s.avatarKey)} size={72} />
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-extrabold">{s.fullName}</h1>
+              <h1 className="text-2xl font-display font-light">{s.fullName}</h1>
               {!s.isActive && <Badge tone="danger">Suspended</Badge>}
             </div>
             <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">

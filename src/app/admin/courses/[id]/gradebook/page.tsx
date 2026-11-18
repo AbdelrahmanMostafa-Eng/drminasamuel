@@ -31,7 +31,7 @@ export default async function GradebookPage({ params }: { params: Promise<{ id: 
         <p className="text-sm text-muted-foreground">Best attempt per student. Red “0” = missed deadline. Click a column to open the assessment.</p>
         {can(user, "reports") && <ReportButton type="COURSE_SUMMARY" refId={id} label="Course summary PDF" variant="primary" />}
       </div>
-      <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
+      <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
         <div className="overflow-x-auto scrollbar-thin">
           <table className="w-max min-w-full text-sm">
             <thead>
@@ -80,8 +80,8 @@ export default async function GradebookPage({ params }: { params: Promise<{ id: 
                         {c.na ? "N/A" : c.pct === null ? "—" : `${c.pct}%`}
                       </td>
                     ))}
-                    <td className={cn("px-3 py-2.5 text-center font-extrabold", color(avg("HOMEWORK")))}>{avg("HOMEWORK") ?? "—"}{avg("HOMEWORK") !== null && "%"}</td>
-                    <td className={cn("px-3 py-2.5 text-center font-extrabold", color(avg("QUIZ")))}>{avg("QUIZ") ?? "—"}{avg("QUIZ") !== null && "%"}</td>
+                    <td className={cn("px-3 py-2.5 text-center font-semibold", color(avg("HOMEWORK")))}>{avg("HOMEWORK") ?? "—"}{avg("HOMEWORK") !== null && "%"}</td>
+                    <td className={cn("px-3 py-2.5 text-center font-semibold", color(avg("QUIZ")))}>{avg("QUIZ") ?? "—"}{avg("QUIZ") !== null && "%"}</td>
                     <td className="px-3 py-2.5 text-center font-semibold">{mine.length ? `${att}/${mine.length}` : "—"}</td>
                   </tr>
                 );

@@ -25,7 +25,7 @@ export default async function CourseAdminLayout({ children, params }: { children
             {c.batchLabel && <Badge tone="neutral">{c.batchLabel}</Badge>}
             {c.isSample && <Badge tone="ember">Example data</Badge>}
           </div>
-          <h1 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">{c.title}</h1>
+          <h1 className="mt-2 text-2xl font-display font-light tracking-tight sm:text-3xl">{c.title}</h1>
           <p className="text-sm text-muted-foreground">{formatEGP(c.price)} · {c.track}</p>
         </div>
         {c.status !== "DRAFT" && c.status !== "ARCHIVED" && (

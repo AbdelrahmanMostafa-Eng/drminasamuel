@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/plus-jakarta-sans";
-import "@fontsource-variable/fraunces";
+import "@fontsource-variable/inter-tight";
+import "@fontsource/ibm-plex-sans/300.css";
+import "@fontsource/ibm-plex-sans/400.css";
+import "@fontsource/ibm-plex-sans/500.css";
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/500.css";
 import "./globals.css";
 import { Providers } from "@/components/app/providers";
 import { PageLoader } from "@/components/ui/loader";
@@ -29,8 +33,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f8fb" },
-    { media: "(prefers-color-scheme: dark)", color: "#061018" },
+    { media: "(prefers-color-scheme: light)", color: "#f5f4f0" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f0f0e" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -41,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Show the intro loader only on the first page load of a visit */}
-        <script dangerouslySetInnerHTML={{ __html: `try{if(sessionStorage.getItem("ba_loaded"))document.documentElement.classList.add("ba-noloader")}catch(e){}` }} />
+        <script dangerouslySetInnerHTML={{ __html: `try{if(sessionStorage.getItem("ba_loaded"))document.documentElement.classList.add("ba-noloader");else{document.documentElement.dataset.intro="playing";setTimeout(function(){delete document.documentElement.dataset.intro},4500)}}catch(e){}` }} />
       </head>
       <body className="min-h-dvh">
         <Providers>

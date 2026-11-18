@@ -123,7 +123,7 @@ export function ResourceManager({ courseId, lessonId, items, books }: { courseId
         })}
       </div>
 
-      <div className="rounded-3xl border border-border bg-muted/30 p-4 sm:p-5">
+      <div className="rounded-2xl border border-border bg-muted/30 p-4 sm:p-5">
         <Label>{books ? "Upload a book or reference" : "Add material"}</Label>
         {!books && (
           <StateTabs

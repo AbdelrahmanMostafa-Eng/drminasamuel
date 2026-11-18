@@ -20,10 +20,10 @@ export function Reveal({
   return (
     <M
       className={className}
-      initial={{ opacity: 0, y, filter: "blur(6px)" }}
+      initial={{ opacity: 0, y, filter: "blur(4px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, delay, ease: [0.2, 0.8, 0.2, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
     </M>
@@ -32,8 +32,8 @@ export function Reveal({
 
 const container: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
 const item: Variants = {
-  hidden: { opacity: 0, y: 18, scale: 0.98 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.2, 0.8, 0.2, 1] } },
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
 };
 
 export function Stagger({ children, className }: { children: React.ReactNode; className?: string }) {

@@ -30,7 +30,7 @@ export function Watermark({ text }: { text: string }) {
 
 export function VideoPlayer({ item, watermark }: { item: MediaItem; watermark: string }) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-border bg-black shadow-lift" onContextMenu={(e) => e.preventDefault()}>
+    <div className="relative overflow-hidden rounded-2xl border border-border bg-black shadow-lift" onContextMenu={(e) => e.preventDefault()}>
       {item.embed ? (
         <iframe src={item.embed} title={item.title} className="aspect-video w-full" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen />
       ) : item.src ? (
@@ -51,7 +51,7 @@ export function PdfViewer({ item, watermark }: { item: MediaItem; watermark: str
   const [full, setFull] = React.useState(false);
   if (!item.src) return null;
   return (
-    <div className={cn("overflow-hidden rounded-3xl border border-border bg-card shadow-soft", full && "fixed inset-2 z-50 flex flex-col shadow-2xl sm:inset-6")}>
+    <div className={cn("overflow-hidden rounded-2xl border border-border bg-card shadow-soft", full && "fixed inset-2 z-50 flex flex-col shadow-2xl sm:inset-6")}>
       <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
         <div className="flex min-w-0 items-center gap-3">
           <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-red-50 text-red-600 dark:bg-red-950/40">
@@ -85,7 +85,7 @@ export function ResourceRow({ item }: { item: MediaItem }) {
   const Icon = item.kind === "VIDEO" ? Film : item.kind === "PDF" ? FileText : Link2;
   const href = item.kind === "LINK" ? item.externalUrl : item.src ? `${item.src}${item.allowDownload ? "?download=1" : ""}` : item.externalUrl;
   return (
-    <a href={href ?? "#"} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-2xl border border-border bg-card p-3.5 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-300">
+    <a href={href ?? "#"} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-2xl border border-border bg-card p-3.5 shadow-soft transition hover:border-brand-300">
       <span className="grid size-10 place-items-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-900/40 dark:text-brand-200">
         <Icon className="size-5" />
       </span>

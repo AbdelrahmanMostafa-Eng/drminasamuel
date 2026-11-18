@@ -39,7 +39,7 @@ export default async function EnrollPage({ params }: { params: Promise<{ courseI
         <div className="space-y-6">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-ember-600 dark:text-ember-400">Enrollment</p>
-            <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">{course.title}</h1>
+            <h1 className="mt-1 text-2xl font-display font-light sm:text-3xl">{course.title}</h1>
             <p className="mt-1 text-muted-foreground">Pay {formatEGP(course.price)} via InstaPay or Vodafone Cash, then upload your screenshot.</p>
           </div>
 
@@ -49,7 +49,7 @@ export default async function EnrollPage({ params }: { params: Promise<{ courseI
                 <div className="flex items-center justify-between gap-2">
                   {steps.map((s, i) => (
                     <div key={s.label} className="flex flex-1 items-center gap-2">
-                      <div className={`grid size-10 shrink-0 place-items-center rounded-xl ${s.bad ? "bg-red-500 text-white shadow-[0_3px_0_0_#8f2119]" : s.done ? "bg-emerald-500 text-white shadow-[0_3px_0_0_#08623f]" : s.active ? "animate-pulse bg-amber-400 text-white shadow-[0_3px_0_0_#b45309]" : "bg-muted text-muted-foreground"}`}>
+                      <div className={`grid size-10 shrink-0 place-items-center rounded-xl ${s.bad ? "bg-red-500 text-white" : s.done ? "bg-emerald-500 text-white" : s.active ? "animate-pulse bg-amber-400 text-white" : "bg-muted text-muted-foreground"}`}>
                         <s.icon className="size-5" />
                       </div>
                       <span className="hidden text-sm font-semibold sm:block">{s.label}</span>
@@ -60,10 +60,10 @@ export default async function EnrollPage({ params }: { params: Promise<{ courseI
                 <div className="mt-5 rounded-2xl bg-muted/50 p-4 text-sm">
                   {enrollment.status === "PENDING" && (
                     <p>
-                      ⏳ Your payment of <b>{formatEGP(enrollment.amount)}</b> via <b>{enrollment.method === "INSTAPAY" ? "InstaPay" : "Vodafone Cash"}</b> was submitted on {fmt(enrollment.submittedAt)}. The team will review it shortly — you&apos;ll get a notification as soon as you&apos;re approved.
+                      Your payment of <b>{formatEGP(enrollment.amount)}</b> via <b>{enrollment.method === "INSTAPAY" ? "InstaPay" : "Vodafone Cash"}</b> was submitted on {fmt(enrollment.submittedAt)}. The team will review it shortly — you&apos;ll get a notification as soon as you&apos;re approved.
                     </p>
                   )}
-                  {enrollment.status === "APPROVED" && <p>🎉 You&apos;re enrolled! Your course is unlocked.</p>}
+                  {enrollment.status === "APPROVED" && <p>You&apos;re enrolled. Your course is unlocked.</p>}
                   {enrollment.status === "REJECTED" && (
                     <p className="text-danger">
                       Your payment couldn&apos;t be verified. <b>Reason:</b> {enrollment.rejectionReason ?? "—"}. Please resubmit below or contact an assistant.
@@ -104,7 +104,7 @@ export default async function EnrollPage({ params }: { params: Promise<{ courseI
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-          <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-lift">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-lift">
             <CourseCover coverKey={course.coverKey} level={course.level} title={course.title} className="aspect-[16/9]" />
             <div className="p-5">
               <div className="flex gap-2">
@@ -114,7 +114,7 @@ export default async function EnrollPage({ params }: { params: Promise<{ courseI
               <p className="mt-3 font-bold">{course.title}</p>
               <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
                 <span className="text-sm text-muted-foreground">Total</span>
-                <span className="text-2xl font-extrabold">{formatEGP(course.price)}</span>
+                <span className="text-2xl font-display font-light">{formatEGP(course.price)}</span>
               </div>
               <Link href={`/courses/${course.slug}`} className="mt-3 inline-block text-sm font-semibold text-primary hover:underline">
                 View course details
@@ -122,7 +122,7 @@ export default async function EnrollPage({ params }: { params: Promise<{ courseI
             </div>
           </div>
           {helper && (
-            <a href={waLink(helper.phone, `Hi! I have a question about paying for ${course.title}.`)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft transition hover:-translate-y-0.5">
+            <a href={waLink(helper.phone, `Hi! I have a question about paying for ${course.title}.`)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft transition">
               <span className="grid size-10 place-items-center rounded-xl bg-[#25d366] text-white">
                 <WhatsAppIcon className="size-5" />
               </span>

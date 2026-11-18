@@ -14,7 +14,7 @@ export function DropdownContent({ children, className, align = "end" }: { childr
         align={align}
         sideOffset={8}
         className={cn(
-          "z-50 min-w-48 overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-lift data-[state=open]:animate-[pop-in_160ms_ease-out]",
+          "z-50 min-w-48 overflow-hidden rounded-xl border border-border bg-card p-1 shadow-lift data-[state=open]:animate-[pop-in_140ms_ease-out]",
           className,
         )}
       >
@@ -30,7 +30,7 @@ export function DropdownItem({ children, onSelect, danger, className, disabled }
       disabled={disabled}
       onSelect={onSelect}
       className={cn(
-        "flex cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium outline-none transition-colors data-[highlighted]:bg-muted data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:text-muted-foreground",
+        "flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm outline-none transition-colors data-[highlighted]:bg-muted data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:text-muted-foreground",
         danger && "text-danger data-[highlighted]:bg-red-50 dark:data-[highlighted]:bg-red-950/40 [&>svg]:text-danger",
         className,
       )}
@@ -41,7 +41,7 @@ export function DropdownItem({ children, onSelect, danger, className, disabled }
 }
 
 export function DropdownLabel({ children }: { children: React.ReactNode }) {
-  return <M.Label className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{children}</M.Label>;
+  return <M.Label className="eyebrow px-3 pb-1 pt-2">{children}</M.Label>;
 }
 
 export function DropdownSeparator() {

@@ -108,7 +108,7 @@ export function FileDrop({
         className={cn(
           "group relative flex w-full flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed text-center transition-all duration-300",
           compact ? "px-4 py-5" : "px-6 py-9",
-          drag ? "scale-[1.01] border-brand-400 bg-brand-50/70 dark:bg-brand-900/30" : "border-input bg-muted/40 hover:border-brand-300 hover:bg-brand-50/40 dark:hover:bg-brand-900/20",
+          drag ? "border-foreground bg-foreground/[0.03]" : "border-input bg-card hover:border-foreground/30",
         )}
       >
         {previewUrl && (
@@ -116,19 +116,19 @@ export function FileDrop({
           <img src={previewUrl} alt="" className="absolute inset-0 size-full object-cover opacity-25 blur-[1px]" />
         )}
         <div className="relative">
-          <div className="mx-auto mb-3 grid size-12 place-items-center rounded-2xl bg-card text-brand-600 shadow-[0_4px_0_0_var(--input),0_10px_24px_-12px_rgb(31_96_124/0.5)] transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-3 dark:text-brand-300">
+          <div className="mx-auto mb-3 grid size-11 place-items-center rounded-xl border border-border bg-card text-foreground/60">
             {done ? <CheckCircle2 className="size-6 text-success" /> : <Icon className="size-6" />}
           </div>
-          <p className="text-sm font-semibold">{done ? done.name : label}</p>
+          <p className="text-sm font-medium">{done ? done.name : label}</p>
           <p className="mt-1 text-xs text-muted-foreground">{done ? `${formatBytes(done.size)} · uploaded — click to replace` : hint}</p>
         </div>
         <AnimatePresence>
           {progress !== null && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-x-6 bottom-3">
-              <div className="h-1.5 overflow-hidden rounded-full bg-border">
-                <motion.div className="h-full rounded-full bg-gradient-to-r from-brand-400 to-ember-400" animate={{ width: `${progress}%` }} />
+              <div className="h-1 overflow-hidden rounded-full bg-border">
+                <motion.div className="h-full rounded-full bg-foreground" animate={{ width: `${progress}%` }} />
               </div>
-              <p className="mt-1 text-[0.7rem] font-semibold text-muted-foreground">Uploading… {progress}%</p>
+              <p className="mt-1 font-mono text-[0.68rem] text-muted-foreground">Uploading {progress}%</p>
             </motion.div>
           )}
         </AnimatePresence>

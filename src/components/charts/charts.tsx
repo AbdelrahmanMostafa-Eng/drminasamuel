@@ -26,14 +26,14 @@ import {
 } from "recharts";
 
 export const C = {
-  brand: "#2a7a9b",
-  brandLight: "#79b9d2",
-  ember: "#ff8a1a",
-  emerald: "#10b981",
-  amber: "#f59e0b",
-  red: "#ef4444",
-  violet: "#8b5cf6",
-  slate: "#94a3b8",
+  brand: "#1f607c",
+  brandLight: "#9dbccb",
+  ember: "#c8641a",
+  emerald: "#2f7d4f",
+  amber: "#a8650f",
+  red: "#b4372d",
+  violet: "#5e5a8c",
+  slate: "#b5b3ac",
 };
 
 const axis = { stroke: "var(--muted-foreground)", fontSize: 11, tickLine: false, axisLine: false } as const;
@@ -42,12 +42,12 @@ function Tip({ active, payload, label, suffix = "" }: { active?: boolean; payloa
   if (!active || !payload?.length) return null;
   return (
     <div className="rounded-xl border border-border bg-card px-3 py-2 text-xs shadow-lift">
-      {label && <p className="mb-1 max-w-56 truncate font-bold">{label}</p>}
+      {label && <p className="mb-1 max-w-56 truncate font-medium">{label}</p>}
       {payload.map((p) => (
         <p key={p.name} className="flex items-center gap-2">
           <span className="size-2 rounded-full" style={{ background: p.color }} />
           <span className="text-muted-foreground">{p.name}:</span>
-          <span className="font-bold">
+          <span className="font-medium">
             {p.value}
             {suffix}
           </span>
@@ -72,7 +72,7 @@ export function ScoreTrend({ data, height = 260 }: { data: { label: string; scor
       <AreaChart data={data} margin={{ top: 10, right: 10, left: -18, bottom: 0 }}>
         <defs>
           <linearGradient id="gScore" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={C.ember} stopOpacity={0.45} />
+            <stop offset="0%" stopColor={C.ember} stopOpacity={0.16} />
             <stop offset="100%" stopColor={C.ember} stopOpacity={0} />
           </linearGradient>
         </defs>
@@ -183,7 +183,7 @@ export function TrendArea({ data, height = 240, name = "Value", color = C.brand 
       <AreaChart data={data} margin={{ top: 10, right: 10, left: -18, bottom: 0 }}>
         <defs>
           <linearGradient id={`g-${name}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={color} stopOpacity={0.4} />
+            <stop offset="0%" stopColor={color} stopOpacity={0.14} />
             <stop offset="100%" stopColor={color} stopOpacity={0} />
           </linearGradient>
         </defs>

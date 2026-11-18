@@ -12,12 +12,13 @@ and study analytics.
 ## ✨ What's inside
 
 ### Public website (anyone)
-- Animated **3D DNA hero** (Three.js) with Dr. Mina's photo, smooth scroll reveals, 3D tilt cards and an intro loader.
+- Calm editorial design: warm off-white paper, IBM Plex type, hairline cards, a real fluorescence micrograph and
+  Dr. Mina's photo, word-by-word title reveals, a magnetic cursor, stacking course cards and a short intro loader.
 - About Dr. Mina, course catalogue + course intro pages (description, curriculum outline, intro video, price).
 - How enrollment works, features, **public session schedule** (times only — never Zoom links), FAQ.
 - Team contacts (WhatsApp click-to-chat), **center locations** (Google Maps), social links and the official
   ACT / EST test websites — on the homepage, the Contact page and the footer.
-- Light & dark mode, mobile-first.
+- Mobile-first. The public site is light; the dashboards also have a dark mode.
 
 ### Students
 - Sign up with **full name, WhatsApp number, email** (+ optional parent's number and school).
@@ -73,7 +74,7 @@ Announcements · Analytics · Revenue. Presets: *Full assistant*, *Content & ass
 
 ## 🧱 Tech stack
 Next.js 16 (App Router, Server Actions) · React 19 · TypeScript · Tailwind CSS 4 · Motion (Framer Motion) ·
-Three.js / React Three Fiber · Radix UI · Recharts · PDF.js · @react-pdf/renderer · Prisma 6 + PostgreSQL ·
+Radix UI · Recharts · PDF.js · @react-pdf/renderer · Prisma 6 + PostgreSQL ·
 S3-compatible storage (Cloudflare R2 / Supabase Storage / AWS S3) or local disk.
 
 Auth is built in (bcrypt passwords, database sessions in an httpOnly cookie) so the one-device rule is exact and

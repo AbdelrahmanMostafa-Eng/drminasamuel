@@ -69,7 +69,7 @@ export function Comments({ lessonId, comments, meId, staff }: { lessonId: string
   );
 
   return (
-    <div id="qa" className="scroll-mt-24 rounded-3xl border border-border bg-card p-5 shadow-soft sm:p-6">
+    <div id="qa" className="scroll-mt-24 rounded-2xl border border-border bg-card p-5 shadow-soft sm:p-6">
       <div className="flex items-center gap-2">
         <MessageCircle className="size-5 text-brand-500" />
         <h3 className="font-bold">Questions about this lesson</h3>

@@ -56,8 +56,8 @@ export function HomeworkPanel({
     <div className="space-y-3">
       {items.length === 0 && <p className="text-sm text-muted-foreground">No homework for this lesson yet.</p>}
       {items.map((a) => (
-        <Link key={a.id} href={`/admin/assessments/${a.id}`} className="flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:-translate-y-0.5 hover:shadow-soft">
-          <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-b from-emerald-400 to-emerald-600 text-white shadow-[0_3px_0_0_#08623f]">
+        <Link key={a.id} href={`/admin/assessments/${a.id}`} className="flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:border-foreground/20">
+          <span className="grid size-10 place-items-center rounded-lg border border-border text-success">
             <ClipboardList className="size-5" />
           </span>
           <span className="min-w-0 flex-1">

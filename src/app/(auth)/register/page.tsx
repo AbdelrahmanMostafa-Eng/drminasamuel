@@ -12,7 +12,7 @@ export default async function RegisterPage({ searchParams }: { searchParams: Pro
   if (user) redirect(user.role === "STUDENT" ? "/dashboard" : "/admin");
   return (
     <FadeIn>
-      <h1 className="font-display text-4xl font-semibold tracking-tight">Create your account</h1>
+      <h1 className="font-display text-4xl font-light tracking-tight">Create your account</h1>
       <p className="mt-2 text-muted-foreground">Free to create — you only pay when you enroll in a course.</p>
       <div className="mt-8">
         <RegisterForm next={sp.next} />

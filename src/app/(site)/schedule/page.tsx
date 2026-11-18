@@ -20,9 +20,9 @@ export default async function SchedulePage() {
     : [];
   return (
     <>
-      <PageHero eyebrow="Schedule" title={<>Live session <em className="text-ember-400">schedule</em></>} description="All times are shown in Cairo time. Enrolled students join from their dashboard — the Join button marks attendance automatically." />
-      <section className="py-14">
-        <div className="container-x">
+      <PageHero eyebrow="Schedule" title="Live session schedule." description="All times are Cairo time. Enrolled students join from their dashboard — the Join button marks attendance automatically." />
+      <section className="px-6 pb-32 pt-12 md:px-12" data-gradient-bar>
+        <div className="mx-auto max-w-6xl">
           {settings.showPublicSchedule ? (
             <ScheduleCalendar
               events={sessions.map((s) => ({ id: s.id, title: s.title, start: s.startsAt.toISOString(), end: s.endsAt.toISOString(), kind: "session" as const, courseTitle: s.course.title }))}

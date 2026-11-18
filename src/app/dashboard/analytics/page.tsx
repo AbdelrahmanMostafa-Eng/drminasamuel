@@ -130,7 +130,7 @@ export default async function StudentAnalyticsPage() {
               ]}
               center={
                 <div>
-                  <p className="text-2xl font-extrabold">{stats.attendanceRate ?? 0}%</p>
+                  <p className="text-2xl font-display font-light">{stats.attendanceRate ?? 0}%</p>
                   <p className="text-xs text-muted-foreground">present</p>
                 </div>
               }

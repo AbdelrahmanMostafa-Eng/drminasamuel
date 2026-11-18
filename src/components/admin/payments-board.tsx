@@ -74,7 +74,7 @@ export function PaymentsBoard({ items }: { items: PaymentCard[] }) {
             {list.map((p) => {
               const mismatch = p.amount < p.course.price;
               return (
-                <motion.div key={p.id} layout initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, x: 40 }} className="flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft sm:flex-row">
+                <motion.div key={p.id} layout initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, x: 40 }} className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft sm:flex-row">
                   <button onClick={() => setPreview(p)} className="group relative h-48 shrink-0 overflow-hidden bg-muted sm:h-auto sm:w-44">
                     {p.proofUrl ? (
                       p.isPdf ? (
@@ -95,7 +95,7 @@ export function PaymentsBoard({ items }: { items: PaymentCard[] }) {
                   <div className="flex min-w-0 flex-1 flex-col p-5">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <Link href={`/admin/students/${p.student.id}`} className="block truncate font-extrabold hover:text-primary">{p.student.name}</Link>
+                        <Link href={`/admin/students/${p.student.id}`} className="block truncate font-semibold hover:text-primary">{p.student.name}</Link>
                         <p className="truncate text-xs text-muted-foreground">{formatPhone(p.student.whatsapp)}</p>
                       </div>
                       <Badge tone={p.method === "INSTAPAY" ? "brand" : "danger"}>

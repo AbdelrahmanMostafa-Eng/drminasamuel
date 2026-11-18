@@ -52,32 +52,34 @@ export default async function StudentCoursePage({ params }: { params: Promise<{ 
   return (
     <div className="space-y-8">
       <Reveal>
-        <div className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-lift">
-          <CourseCover coverKey={course.coverKey} level={course.level} title={course.title} className="absolute inset-0" />
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-950/95 via-brand-950/80 to-brand-950/30" />
-          <div className="relative flex flex-col gap-6 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-card">
+          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 md:block">
+            <CourseCover label={false} coverKey={course.coverKey} level={course.level} title={course.title} className="absolute inset-0" />
+            <div className="absolute inset-0 bg-gradient-to-r from-card via-card/50 to-transparent" />
+          </div>
+          <div className="relative flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
             <div>
               <div className="flex flex-wrap gap-2">
-                <Badge tone="glass">{course.level === "BASICS" ? "Basics" : "Advanced"}</Badge>
-                {course.batchLabel && <Badge tone="glass">{course.batchLabel}</Badge>}
+                <Badge tone="neutral">{course.level === "BASICS" ? "Basics" : "Advanced"}</Badge>
+                {course.batchLabel && <Badge tone="neutral">{course.batchLabel}</Badge>}
                 {course.status === "ENDED" && <Badge tone="warning">Course ended</Badge>}
               </div>
-              <h1 className="mt-3 font-display text-3xl font-semibold sm:text-4xl">{course.title}</h1>
-              <p className="mt-2 text-sm text-brand-100/80">
+              <h1 className="mt-4 font-display text-3xl font-light tracking-tight sm:text-4xl">{course.title}</h1>
+              <p className="mt-2 text-sm text-muted-foreground">
                 {progress.lessonsDone}/{progress.lessons} lessons · {progress.assessmentsDone}/{progress.assessments} assignments submitted
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {course.whatsappGroupUrl && (
-                  <a href={course.whatsappGroupUrl} target="_blank" rel="noopener noreferrer" className="btn-3d inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-b from-[#2ee072] to-[#1ebe5a] px-5 text-sm font-bold text-white shadow-[0_4px_0_0_#0f7a37]">
+                  <a href={course.whatsappGroupUrl} target="_blank" rel="noopener noreferrer" className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background hover:opacity-85">
                     <WhatsAppIcon className="size-5" /> Join the WhatsApp group
                   </a>
                 )}
-                <Link href="/dashboard/schedule" className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/25 bg-white/10 px-5 text-sm font-semibold backdrop-blur hover:bg-white/20">
+                <Link href="/dashboard/schedule" className="inline-flex h-11 items-center gap-2 rounded-full border border-border px-5 text-sm font-medium hover:border-foreground/25">
                   Live sessions
                 </Link>
               </div>
             </div>
-            <div className="rounded-3xl bg-white/10 p-4 backdrop-blur [&_circle:first-of-type]:stroke-white/15">
+            <div className="rounded-2xl border border-border bg-card p-4">
               <ProgressRing value={progress.percent} sublabel="complete" tone="ember" size={120} />
             </div>
           </div>
@@ -91,17 +93,17 @@ export default async function StudentCoursePage({ params }: { params: Promise<{ 
             const lessonsDone = ch.lessons.filter((l) => done.has(l.id)).length;
             return (
               <Reveal key={ch.id} delay={ci * 0.04}>
-                <details className="group overflow-hidden rounded-3xl border border-border bg-card shadow-soft" open={ci === 0 || lessonsDone < ch.lessons.length}>
+                <details className="group overflow-hidden rounded-2xl border border-border bg-card shadow-soft" open={ci === 0 || lessonsDone < ch.lessons.length}>
                   <summary className="flex cursor-pointer list-none items-center gap-4 p-5">
                     {ch.coverKey ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={fileUrl(ch.coverKey)!} alt="" className="size-14 shrink-0 rounded-2xl object-cover shadow-[0_3px_0_0_var(--input)]" />
+                      <img src={fileUrl(ch.coverKey)!} alt="" className="size-14 shrink-0 rounded-xl border border-border object-cover" />
                     ) : (
-                      <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-b from-brand-500 to-brand-700 text-lg font-extrabold text-white shadow-[0_4px_0_0_#123b4d]">{ci + 1}</span>
+                      <span className="grid size-14 shrink-0 place-items-center rounded-xl border border-border font-mono text-sm text-muted-foreground">{String(ci + 1).padStart(2, "0")}</span>
                     )}
                     <span className="min-w-0 flex-1">
                       <span className="block text-xs font-bold uppercase tracking-wider text-ember-600 dark:text-ember-400">Chapter {ci + 1}</span>
-                      <span className="block text-lg font-extrabold">{ch.title}</span>
+                      <span className="block text-lg font-semibold">{ch.title}</span>
                       <span className="text-xs text-muted-foreground">
                         {lessonsDone}/{ch.lessons.length} lessons done
                       </span>
@@ -132,9 +134,9 @@ export default async function StudentCoursePage({ params }: { params: Promise<{ 
                         <Link
                           key={q.id}
                           href={`/dashboard/assessments/${q.id}`}
-                          className="mt-1 flex items-center gap-3 rounded-2xl border border-ember-200 bg-ember-50/60 p-3 transition hover:-translate-y-0.5 hover:shadow-soft dark:border-ember-800/40 dark:bg-ember-900/15"
+                          className="mt-1 flex items-center gap-3 rounded-2xl border border-ember-200 bg-ember-50/60 p-3 transition hover:border-foreground/20 dark:border-ember-800/40 dark:bg-ember-900/15"
                         >
-                          <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-b from-ember-400 to-ember-500 text-white shadow-[0_3px_0_0_#b94a07]">
+                          <span className="grid size-10 place-items-center rounded-lg border border-border text-ember-600 dark:text-ember-400">
                             <FileQuestion className="size-5" />
                           </span>
                           <span className="min-w-0 flex-1">
@@ -165,9 +167,9 @@ export default async function StudentCoursePage({ params }: { params: Promise<{ 
                   href={b.storageKey ? `${fileUrl(b.storageKey)}${b.allowDownload ? "?download=1" : ""}` : (b.url ?? "#")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-soft"
+                  className="group flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:border-brand-300 hover:border-foreground/20"
                 >
-                  <span className={`grid size-11 place-items-center rounded-xl text-white ${b.isMainBook ? "bg-gradient-to-b from-ember-400 to-ember-500 shadow-[0_3px_0_0_#b94a07]" : "bg-gradient-to-b from-brand-400 to-brand-600 shadow-[0_3px_0_0_#123b4d]"}`}>
+                  <span className={`grid size-11 place-items-center rounded-lg border border-border ${b.isMainBook ? "text-ember-600 dark:text-ember-400" : "text-brand-600 dark:text-brand-300"}`}>
                     {b.isMainBook ? <BookMarked className="size-5" /> : <FileText className="size-5" />}
                   </span>
                   <span className="min-w-0 flex-1">

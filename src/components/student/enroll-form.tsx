@@ -44,7 +44,7 @@ export function EnrollForm({ courseId, price, payment }: { courseId: string; pri
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <ChoiceCard selected={method === "INSTAPAY"} onSelect={() => setMethod("INSTAPAY")}>
             <div className="flex items-center gap-3">
-              <span className="grid size-11 place-items-center rounded-xl bg-gradient-to-br from-[#6a2c91] to-[#3b1257] text-sm font-black text-white shadow-[0_3px_0_0_#24093a]">IP</span>
+              <span className="grid size-10 place-items-center rounded-lg bg-[#4b1f6f] font-mono text-xs font-medium text-white">IP</span>
               <div>
                 <p className="font-bold">InstaPay</p>
                 <p className="text-xs text-muted-foreground">Instant bank transfer</p>
@@ -53,8 +53,8 @@ export function EnrollForm({ courseId, price, payment }: { courseId: string; pri
           </ChoiceCard>
           <ChoiceCard selected={method === "VODAFONE_CASH"} onSelect={() => setMethod("VODAFONE_CASH")}>
             <div className="flex items-center gap-3">
-              <span className="grid size-11 place-items-center rounded-xl bg-gradient-to-br from-[#e60000] to-[#9e0000] text-white shadow-[0_3px_0_0_#6b0000]">
-                <Smartphone className="size-5" />
+              <span className="grid size-10 place-items-center rounded-lg bg-[#c70000] text-white">
+                <Smartphone className="size-4" />
               </span>
               <div>
                 <p className="font-bold">Vodafone Cash</p>
@@ -78,7 +78,7 @@ export function EnrollForm({ courseId, price, payment }: { courseId: string; pri
               {payment.instapayPhone && <Row label="InstaPay mobile number" value={payment.instapayPhone} />}
               {!payment.instapayHandle && !payment.instapayPhone && <p className="text-sm text-muted-foreground">InstaPay details will be added soon — please contact an assistant on WhatsApp.</p>}
               {payment.instapayLink && (
-                <a href={payment.instapayLink} target="_blank" rel="noopener noreferrer" className="btn-3d inline-flex h-10 items-center gap-2 rounded-xl bg-gradient-to-b from-[#7b35a6] to-[#4a1870] px-4 text-sm font-semibold text-white shadow-[0_3px_0_0_#24093a]">
+                <a href={payment.instapayLink} target="_blank" rel="noopener noreferrer" className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-medium text-background hover:opacity-85">
                   Open InstaPay payment link <ExternalLink className="size-4" />
                 </a>
               )}

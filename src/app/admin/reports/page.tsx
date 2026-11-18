@@ -47,7 +47,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       )}
       <div className="mb-4 flex flex-wrap gap-2">
         {[undefined, "ATTENDANCE", "GRADES", "COURSE_SUMMARY"].map((t) => (
-          <Link key={t ?? "all"} href={q({ type: t })} className={cn("rounded-xl border px-3 py-1.5 text-sm font-semibold transition", sp.type === t ? "border-brand-500 bg-brand-600 text-white shadow-[0_3px_0_0_#123b4d]" : "border-border bg-card text-muted-foreground hover:text-foreground")}>
+          <Link key={t ?? "all"} href={q({ type: t })} className={cn("rounded-full border px-3 py-1.5 text-sm font-medium transition", sp.type === t ? "border-foreground bg-foreground text-background" : "border-border bg-card text-muted-foreground hover:text-foreground")}>
             {t ? TYPES[t as keyof typeof TYPES].label : "All types"}
           </Link>
         ))}
@@ -61,7 +61,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       {reports.length === 0 ? (
         <EmptyState icon={<FileText />} title="No reports yet" description="Open a session after it ends, or an assessment after its deadline, and press Generate PDF report." />
       ) : (
-        <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] text-sm">
               <thead>

@@ -3,7 +3,6 @@
 import * as React from "react";
 import { FileDown, Lock } from "lucide-react";
 import { toast } from "sonner";
-import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { generateReportAction } from "@/actions/admin-assess";
 
@@ -17,7 +16,7 @@ export function ReportButton({
   availableAt,
   label = "Generate PDF report",
   size = "md",
-  variant = "accent",
+  variant = "primary",
 }: {
   type: "ATTENDANCE" | "GRADES" | "COURSE_SUMMARY";
   refId: string;
@@ -47,12 +46,10 @@ export function ReportButton({
       variant={variant}
       size={size}
       loading={pending}
-      onClick={(e) => {
-        const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      onClick={() => {
         start(async () => {
           const res = await generateReportAction(type, refId);
           if (!res.ok || !res.data) return void toast.error(res.ok ? "Failed" : res.error);
-          confetti({ particleCount: 60, spread: 60, origin: { x: (r.left + r.width / 2) / window.innerWidth, y: r.top / window.innerHeight }, colors: ["#ff8a1a", "#4396b6"] });
           toast.success("Report generated — downloading PDF");
           const a = document.createElement("a");
           a.href = `/api/reports/${res.data}/pdf`;

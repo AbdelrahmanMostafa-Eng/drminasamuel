@@ -1,7 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, BookOpen, Dna, Layers, Lock, Users } from "lucide-react";
-import { TiltCard } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ArrowUpRight } from "lucide-react";
+import { SpotlightCard } from "@/components/ui/card";
+import { Tag } from "@/components/ui/misc";
 import { cn, fileUrl, formatEGP } from "@/lib/utils";
 import { fmtDate } from "@/lib/time";
 
@@ -23,103 +24,61 @@ export type CourseCardData = {
   prerequisiteTitle?: string | null;
 };
 
-export function CourseCover({ coverKey, level, title, className }: { coverKey: string | null; level: "BASICS" | "ADVANCED"; title: string; className?: string }) {
+/** Uploaded cover, or a quiet "specimen slide" cover built from a real micrograph. */
+export function CourseCover({ coverKey, level, title, className, label = true }: { coverKey: string | null; level: "BASICS" | "ADVANCED"; title: string; className?: string; label?: boolean }) {
   const src = fileUrl(coverKey);
   return (
-    <div className={cn("relative overflow-hidden", className)}>
+    <div className={cn("relative overflow-hidden bg-[#e9e7e1]", className)}>
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={title} className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <img src={src} alt={title} className="absolute inset-0 size-full object-cover" />
       ) : (
-        <div
-          className={cn(
-            "absolute inset-0",
-            level === "BASICS" ? "bg-gradient-to-br from-brand-500 via-brand-700 to-brand-950" : "bg-gradient-to-br from-ember-400 via-ember-600 to-brand-900",
-          )}
-        >
-          <div className="bg-grid absolute inset-0 opacity-40" />
-          <svg className="absolute -right-6 -top-4 h-[130%] w-auto opacity-25 transition-transform duration-700 group-hover:rotate-6" viewBox="0 0 100 200" fill="none">
-            {Array.from({ length: 14 }).map((_, i) => {
-              const y = i * 14 + 6;
-              const x = 50 + Math.sin(i * 0.7) * 30;
-              const x2 = 50 - Math.sin(i * 0.7) * 30;
-              return (
-                <g key={i}>
-                  <line x1={x} y1={y} x2={x2} y2={y} stroke="white" strokeWidth="1.5" />
-                  <circle cx={x} cy={y} r="4" fill="#ffd2a3" />
-                  <circle cx={x2} cy={y} r="4" fill="#aed6e6" />
-                </g>
-              );
-            })}
-          </svg>
-          <Dna className="absolute bottom-5 left-5 size-10 text-white/80" />
-        </div>
+        <>
+          <div className="bg-grid absolute inset-0" />
+          <div className={cn("absolute top-1/2 aspect-square -translate-y-1/2", level === "BASICS" ? "-right-[12%] w-[62%]" : "-right-[6%] w-[74%] rotate-90")}>
+            <Image src="/images/micrograph-disc.webp" alt="" fill sizes="400px" className="object-contain" />
+          </div>
+          {label && <span className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.18em] text-[#111]/45">{level === "BASICS" ? "Level 01 · Basics" : "Level 02 · Advanced"}</span>}
+        </>
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/0" />
     </div>
   );
 }
 
 export function CourseCard({ course, href }: { course: CourseCardData; href?: string }) {
+  const state = course.status === "ENDED" ? "Ended" : course.enrollmentOpen ? "Enrolling now" : "Enrollment closed";
   return (
-    <TiltCard className="group h-full rounded-3xl" max={7}>
-      <Link
-        href={href ?? `/courses/${course.slug}`}
-        className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition-shadow duration-300 group-hover:shadow-lift"
-      >
-        <div className="relative">
-          <CourseCover coverKey={course.coverKey} level={course.level} title={course.title} className="aspect-[16/9]" />
-          <div className="absolute left-4 top-4 flex gap-2 [transform:translateZ(30px)]">
-            <Badge tone="glass">{course.level === "BASICS" ? "Basics" : "Advanced"}</Badge>
-            <Badge tone="glass">{course.track}</Badge>
+    <SpotlightCard className="h-full overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-300 hover:border-foreground/15">
+      <Link href={href ?? `/courses/${course.slug}`} className="flex h-full flex-col">
+        <CourseCover coverKey={course.coverKey} level={course.level} title={course.title} className="aspect-[16/9]" />
+        <div className="flex flex-1 flex-col p-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <Tag>{course.level === "BASICS" ? "Basics" : "Advanced"}</Tag>
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span className={cn("size-1.5 rounded-full", course.enrollmentOpen && course.status !== "ENDED" ? "bg-success" : "bg-foreground/25")} />
+              {state}
+            </span>
           </div>
-          {course.status === "ENDED" ? (
-            <Badge tone="neutral" className="absolute right-4 top-4">
-              Ended
-            </Badge>
-          ) : !course.enrollmentOpen ? (
-            <Badge tone="warning" className="absolute right-4 top-4">
-              <Lock className="size-3" /> Enrollment closed
-            </Badge>
-          ) : (
-            <Badge tone="success" className="absolute right-4 top-4" dot>
-              Enrolling now
-            </Badge>
-          )}
-          {course.batchLabel && <p className="absolute bottom-3 left-4 text-xs font-semibold text-white/90">{course.batchLabel}</p>}
-        </div>
-        <div className="flex flex-1 flex-col p-5">
-          <h3 className="text-lg font-extrabold leading-snug tracking-tight">{course.title}</h3>
-          {course.subtitle && <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{course.subtitle}</p>}
-          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium text-muted-foreground">
-            {course.chapters !== undefined && (
-              <span className="inline-flex items-center gap-1.5">
-                <Layers className="size-3.5" /> {course.chapters} chapters
-              </span>
-            )}
-            {course.lessons !== undefined && (
-              <span className="inline-flex items-center gap-1.5">
-                <BookOpen className="size-3.5" /> {course.lessons} lessons
-              </span>
-            )}
-            {course.startDate && (
-              <span className="inline-flex items-center gap-1.5">
-                <Users className="size-3.5" /> Starts {fmtDate(course.startDate)}
-              </span>
-            )}
+          <h3 className="mt-4 font-display text-xl font-light leading-snug tracking-tight">{course.title}</h3>
+          {course.subtitle && <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{course.subtitle}</p>}
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+            {course.chapters !== undefined && <span>{course.chapters} chapters</span>}
+            {course.lessons !== undefined && <span>{course.lessons} lessons</span>}
+            {course.batchLabel && <span>{course.batchLabel}</span>}
+            {course.startDate && <span>From {fmtDate(course.startDate)}</span>}
           </div>
-          {course.prerequisiteTitle && <p className="mt-3 text-xs text-ember-700 dark:text-ember-300">Requires: {course.prerequisiteTitle}</p>}
-          <div className="mt-auto flex items-end justify-between pt-5">
+          {course.prerequisiteTitle && <p className="mt-3 text-xs text-muted-foreground">Requires: {course.prerequisiteTitle}</p>}
+          <div className="mt-auto flex items-end justify-between border-t border-border pt-5">
             <div>
-              <p className="text-[0.7rem] font-semibold uppercase tracking-wider text-muted-foreground">Course fee</p>
-              <p className="text-xl font-extrabold text-foreground">{formatEGP(course.price)}</p>
+              <p className="text-[11px] text-muted-foreground">Course fee</p>
+              <p className="font-display text-2xl font-light tracking-tight">{formatEGP(course.price)}</p>
             </div>
-            <span className="grid size-11 place-items-center rounded-xl bg-gradient-to-b from-ember-400 to-ember-500 text-white shadow-[0_3px_0_0_#b94a07] transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-45">
-              <ArrowUpRight className="size-5" />
+            <span className="inline-flex items-center gap-1 text-sm text-foreground/70 transition-colors group-hover/spot:text-foreground">
+              View <ArrowUpRight className="size-4 transition-transform group-hover/spot:-translate-y-0.5 group-hover/spot:translate-x-0.5" />
             </span>
           </div>
         </div>
       </Link>
-    </TiltCard>
+    </SpotlightCard>
   );
 }

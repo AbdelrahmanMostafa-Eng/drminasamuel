@@ -86,20 +86,20 @@ function NavLinks({ nav, onNavigate }: { nav: NavItem[]; onNavigate?: () => void
               onClick={onNavigate}
               className={cn(
                 "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors",
-                active ? "text-white" : "text-foreground/70 hover:bg-muted hover:text-foreground",
+                active ? "text-foreground" : "text-foreground/60 hover:bg-foreground/[0.04] hover:text-foreground",
               )}
             >
               {active && (
                 <motion.span
                   layoutId="sidebar-active"
-                  className="absolute inset-0 rounded-xl bg-gradient-to-b from-brand-500 to-brand-600 shadow-[0_3px_0_0_#123b4d,0_10px_20px_-10px_rgb(31_96_124/0.7)]"
+                  className="absolute inset-0 rounded-lg bg-foreground/[0.06]"
                   transition={{ type: "spring", stiffness: 500, damping: 40 }}
                 />
               )}
-              <Icon className={cn("relative size-[1.15rem] transition-transform duration-300 group-hover:scale-110", active ? "text-white" : "text-muted-foreground group-hover:text-brand-500")} />
+              <Icon className={cn("relative size-[1.05rem]", active ? "text-foreground" : "text-muted-foreground group-hover:text-foreground")} strokeWidth={1.75} />
               <span className="relative flex-1">{item.label}</span>
               {!!item.badge && (
-                <span className={cn("relative min-w-5 rounded-full px-1.5 text-center text-[0.7rem] font-bold leading-5", active ? "bg-white/25 text-white" : "bg-ember-500 text-white shadow-[0_2px_0_0_#b94a07]")}>
+                <span className="relative min-w-5 rounded-full bg-foreground px-1.5 text-center font-mono text-[0.65rem] leading-5 text-background">
                   {item.badge}
                 </span>
               )}
@@ -118,9 +118,9 @@ function Bellmenu({ notifications, unread }: { notifications: ShellNotification[
   return (
     <Dropdown>
       <DropdownTrigger asChild>
-        <button className="relative grid size-10 place-items-center rounded-xl border border-border bg-card text-foreground/80 transition hover:-translate-y-0.5 hover:text-foreground" aria-label="Notifications">
+        <button className="relative grid size-10 place-items-center rounded-xl border border-border bg-card text-foreground/80 transition hover:text-foreground" aria-label="Notifications">
           <Bell className={cn("size-[1.1rem]", count > 0 && "origin-top animate-[wiggle_1.2s_ease-in-out_2]")} />
-          {count > 0 && <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-ember-500 px-1 text-[0.65rem] font-bold leading-5 text-white shadow-[0_2px_0_0_#b94a07]">{count > 9 ? "9+" : count}</span>}
+          {count > 0 && <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-foreground px-1 font-mono text-[0.6rem] leading-5 text-background">{count > 9 ? "9+" : count}</span>}
         </button>
       </DropdownTrigger>
       <DropdownContent className="w-[22rem] max-w-[calc(100vw-1.5rem)] p-0">
@@ -140,7 +140,7 @@ function Bellmenu({ notifications, unread }: { notifications: ShellNotification[
           )}
         </div>
         <div className="max-h-96 overflow-y-auto scrollbar-thin p-1.5">
-          {notifications.length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">You&apos;re all caught up ✨</p>}
+          {notifications.length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">You&apos;re all caught up.</p>}
           {notifications.map((n) => (
             <DropdownItem
               key={n.id}
@@ -190,12 +190,12 @@ export function AppShell({
       <div className="flex h-16 items-center px-4">
         <Logo href="/" />
       </div>
-      <div className="mx-3 mb-2 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-900 p-3.5 text-white shadow-[0_4px_0_0_#0b222e]">
+      <div className="mx-3 mb-2 rounded-xl border border-border p-3">
         <div className="flex items-center gap-3">
           <Avatar name={user.name} src={user.avatar} size={38} />
           <div className="min-w-0">
             <p className="truncate text-sm font-bold">{user.name}</p>
-            <p className="text-[0.7rem] font-semibold uppercase tracking-wider text-ember-300">{roleLabel}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{roleLabel}</p>
           </div>
         </div>
       </div>
@@ -219,7 +219,7 @@ export function AppShell({
       <AnimatePresence>
         {open && (
           <>
-            <motion.div className="fixed inset-0 z-40 bg-brand-950/50 backdrop-blur-sm lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)} />
+            <motion.div className="fixed inset-0 z-40 bg-[#111]/30 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)} />
             <motion.aside
               className="fixed inset-y-0 left-0 z-50 w-[19rem] max-w-[85vw] border-r border-border bg-card shadow-2xl lg:hidden"
               initial={{ x: "-100%" }}
@@ -248,9 +248,9 @@ export function AppShell({
           <Bellmenu notifications={notifications} unread={unread} />
           <Dropdown>
             <DropdownTrigger asChild>
-              <button className="flex items-center gap-2 rounded-xl border border-border bg-card py-1 pl-1 pr-2.5 transition hover:-translate-y-0.5">
+              <button className="flex items-center gap-2 rounded-xl border border-border bg-card py-1 pl-1 pr-2.5 transition">
                 <Avatar name={user.name} src={user.avatar} size={32} />
-                <span className="hidden max-w-32 truncate text-sm font-semibold sm:block">{user.name.split(" ")[0]}</span>
+                <span className="hidden max-w-32 truncate text-sm font-semibold sm:block">{user.name.replace(/^(dr|mr|mrs|ms)\.?\s+/i, "").split(" ")[0]}</span>
                 <ChevronDown className="size-4 text-muted-foreground" />
               </button>
             </DropdownTrigger>
