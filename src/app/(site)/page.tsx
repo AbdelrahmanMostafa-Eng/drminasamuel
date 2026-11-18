@@ -19,6 +19,7 @@ export default async function HomePage() {
       <AboutSection about={settings.about} stats={settings.stats} />
       <Section id="courses" gradientBar>
         <SectionHead
+          anim="tree"
           tag="Courses"
           title={<>Basics first.<br />Then Advanced.</>}
           description="Each course is enrolled and paid for separately. Basics builds the foundation; Advanced opens near the end of Basics and takes you to exam level."

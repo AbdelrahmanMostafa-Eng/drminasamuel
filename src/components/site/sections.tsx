@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, BarChart3, BookMarked, ClipboardList, FileChe
 import { HeroTitle, SectionTitle } from "./text-anim";
 import { FeatherOrb } from "./orb";
 import { ViewerLink } from "./viewer";
+import { PixelAnim, type PixelScene } from "./pixel-anim";
 import { FaqList } from "./faq";
 import { Reveal } from "@/components/ui/reveal";
 import { SpotlightCard } from "@/components/ui/card";
@@ -15,10 +16,11 @@ import { fmt } from "@/lib/time";
 
 /* ─── Shared section heading (agentic layout + portfolio text reveal) ───────── */
 
-export function SectionHead({ tag, title, description, center, aside }: { tag: string; title: React.ReactNode; description?: React.ReactNode; center?: boolean; aside?: React.ReactNode }) {
+export function SectionHead({ tag, title, description, center, aside, anim }: { tag: string; title: React.ReactNode; description?: React.ReactNode; center?: boolean; aside?: React.ReactNode; anim?: PixelScene }) {
   return (
     <div className={center ? "mx-auto mb-16 flex max-w-2xl flex-col items-center text-center" : "mb-16 flex flex-col gap-8 md:flex-row md:items-end md:justify-between"}>
-      <div className={center ? "" : "max-w-2xl"}>
+      <div className={center ? "flex flex-col items-center" : "max-w-2xl"}>
+        {anim && <PixelAnim scene={anim} className="mb-6" />}
         <Tag>{tag}</Tag>
         <SectionTitle className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">{title}</SectionTitle>
         {description && center && <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">{description}</p>}
@@ -132,6 +134,7 @@ export function AboutSection({ about }: { about: SiteSettings["about"]; stats?: 
     <Section id="about" border={false}>
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
+          <PixelAnim scene="dna" className="mb-6" />
           <Tag>About</Tag>
           <SectionTitle className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">{about.title}</SectionTitle>
           <Reveal>
@@ -200,7 +203,7 @@ const STEPS = [
 export function HowItWorks() {
   return (
     <Section id="enroll">
-      <SectionHead tag="Enrollment" title={<>From sign-up to your first<br className="hidden md:block" /> lesson in four steps.</>} description="Payments are manual and personal: your screenshot is checked by the team before the course unlocks." />
+      <SectionHead anim="heartbeat" tag="Enrollment" title={<>From sign-up to your first<br className="hidden md:block" /> lesson in four steps.</>} description="Payments are manual and personal: your screenshot is checked by the team before the course unlocks." />
       <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
         {STEPS.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.08}>
@@ -235,7 +238,7 @@ const FEATURES = [
 export function Features() {
   return (
     <Section id="platform">
-      <SectionHead tag="The platform" title={<>Everything you need<br className="hidden md:block" /> to prepare properly.</>} />
+      <SectionHead anim="iguana" tag="The platform" title={<>Everything you need<br className="hidden md:block" /> to prepare properly.</>} />
       <div className="grid grid-cols-12 gap-3">
         <Reveal className="col-span-12">
           <SpotlightCard className="grid overflow-hidden rounded-2xl border border-border bg-[#0b0b0a] text-white md:grid-cols-12">
@@ -278,6 +281,7 @@ export function SchedulePreview({ sessions }: { sessions: { id: string; title: s
     <Section id="schedule">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
         <div>
+          <PixelAnim scene="hourglass" className="mb-6" />
           <Tag>Schedule</Tag>
           <SectionTitle className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">Upcoming live sessions</SectionTitle>
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">All times are Cairo time. Zoom links are only available inside the dashboard, to enrolled students.</p>
@@ -316,7 +320,7 @@ export function SchedulePreview({ sessions }: { sessions: { id: string; title: s
 export function TeamSection({ team }: { team: SiteSettings["team"] }) {
   return (
     <Section id="team">
-      <SectionHead tag="Team contacts" title={<>Questions? Talk to<br className="hidden md:block" /> the assistant team.</>} description="Message any assistant on WhatsApp about enrollment, payments or anything course-related." />
+      <SectionHead anim="bees" tag="Team contacts" title={<>Questions? Talk to<br className="hidden md:block" /> the assistant team.</>} description="Message any assistant on WhatsApp about enrollment, payments or anything course-related." />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {team.map((t, i) => (
           <Reveal key={t.phone} delay={(i % 3) * 0.05}>
@@ -346,7 +350,7 @@ export function TeamSection({ team }: { team: SiteSettings["team"] }) {
 export function CentersSection({ centers }: { centers: SiteSettings["centers"] }) {
   return (
     <Section id="centers">
-      <SectionHead tag="Center locations" title="Prefer to visit in person?" />
+      <SectionHead anim="bird" tag="Center locations" title="Prefer to visit in person?" />
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         {centers.map((c, i) => (
           <Reveal key={c.name} delay={i * 0.06}>
@@ -376,6 +380,7 @@ export function FaqSection({ faqs }: { faqs: SiteSettings["faqs"] }) {
     <Section id="faq">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
+          <PixelAnim scene="amoeba" className="mb-6" />
           <Tag>FAQ</Tag>
           <SectionTitle className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">Good questions, clear answers.</SectionTitle>
           <p className="mt-6 max-w-xs text-sm leading-relaxed text-muted-foreground">Can&apos;t find what you need? Message any of the assistants on WhatsApp.</p>
@@ -393,6 +398,7 @@ export function CtaBand() {
     <section className="relative overflow-hidden border-t border-border px-6 py-32 md:px-12">
       <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_bottom,black,transparent_70%)]" />
       <div className="relative z-10 mx-auto max-w-2xl text-center">
+        <PixelAnim scene="butterfly" className="mx-auto mb-8" />
         <SectionTitle className="font-display text-4xl font-light leading-[1.05] tracking-tight md:text-6xl">Start your Biology preparation today.</SectionTitle>
         <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">Create your account, enroll in the current course and join the next live session.</p>
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -470,6 +476,7 @@ export function PricingSection({ courses }: { courses: PricingCourse[] }) {
   return (
     <Section id="pricing">
       <div className="mb-14 text-center md:mb-16">
+        <PixelAnim scene="mitosis" className="mx-auto mb-6" />
         <Tag>Pricing</Tag>
         <SectionTitle className="mt-6 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">Pay per course, as you progress.</SectionTitle>
       </div>
