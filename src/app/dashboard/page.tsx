@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, CalendarClock, ClipboardList, FileQuestion, Megaphone, Sparkles, Target, Trophy, Video } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarClock, ClipboardList, FileQuestion, Megaphone, Target, Trophy, Video } from "lucide-react";
 import { db } from "@/lib/db";
 import { requireStudent } from "@/lib/auth";
 import { approvedCourseIds, sessionEnd } from "@/lib/access";
@@ -45,28 +45,24 @@ export default async function StudentOverview() {
   return (
     <div className="space-y-8">
       <Reveal>
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-800 to-brand-950 p-6 text-white shadow-[0_8px_0_0_#07161e,0_30px_60px_-30px_rgb(31_96_124/0.8)] sm:p-8">
-          <div className="bg-grid absolute inset-0 opacity-25" />
-          <div className="absolute -right-16 -top-16 size-64 rounded-full bg-ember-500/25 blur-3xl" />
-          <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8">
+                    <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="inline-flex items-center gap-2 text-sm font-semibold text-ember-300">
-                <Sparkles className="size-4" /> {greet}
-              </p>
-              <h1 className="mt-1 font-display text-3xl font-semibold sm:text-4xl">Welcome back, {firstName}!</h1>
-              <p className="mt-2 max-w-lg text-brand-100/80">
+              <p className="eyebrow">{greet}</p>
+              <h1 className="mt-3 font-display text-3xl font-light tracking-tight sm:text-4xl">Welcome back, {firstName}.</h1>
+              <p className="mt-2 max-w-lg text-sm text-muted-foreground">
                 {due.length ? `You have ${due.length} assignment${due.length > 1 ? "s" : ""} due soon. Keep the streak going!` : courses.length ? "You're all caught up. Great work — review a lesson or check your analytics." : "Enroll in a course to unlock lessons, live sessions and quizzes."}
               </p>
             </div>
             {courses.length > 0 && (
               <div className="flex gap-4">
-                <div className="rounded-2xl bg-white/10 px-4 py-3 text-center backdrop-blur">
-                  <p className="text-2xl font-extrabold">{stats.attendanceRate ?? "—"}{stats.attendanceRate !== null && "%"}</p>
-                  <p className="text-[0.7rem] font-medium text-brand-100/70">Attendance</p>
+                <div className="border-l border-border pl-5">
+                  <p className="font-display text-3xl font-light">{stats.attendanceRate ?? "—"}{stats.attendanceRate !== null && "%"}</p>
+                  <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">Attendance</p>
                 </div>
-                <div className="rounded-2xl bg-white/10 px-4 py-3 text-center backdrop-blur">
-                  <p className="text-2xl font-extrabold">{stats.quizAvg ?? "—"}{stats.quizAvg !== null && "%"}</p>
-                  <p className="text-[0.7rem] font-medium text-brand-100/70">Quiz average</p>
+                <div className="border-l border-border pl-5">
+                  <p className="font-display text-3xl font-light">{stats.quizAvg ?? "—"}{stats.quizAvg !== null && "%"}</p>
+                  <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">Quiz average</p>
                 </div>
               </div>
             )}
@@ -79,7 +75,7 @@ export default async function StudentOverview() {
           {pending.map((e) => (
             <div key={e.id} className={`flex flex-col gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center sm:justify-between ${e.status === "PENDING" ? "border-amber-200 bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/20" : "border-red-200 bg-red-50 dark:border-red-800/50 dark:bg-red-950/20"}`}>
               <div>
-                <p className="font-bold">{e.status === "PENDING" ? "⏳ Payment under review" : "⚠️ Payment needs attention"} — {e.course.title}</p>
+                <p className="font-bold">{e.status === "PENDING" ? "Payment under review" : "Payment needs attention"} — {e.course.title}</p>
                 <p className="text-sm text-muted-foreground">
                   {e.status === "PENDING" ? `Submitted ${relative(e.submittedAt)}. You'll be notified as soon as it's approved.` : `Reason: ${e.rejectionReason ?? "Please contact the team."}`}
                 </p>
@@ -139,7 +135,7 @@ export default async function StudentOverview() {
                 <CardHeader title="My courses" icon={<BookOpen />} />
                 <CardBody className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {courses.map((c, i) => (
-                    <Link key={c.id} href={`/dashboard/courses/${c.id}`} className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-lift">
+                    <Link key={c.id} href={`/dashboard/courses/${c.id}`} className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:border-foreground/20">
                       <CourseCover coverKey={c.coverKey} level={c.level} title={c.title} className="h-24" />
                       <div className="p-4">
                         <p className="line-clamp-1 font-bold">{c.title}</p>
@@ -161,10 +157,10 @@ export default async function StudentOverview() {
               <Card>
                 <CardHeader title="Due soon" icon={<FileQuestion />} />
                 <CardBody className="space-y-2.5">
-                  {due.length === 0 && <p className="text-sm text-muted-foreground">Nothing due. 🎉</p>}
+                  {due.length === 0 && <p className="text-sm text-muted-foreground">Nothing due right now.</p>}
                   {due.map((a) => (
-                    <Link key={a.id} href={`/dashboard/assessments/${a.id}`} className="flex items-center gap-3 rounded-xl border border-border p-3 transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-soft">
-                      <span className={`grid size-9 place-items-center rounded-xl text-white ${a.type === "QUIZ" ? "bg-gradient-to-b from-ember-400 to-ember-500 shadow-[0_2px_0_0_#b94a07]" : "bg-gradient-to-b from-emerald-400 to-emerald-600 shadow-[0_2px_0_0_#08623f]"}`}>
+                    <Link key={a.id} href={`/dashboard/assessments/${a.id}`} className="flex items-center gap-3 rounded-xl border border-border p-3 transition hover:border-brand-300 hover:border-foreground/20">
+                      <span className={`grid size-9 place-items-center rounded-lg border border-border ${a.type === "QUIZ" ? "text-ember-600 dark:text-ember-400" : "text-success"}`}>
                         {a.type === "QUIZ" ? <FileQuestion className="size-4" /> : <ClipboardList className="size-4" />}
                       </span>
                       <span className="min-w-0 flex-1">
@@ -218,12 +214,12 @@ export default async function StudentOverview() {
       {openCourses.length > 0 && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {openCourses.map((c) => (
-            <div key={c.id} className="relative overflow-hidden rounded-3xl border border-ember-200 bg-gradient-to-br from-ember-50 to-card p-6 dark:border-ember-800/40 dark:from-ember-900/20">
+            <div key={c.id} className="relative overflow-hidden rounded-2xl border border-border bg-card p-6">
               <Badge tone="ember">{c.level === "ADVANCED" ? "Next step" : "Now enrolling"}</Badge>
-              <p className="mt-3 text-lg font-extrabold">{c.title}</p>
+              <p className="mt-3 text-lg font-semibold">{c.title}</p>
               <p className="mt-1 text-sm text-muted-foreground">{c.subtitle}</p>
               <div className="mt-4 flex items-center justify-between">
-                <p className="text-xl font-extrabold">{formatEGP(c.price)}</p>
+                <p className="text-xl font-display font-light">{formatEGP(c.price)}</p>
                 <ButtonLink href={`/dashboard/enroll/${c.id}`} variant="accent" size="sm">
                   Enroll <ArrowRight className="size-4" />
                 </ButtonLink>

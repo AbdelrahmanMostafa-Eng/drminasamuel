@@ -36,14 +36,14 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
       {children}
       <D.Root open={!!opts} onOpenChange={(o) => !o && close(false)}>
         <D.Portal>
-          <D.Overlay className="fixed inset-0 z-[60] bg-brand-950/55 backdrop-blur-sm data-[state=open]:animate-[fade-in_200ms_ease]" />
-          <D.Content className="fixed left-1/2 top-1/2 z-[60] w-[calc(100vw-1.5rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-border bg-card p-6 shadow-2xl data-[state=open]:animate-[dialog-in_260ms_cubic-bezier(0.2,0.9,0.3,1.2)]">
+          <D.Overlay className="fixed inset-0 z-[60] bg-[#111]/35 data-[state=open]:animate-[fade-in_200ms_ease]" />
+          <D.Content className="fixed left-1/2 top-1/2 z-[60] w-[calc(100vw-1.5rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border bg-card p-6 shadow-lift data-[state=open]:animate-[dialog-in_220ms_cubic-bezier(0.16,1,0.3,1)]">
             <div className="flex gap-4">
-              <div className={`grid size-12 shrink-0 place-items-center rounded-2xl ${opts?.danger ? "bg-red-50 text-danger dark:bg-red-950/40" : "bg-brand-50 text-brand-600 dark:bg-brand-900/40"}`}>
-                <AlertTriangle className="size-6" />
+              <div className={`grid size-10 shrink-0 place-items-center rounded-xl border ${opts?.danger ? "border-red-200 text-danger dark:border-red-900" : "border-border text-foreground/70"}`}>
+                <AlertTriangle className="size-5" />
               </div>
               <div className="min-w-0">
-                <D.Title className="text-lg font-bold">{opts?.title}</D.Title>
+                <D.Title className="text-lg font-medium tracking-tight">{opts?.title}</D.Title>
                 <D.Description asChild>
                   <div className="mt-1.5 text-sm text-muted-foreground">{opts?.description}</div>
                 </D.Description>
@@ -51,8 +51,8 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
             </div>
             {opts?.typeToConfirm && (
               <div className="mt-5">
-                <p className="mb-2 text-xs font-medium text-muted-foreground">
-                  Type <span className="font-bold text-foreground">{opts.typeToConfirm}</span> to confirm
+                <p className="mb-2 text-xs text-muted-foreground">
+                  Type <span className="font-mono font-medium text-foreground">{opts.typeToConfirm}</span> to confirm
                 </p>
                 <input
                   autoFocus

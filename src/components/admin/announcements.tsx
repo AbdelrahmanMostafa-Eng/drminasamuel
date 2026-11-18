@@ -28,7 +28,7 @@ export function Announcements({ items, courses }: { items: A[]; courses: { id: s
       </div>
       {items.length === 0 && <EmptyState icon={<Megaphone />} title="No announcements yet" description="Post updates — students get an in-app notification instantly." />}
       {items.map((a) => (
-        <div key={a.id} className="rounded-3xl border border-border bg-card p-5 shadow-soft">
+        <div key={a.id} className="rounded-2xl border border-border bg-card p-5 shadow-soft">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">

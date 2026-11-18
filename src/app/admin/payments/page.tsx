@@ -27,7 +27,7 @@ export default async function PaymentsPage() {
       <PageHeader eyebrow="Students" title="Payments" description="Check each screenshot, then approve to unlock the course instantly — or reject with a reason so the student can resubmit." />
       {missing && (
         <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-200">
-          ⚠️ Your InstaPay / Vodafone Cash numbers aren&apos;t set yet — students can&apos;t see where to pay.{" "}
+          Your InstaPay / Vodafone Cash numbers aren&apos;t set yet — students can&apos;t see where to pay.{" "}
           {user.role === "MASTER" ? <Link href="/admin/settings" className="font-bold underline">Add them in Website settings</Link> : "Ask Dr. Mina to add them in Website settings."}
         </div>
       )}

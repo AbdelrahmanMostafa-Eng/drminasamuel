@@ -136,7 +136,7 @@ export function AssessmentPlayer({
               animate={{ opacity: 1, rotateY: 0, x: 0 }}
               exit={{ opacity: 0, rotateY: dir * -25, x: dir * -60 }}
               transition={{ duration: 0.38, ease: [0.2, 0.8, 0.2, 1] }}
-              className="rounded-3xl border border-border bg-card p-6 shadow-lift sm:p-8"
+              className="rounded-2xl border border-border bg-card p-6 shadow-lift sm:p-8"
             >
               <p className="whitespace-pre-line text-lg font-semibold leading-relaxed sm:text-xl">{q.text}</p>
               {q.image && (
@@ -155,14 +155,14 @@ export function AssessmentPlayer({
                       className={cn(
                         "group flex items-center gap-4 rounded-2xl border-2 p-4 text-left transition-all duration-200",
                         sel
-                          ? "-translate-y-0.5 border-brand-500 bg-brand-50 shadow-[0_4px_0_0_var(--color-brand-600)] dark:bg-brand-900/30"
-                          : "border-border bg-card shadow-[0_3px_0_0_var(--input)] hover:-translate-y-0.5 hover:border-brand-300",
+                          ? "border-foreground bg-foreground/[0.03] ring-1 ring-foreground"
+                          : "border-border bg-card hover:border-foreground/30",
                       )}
                     >
                       <span
                         className={cn(
-                          "grid size-9 shrink-0 place-items-center rounded-xl text-sm font-extrabold transition-all",
-                          sel ? "bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-[0_2px_0_0_#123b4d]" : "bg-muted text-muted-foreground group-hover:text-foreground",
+                          "grid size-9 shrink-0 place-items-center rounded-xl text-sm font-semibold transition-all",
+                          sel ? "bg-foreground text-background" : "border border-border text-muted-foreground group-hover:text-foreground",
                         )}
                       >
                         {sel ? <CheckCircle2 className="size-5" /> : LETTERS[i]}
@@ -205,23 +205,23 @@ export function AssessmentPlayer({
       </div>
 
       <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-        <div className={cn("rounded-3xl border p-5 shadow-soft transition-colors", urgent ? "border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950/30" : "border-border bg-card")}>
+        <div className={cn("rounded-2xl border p-5 shadow-soft transition-colors", urgent ? "border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950/30" : "border-border bg-card")}>
           <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{title}</p>
           <div className="mt-3 flex items-center gap-3">
             <Clock className={cn("size-6", urgent ? "text-danger" : "text-brand-500")} />
-            <p className={cn("font-mono text-3xl font-extrabold tabular-nums", urgent && "text-danger")} suppressHydrationWarning>
+            <p className={cn("font-mono text-3xl font-display font-light tabular-nums", urgent && "text-danger")} suppressHydrationWarning>
               {mins > 99 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`}
             </p>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">Answers auto-submit when time runs out.</p>
           <div className="mt-4 h-2 overflow-hidden rounded-full bg-muted">
-            <motion.div className="h-full rounded-full bg-gradient-to-r from-brand-400 to-ember-400" initial={{ width: 0 }} animate={{ width: `${progress}%` }} />
+            <motion.div className="h-full rounded-full bg-foreground" initial={{ width: 0 }} animate={{ width: `${progress}%` }} />
           </div>
           <p className="mt-1.5 text-xs font-semibold text-muted-foreground">
             {answered}/{questions.length} answered
           </p>
         </div>
-        <div className="rounded-3xl border border-border bg-card p-5 shadow-soft">
+        <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
           <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">Navigator</p>
           <div className="grid grid-cols-6 gap-2">
             {questions.map((qq, i) => (
@@ -233,7 +233,7 @@ export function AssessmentPlayer({
                 }}
                 className={cn(
                   "relative grid aspect-square place-items-center rounded-xl text-xs font-bold transition-all",
-                  i === idx ? "bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-[0_3px_0_0_#123b4d]" : answers[qq.id] ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200" : "bg-muted text-muted-foreground hover:bg-border",
+                  i === idx ? "bg-foreground text-background" : answers[qq.id] ? "border border-foreground/30 text-foreground" : "border border-border text-muted-foreground hover:border-foreground/30",
                 )}
               >
                 {i + 1}

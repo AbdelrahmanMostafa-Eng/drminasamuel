@@ -102,11 +102,11 @@ export function SessionCard({ s, compact }: { s: StudentSession; compact?: boole
     );
 
   return (
-    <motion.div layout className={cn("@container relative overflow-hidden rounded-2xl border bg-card shadow-soft transition-shadow hover:shadow-lift", phase === "live" ? "border-red-300 dark:border-red-800" : "border-border")}>
-      {phase === "live" && <div className="absolute inset-x-0 top-0 h-1 animate-[gradient-pan_3s_ease_infinite] bg-gradient-to-r from-red-400 via-ember-400 to-red-400 bg-[length:200%_100%]" />}
+    <motion.div layout className={cn("@container relative overflow-hidden rounded-2xl border bg-card shadow-soft transition-shadow hover:border-foreground/20", phase === "live" ? "border-red-300 dark:border-red-800" : "border-border")}>
+      {phase === "live" && <div className="absolute inset-x-0 top-0 h-0.5 bg-danger" />}
       <div className="flex flex-col gap-4 p-5 @2xl:flex-row @2xl:items-center">
         <div className="flex min-w-0 flex-1 gap-4">
-          <div className={cn("grid size-12 shrink-0 place-items-center rounded-2xl text-white", phase === "ended" ? "bg-gradient-to-b from-slate-400 to-slate-600 shadow-[0_3px_0_0_#334155]" : "bg-gradient-to-b from-brand-500 to-brand-700 shadow-[0_3px_0_0_#123b4d]")}>
+          <div className={cn("grid size-12 shrink-0 place-items-center rounded-xl border border-border", phase === "ended" ? "text-muted-foreground" : "text-foreground")}>
             <Video className="size-5" />
           </div>
           <div className="min-w-0">
@@ -139,7 +139,7 @@ export function SessionCard({ s, compact }: { s: StudentSession; compact?: boole
                     toast.success("You're marked present — opening Zoom…");
                     setTimeout(() => router.refresh(), 1500);
                   }}
-                  className="btn-3d btn-depth-success inline-flex h-10 items-center gap-2 rounded-xl bg-gradient-to-b from-emerald-500 to-emerald-600 px-4 text-sm font-semibold text-white"
+                  className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-medium text-background hover:opacity-85"
                 >
                   <Video className="size-4" /> {joined ? "Re-join session" : "Join session"}
                 </a>
@@ -157,7 +157,7 @@ export function SessionCard({ s, compact }: { s: StudentSession; compact?: boole
             </>
           )}
           {phase === "ended" && s.recordingUrl && (
-            <a href={s.recordingUrl} target="_blank" rel="noopener noreferrer" className="btn-3d btn-depth-brand inline-flex h-9 items-center gap-2 rounded-xl bg-gradient-to-b from-brand-500 to-brand-600 px-3.5 text-sm font-semibold text-white">
+            <a href={s.recordingUrl} target="_blank" rel="noopener noreferrer" className="inline-flex h-9 items-center gap-2 rounded-full border border-border px-3.5 text-sm font-medium hover:border-foreground/25">
               Watch recording
             </a>
           )}

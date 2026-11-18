@@ -62,7 +62,7 @@ export default async function AssessmentPage({ params, searchParams }: { params:
         <FadeIn>
           <div className="mb-6 flex items-center gap-3">
             <Badge tone={a.type === "QUIZ" ? "ember" : "success"}>{a.type === "QUIZ" ? "Chapter quiz" : "Homework"}</Badge>
-            <h1 className="text-xl font-extrabold sm:text-2xl">{a.title}</h1>
+            <h1 className="text-xl font-display font-light sm:text-2xl">{a.title}</h1>
           </div>
           <AssessmentPlayer submissionId={openAttempt.id} title={a.title} questions={questions} initialAnswers={(openAttempt.answers ?? {}) as Record<string, string>} deadline={new Date(deadline).toISOString()} backHref={backHref} />
         </FadeIn>
@@ -81,13 +81,12 @@ export default async function AssessmentPage({ params, searchParams }: { params:
         <ArrowLeft className="size-4" /> Back to {a.lesson ? "lesson" : "course"}
       </Link>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px]">
-        <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-lift">
-          <div className={cn("relative p-7 text-white", a.type === "QUIZ" ? "bg-gradient-to-br from-ember-400 via-ember-600 to-brand-900" : "bg-gradient-to-br from-emerald-500 via-emerald-700 to-brand-900")}>
-            <div className="bg-grid absolute inset-0 opacity-25" />
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-lift">
+          <div className="relative border-b border-border p-7">
             <div className="relative">
-              <Badge tone="glass">{a.type === "QUIZ" ? `Chapter quiz · ${a.chapter?.title ?? ""}` : `Homework · ${a.lesson?.title ?? ""}`}</Badge>
-              <h1 className="mt-3 font-display text-3xl font-semibold">{a.title}</h1>
-              {a.instructions && <p className="mt-2 max-w-xl whitespace-pre-line text-white/85">{a.instructions}</p>}
+              <Badge tone={a.type === "QUIZ" ? "ember" : "success"}>{a.type === "QUIZ" ? `Chapter quiz · ${a.chapter?.title ?? ""}` : `Homework · ${a.lesson?.title ?? ""}`}</Badge>
+              <h1 className="mt-4 font-display text-3xl font-light tracking-tight">{a.title}</h1>
+              {a.instructions && <p className="mt-2 max-w-xl whitespace-pre-line text-sm text-muted-foreground">{a.instructions}</p>}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
@@ -101,7 +100,7 @@ export default async function AssessmentPage({ params, searchParams }: { params:
               return (
                 <div key={i} className="bg-card p-4">
                   <I className="size-4 text-muted-foreground" />
-                  <p className="mt-2 text-lg font-extrabold">{val as string}</p>
+                  <p className="mt-2 text-lg font-semibold">{val as string}</p>
                   <p className="text-xs text-muted-foreground">{label as string}</p>
                 </div>
               );
@@ -131,8 +130,8 @@ export default async function AssessmentPage({ params, searchParams }: { params:
         </div>
 
         <div className="space-y-5">
-          <div className="rounded-3xl border border-border bg-card p-6 text-center shadow-soft">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Your best result</p>
+          <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-soft">
+            <p className="eyebrow">Your best result</p>
             <div className="mt-4 flex justify-center">
               <ProgressRing value={pct} size={150} stroke={12} label={best ? `${best.score}/${best.total}` : "—"} sublabel={best ? `${pct}%` : "not submitted"} tone={!best ? "brand" : pct >= 75 ? "success" : pct >= 50 ? "ember" : "danger"} />
             </div>
@@ -148,15 +147,15 @@ export default async function AssessmentPage({ params, searchParams }: { params:
 
       {reviewAllowed && (
         <div className="mt-8 space-y-4">
-          <h2 className="text-lg font-extrabold">Answer review</h2>
+          <h2 className="font-display text-2xl font-light tracking-tight">Answer review</h2>
           {a.questions.map((q, i) => {
             const opts = q.options as QOption[];
             const mine = answers[q.id];
             const correct = mine === q.correctOptionId;
             return (
-              <div key={q.id} className={cn("rounded-3xl border bg-card p-5 shadow-soft", correct ? "border-emerald-200 dark:border-emerald-900" : "border-red-200 dark:border-red-900")}>
+              <div key={q.id} className={cn("rounded-2xl border border-border bg-card p-5")}>
                 <div className="flex items-start gap-3">
-                  <span className={cn("grid size-8 shrink-0 place-items-center rounded-xl text-sm font-bold text-white", correct ? "bg-emerald-500" : "bg-red-500")}>{i + 1}</span>
+                  <span className={cn("grid size-8 shrink-0 place-items-center rounded-lg border font-mono text-xs", correct ? "border-success/40 text-success" : "border-danger/40 text-danger")}>{String(i + 1).padStart(2, "0")}</span>
                   <div className="min-w-0 flex-1">
                     <p className="whitespace-pre-line font-semibold">{q.text}</p>
                     {q.imageKey && (
@@ -179,7 +178,7 @@ export default async function AssessmentPage({ params, searchParams }: { params:
                       ))}
                     </div>
                     {!mine && <p className="mt-2 text-xs font-semibold text-danger">Not answered</p>}
-                    {q.explanation && <p className="mt-3 rounded-xl bg-brand-50 p-3 text-sm text-brand-800 dark:bg-brand-900/30 dark:text-brand-100">💡 {q.explanation}</p>}
+                    {q.explanation && <p className="mt-3 rounded-xl border border-border bg-foreground/[0.02] p-3 text-sm text-foreground/80"><span className="eyebrow mr-2">Why</span>{q.explanation}</p>}
                   </div>
                 </div>
               </div>

@@ -116,7 +116,7 @@ export function QuestionBuilder({ assessmentId, courseId, initial, hasSubmission
 
   return (
     <div className="space-y-4">
-      <div className="sticky top-16 z-10 -mx-1 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card/90 p-3 shadow-soft backdrop-blur">
+      <div className="sticky top-16 z-10 -mx-1 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card p-3">
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Badge>{qs.length} questions</Badge>
           <Badge tone="neutral">{total} points</Badge>
@@ -182,7 +182,7 @@ export function QuestionBuilder({ assessmentId, courseId, initial, hasSubmission
           setDirty(true);
           setQs((l) => [...l, blank()]);
         }}
-        className="group flex w-full items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-border py-6 font-semibold text-muted-foreground transition hover:border-brand-400 hover:bg-brand-50/40 hover:text-brand-600 dark:hover:bg-brand-900/20"
+        className="group flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border py-6 font-semibold text-muted-foreground transition hover:border-foreground/30 hover:text-foreground"
       >
         <Plus className="size-5 transition group-hover:rotate-90" /> Add question
       </button>
@@ -242,7 +242,7 @@ export function QuestionBuilder({ assessmentId, courseId, initial, hasSubmission
 function DraggableItem({ value, children }: { value: BuilderQuestion; children: (c: DragControls) => React.ReactNode }) {
   const controls = useDragControls();
   return (
-    <Reorder.Item value={value} dragListener={false} dragControls={controls} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }} className="rounded-3xl border border-border bg-card p-4 shadow-soft sm:p-5" whileDrag={{ scale: 1.02, boxShadow: "0 30px 60px -20px rgb(0 0 0 / 0.35)" }}>
+    <Reorder.Item value={value} dragListener={false} dragControls={controls} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }} className="rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-5" whileDrag={{ scale: 1.02, boxShadow: "0 30px 60px -20px rgb(0 0 0 / 0.35)" }}>
       {children(controls)}
     </Reorder.Item>
   );
@@ -272,7 +272,7 @@ function QuestionCard({
     <div>
       <div className="flex items-start gap-3">
         <div className="flex flex-col items-center gap-1 pt-1">
-          <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-b from-brand-500 to-brand-700 text-sm font-extrabold text-white shadow-[0_3px_0_0_#123b4d]">{index + 1}</span>
+          <span className="grid size-9 place-items-center rounded-lg border border-border font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
           <button type="button" onPointerDown={(e) => controls.start(e)} className="cursor-grab touch-none rounded-md p-0.5 text-muted-foreground/60 hover:text-foreground active:cursor-grabbing" aria-label="Drag to reorder"><GripVertical className="size-4" /></button>
         </div>
         <div className="min-w-0 flex-1 space-y-3">
@@ -301,7 +301,7 @@ function QuestionCard({
                     type="button"
                     onClick={() => onChange({ correctOptionId: o.id })}
                     title="Mark as correct answer"
-                    className={cn("grid size-8 shrink-0 place-items-center rounded-lg text-xs font-extrabold transition", correct ? "bg-emerald-500 text-white shadow-[0_2px_0_0_#08623f]" : "bg-muted text-muted-foreground hover:bg-emerald-100 hover:text-emerald-700")}
+                    className={cn("grid size-8 shrink-0 place-items-center rounded-lg text-xs font-semibold transition", correct ? "bg-success text-white" : "bg-muted text-muted-foreground hover:bg-emerald-100 hover:text-emerald-700")}
                   >
                     {correct ? <CheckCircle2 className="size-4" /> : LETTERS[k]}
                   </button>

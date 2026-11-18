@@ -57,18 +57,18 @@ export function ContentBuilder({ courseId, chapters, canContent, canAssess }: { 
       )}
       <AnimatePresence initial={false}>
         {chapters.map((ch, i) => (
-          <motion.div key={ch.id} layout initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }} className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
+          <motion.div key={ch.id} layout initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }} className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
             <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center sm:p-5">
               <div className="flex min-w-0 flex-1 items-center gap-4">
                 {ch.coverKey ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={`/api/files/${ch.coverKey}`} alt="" className="size-14 shrink-0 rounded-2xl object-cover" />
                 ) : (
-                  <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-b from-brand-500 to-brand-700 text-xl font-extrabold text-white shadow-[0_4px_0_0_#123b4d]">{i + 1}</span>
+                  <span className="grid size-14 shrink-0 place-items-center rounded-xl border border-border font-mono text-sm text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
                 )}
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-lg font-extrabold">{ch.title}</p>
+                    <p className="text-lg font-semibold">{ch.title}</p>
                     {!ch.isPublished && (
                       <Badge tone="neutral">
                         <EyeOff className="size-3" /> Hidden
@@ -144,8 +144,8 @@ export function ContentBuilder({ courseId, chapters, canContent, canAssess }: { 
                 </div>
               ))}
               {ch.quizzes.map((q) => (
-                <Link key={q.id} href={`/admin/assessments/${q.id}`} className="flex items-center gap-3 rounded-2xl border border-ember-200 bg-ember-50/60 p-3 transition hover:-translate-y-0.5 hover:shadow-soft dark:border-ember-800/40 dark:bg-ember-900/15">
-                  <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-b from-ember-400 to-ember-500 text-white shadow-[0_3px_0_0_#b94a07]">
+                <Link key={q.id} href={`/admin/assessments/${q.id}`} className="flex items-center gap-3 rounded-2xl border border-ember-200 bg-ember-50/60 p-3 transition hover:border-foreground/20 dark:border-ember-800/40 dark:bg-ember-900/15">
+                  <span className="grid size-9 place-items-center rounded-lg border border-border text-ember-600 dark:text-ember-400">
                     <FileQuestion className="size-4.5" />
                   </span>
                   <span className="min-w-0 flex-1">

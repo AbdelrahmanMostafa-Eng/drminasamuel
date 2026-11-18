@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft, ArrowRight, ChevronRight, ClipboardList } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import { db } from "@/lib/db";
 import { requireStudent } from "@/lib/auth";
 import { getCourseAccess, assessmentPhase } from "@/lib/access";
@@ -81,7 +81,7 @@ export default async function LessonPage({ params }: { params: Promise<{ courseI
       </nav>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{lesson.title}</h1>
+          <h1 className="text-2xl font-display font-light tracking-tight sm:text-3xl">{lesson.title}</h1>
           {lesson.description && <p className="mt-2 max-w-3xl whitespace-pre-line text-muted-foreground">{lesson.description}</p>}
         </div>
         <CompleteButton lessonId={lesson.id} done={!!prog.completedAt} />
@@ -97,7 +97,7 @@ export default async function LessonPage({ params }: { params: Promise<{ courseI
           ))}
           {pdfs.length > 0 && <PdfTabs items={pdfs} watermark={watermark} />}
           {videos.length === 0 && pdfs.length === 0 && others.length === 0 && (
-            <p className="rounded-3xl border border-dashed border-border p-10 text-center text-muted-foreground">Materials for this lesson will be uploaded soon.</p>
+            <p className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">Materials for this lesson will be uploaded soon.</p>
           )}
           <Comments
             lessonId={lesson.id}
@@ -117,11 +117,10 @@ export default async function LessonPage({ params }: { params: Promise<{ courseI
             const best = a.submissions.filter((s) => s.submittedAt).sort((x, y) => (y.score ?? 0) - (x.score ?? 0))[0];
             const phase = assessmentPhase(a);
             return (
-              <div key={a.id} className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
-                <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 p-5 text-white">
-                  <ClipboardList className="size-6" />
-                  <p className="mt-2 text-xs font-bold uppercase tracking-wider text-emerald-100">Lesson homework</p>
-                  <p className="text-lg font-extrabold">{a.title}</p>
+              <div key={a.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
+                <div className="border-b border-border p-5">
+                  <p className="eyebrow">Lesson homework</p>
+                  <p className="mt-2 font-display text-lg font-light tracking-tight">{a.title}</p>
                 </div>
                 <div className="space-y-3 p-5 text-sm">
                   <p className="flex justify-between"><span className="text-muted-foreground">Questions</span><span className="font-semibold">{a._count.questions}</span></p>
@@ -148,13 +147,13 @@ export default async function LessonPage({ params }: { params: Promise<{ courseI
           )}
           <div className="grid grid-cols-2 gap-2">
             {prev ? (
-              <Link href={`/dashboard/courses/${courseId}/lessons/${prev.id}`} className="rounded-2xl border border-border bg-card p-3 text-sm transition hover:-translate-y-0.5 hover:shadow-soft">
+              <Link href={`/dashboard/courses/${courseId}/lessons/${prev.id}`} className="rounded-2xl border border-border bg-card p-3 text-sm transition hover:border-foreground/20">
                 <span className="flex items-center gap-1 text-xs font-semibold text-muted-foreground"><ArrowLeft className="size-3.5" /> Previous</span>
                 <span className="mt-1 line-clamp-2 block font-semibold">{prev.title}</span>
               </Link>
             ) : <span />}
             {next && (
-              <Link href={`/dashboard/courses/${courseId}/lessons/${next.id}`} className="rounded-2xl border border-border bg-card p-3 text-right text-sm transition hover:-translate-y-0.5 hover:shadow-soft">
+              <Link href={`/dashboard/courses/${courseId}/lessons/${next.id}`} className="rounded-2xl border border-border bg-card p-3 text-right text-sm transition hover:border-foreground/20">
                 <span className="flex items-center justify-end gap-1 text-xs font-semibold text-muted-foreground">Next <ArrowRight className="size-3.5" /></span>
                 <span className="mt-1 line-clamp-2 block font-semibold">{next.title}</span>
               </Link>

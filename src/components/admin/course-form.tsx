@@ -125,7 +125,7 @@ export function CourseForm({ id, initial, courses }: { id?: string; initial: Cou
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-5 rounded-3xl border border-border bg-muted/30 p-5 lg:grid-cols-2">
+      <section className="grid grid-cols-1 gap-5 rounded-2xl border border-border bg-muted/30 p-5 lg:grid-cols-2">
         <div className="space-y-4">
           <Label>Visibility</Label>
           <div className="grid grid-cols-3 gap-2">
@@ -142,7 +142,7 @@ export function CourseForm({ id, initial, courses }: { id?: string; initial: Cou
                 onClick={() => set("status", val)}
                 className={cn(
                   "rounded-2xl border-2 p-3 text-left transition",
-                  v.status === val ? "border-brand-500 bg-card shadow-[0_3px_0_0_var(--color-brand-600)]" : "border-border bg-card hover:border-brand-300",
+                  v.status === val ? "border-foreground bg-card ring-1 ring-foreground" : "border-border bg-card hover:border-foreground/30",
                 )}
               >
                 <p className="text-sm font-bold">{label}</p>

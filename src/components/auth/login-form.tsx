@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { AtSign, KeyRound, LogIn } from "lucide-react";
+import { AtSign, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 import { Field } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -35,14 +35,14 @@ export function LoginForm({ next }: { next?: string }) {
     >
       <Field name="identifier" label="Email, WhatsApp number or username" icon={<AtSign />} autoComplete="username" required autoFocus />
       <Field name="password" type="password" label="Password" icon={<KeyRound />} autoComplete="current-password" required />
-      {error && <p className="rounded-xl bg-red-50 px-3 py-2 text-sm font-medium text-danger dark:bg-red-950/40">{error}</p>}
+      {error && <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-danger dark:border-red-900 dark:bg-red-950/40">{error}</p>}
       <div className="flex justify-end">
-        <Link href="/forgot-password" className="text-sm font-semibold text-primary hover:underline">
+        <Link href="/forgot-password" className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
           Forgot password?
         </Link>
       </div>
-      <Button type="submit" size="lg" className="w-full" loading={pending}>
-        {!pending && <LogIn className="size-4" />} Sign in
+      <Button type="submit" size="lg" className="w-full rounded-full" loading={pending}>
+        Sign in
       </Button>
     </motion.form>
   );

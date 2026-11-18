@@ -34,7 +34,7 @@ export const Field = React.forwardRef<HTMLInputElement, FieldProps>(function Fie
           data-filled={alwaysFloat ? "true" : undefined}
           aria-invalid={!!error}
           className={cn(
-            "field-input peer h-13 w-full rounded-xl border border-input bg-card px-4 pt-1 text-[0.95rem] text-foreground outline-none placeholder:text-transparent",
+            "field-input peer h-12 w-full rounded-xl border border-input bg-card px-4 pt-1 text-[0.95rem] text-foreground outline-none placeholder:text-transparent disabled:bg-muted disabled:text-muted-foreground",
             icon && "pl-10",
             isPassword && "pr-11",
             error && "border-danger focus:border-danger",
@@ -44,7 +44,7 @@ export const Field = React.forwardRef<HTMLInputElement, FieldProps>(function Fie
         />
         <label htmlFor={inputId} className="field-label">
           {label}
-          {props.required && <span className="text-ember-500"> *</span>}
+          {props.required && <span className="text-muted-foreground"> *</span>}
         </label>
         {isPassword && (
           <button
@@ -88,7 +88,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(fun
         />
         <label htmlFor={inputId} className="field-label">
           {label}
-          {props.required && <span className="text-ember-500"> *</span>}
+          {props.required && <span className="text-muted-foreground"> *</span>}
         </label>
       </div>
       {error ? <p className="mt-1.5 text-xs font-medium text-danger">{error}</p> : hint ? <p className="mt-1.5 text-xs text-muted-foreground">{hint}</p> : null}
@@ -111,14 +111,14 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
           ref={ref}
           id={inputId}
           className={cn(
-            "field-input h-13 w-full appearance-none rounded-xl border border-input bg-card px-4 pt-4 text-[0.95rem] text-foreground outline-none",
+            "field-input h-12 w-full appearance-none rounded-xl border border-input bg-card px-4 pt-4 text-[0.95rem] text-foreground outline-none",
             className,
           )}
           {...props}
         >
           {children}
         </select>
-        <label htmlFor={inputId} className="pointer-events-none absolute left-4 top-1.5 text-[0.72rem] font-semibold text-muted-foreground">
+        <label htmlFor={inputId} className="pointer-events-none absolute left-4 top-1.5 text-[0.7rem] font-medium text-muted-foreground">
           {label}
         </label>
         <svg className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 20 20" fill="currentColor">
@@ -132,5 +132,5 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
 
 /** Small plain label used above custom controls. */
 export function Label({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <p className={cn("mb-2 text-sm font-semibold text-foreground", className)}>{children}</p>;
+  return <p className={cn("mb-2 text-sm font-medium text-foreground", className)}>{children}</p>;
 }

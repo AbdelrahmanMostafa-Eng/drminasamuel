@@ -1,350 +1,415 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BarChart3,
-  BookMarked,
-  CalendarClock,
-  CheckCircle2,
-  ClipboardList,
-  CreditCard,
-  FileCheck2,
-  GraduationCap,
-  MapPin,
-  MonitorPlay,
-  ShieldCheck,
-  Upload,
-  UserPlus,
-  Video,
-} from "lucide-react";
-import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
-import { TiltCard } from "@/components/ui/card";
-import { ButtonLink } from "@/components/ui/button";
+import { ArrowRight, ArrowUpRight, BarChart3, BookMarked, ClipboardList, FileCheck2, GraduationCap, Lock, MonitorPlay, Smartphone, Upload, UserPlus, Video } from "lucide-react";
+import { HeroTitle, SectionTitle } from "./text-anim";
+import { MicroscopeOrb } from "./orb";
+import { FaqList } from "./faq";
+import { Reveal } from "@/components/ui/reveal";
+import { SpotlightCard } from "@/components/ui/card";
+import { Tag } from "@/components/ui/misc";
 import { WhatsAppIcon } from "@/components/brand/social-icons";
 import type { SiteSettings } from "@/lib/settings";
 import { formatPhone, waLink } from "@/lib/utils";
 import { fmt } from "@/lib/time";
-import { FaqList } from "./faq";
 
-export function SectionHeading({ eyebrow, title, description, center }: { eyebrow: string; title: React.ReactNode; description?: React.ReactNode; center?: boolean }) {
+/* ─── Shared section heading (agentic layout + portfolio text reveal) ───────── */
+
+export function SectionHead({ tag, title, description, center, aside }: { tag: string; title: React.ReactNode; description?: React.ReactNode; center?: boolean; aside?: React.ReactNode }) {
   return (
-    <Reveal className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-ember-600 dark:text-ember-400">{eyebrow}</p>
-      <h2 className="mt-3 font-display text-3xl font-semibold leading-tight tracking-tight sm:text-[2.6rem]">{title}</h2>
-      {description && <p className="mt-4 text-base leading-relaxed text-muted-foreground">{description}</p>}
-    </Reveal>
-  );
-}
-
-const TOPICS = ["Cell Biology", "Molecular Genetics", "Human Systems", "Ecology", "Evolution", "Plant Biology", "Biochemistry", "Classification", "Heredity", "Homeostasis", "Photosynthesis", "Cellular Respiration"];
-
-export function TopicMarquee() {
-  return (
-    <div className="relative overflow-hidden border-y border-border bg-card py-5">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-card to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-card to-transparent" />
-      <div className="flex w-max animate-marquee gap-10">
-        {[...TOPICS, ...TOPICS].map((t, i) => (
-          <span key={i} className="flex items-center gap-10 whitespace-nowrap font-display text-xl font-medium text-foreground/70">
-            {t}
-            <span className="size-2 rotate-45 rounded-[3px] bg-ember-400" />
-          </span>
-        ))}
+    <div className={center ? "mx-auto mb-16 flex max-w-2xl flex-col items-center text-center" : "mb-16 flex flex-col gap-8 md:flex-row md:items-end md:justify-between"}>
+      <div className={center ? "" : "max-w-2xl"}>
+        <Tag>{tag}</Tag>
+        <SectionTitle className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">{title}</SectionTitle>
+        {description && center && <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">{description}</p>}
       </div>
+      {!center && (aside ?? (description && <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">{description}</p>))}
     </div>
   );
 }
 
-export function AboutSection({ about, stats }: { about: SiteSettings["about"]; stats: SiteSettings["stats"] }) {
+export function Section({ id, children, className = "", border = true, gradientBar }: { id?: string; children: React.ReactNode; className?: string; border?: boolean; gradientBar?: boolean }) {
   return (
-    <section id="about" className="relative scroll-mt-24 overflow-hidden py-24">
-      <div className="container-x grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
-        <Reveal>
-          <TiltCard className="mx-auto max-w-md rounded-[2rem]" max={6}>
-            <div className="relative overflow-hidden rounded-[2rem] border border-border bg-gradient-to-br from-brand-50 via-card to-ember-50 p-6 shadow-lift dark:from-brand-900/40 dark:via-card dark:to-ember-900/20">
-              <div className="bg-grid absolute inset-0 opacity-60" />
-              <Image src="/brand/dr-mina.webp" alt="Dr. Mina Samuel" width={816} height={698} className="relative h-auto w-full [transform:translateZ(50px)]" />
-              <div className="relative mt-2 flex items-center justify-between rounded-2xl border border-border bg-card/90 p-4 backdrop-blur [transform:translateZ(70px)]">
-                <div>
-                  <p className="font-display text-lg font-semibold">Dr. Mina Samuel</p>
-                  <p className="text-xs font-medium text-muted-foreground">Pharmacist · ACT2 & EST Biology instructor</p>
-                </div>
-                <Image src="/brand/logo-mark.png" alt="" width={44} height={40} className="h-10 w-auto dark:hidden" />
-                <Image src="/brand/logo-mark-white.png" alt="" width={44} height={40} className="hidden h-10 w-auto dark:block" />
+    <section id={id} data-gradient-bar={gradientBar ? "" : undefined} className={`scroll-mt-24 px-6 py-28 md:px-12 md:py-32 ${border ? "border-t border-border" : ""} ${className}`}>
+      <div className="mx-auto max-w-6xl">{children}</div>
+    </section>
+  );
+}
+
+/* ─── Hero ───────────────────────────────────────────────────────────────── */
+
+export function Hero({ hero, stats, loggedIn }: { hero: SiteSettings["hero"]; stats: SiteSettings["stats"]; loggedIn: boolean }) {
+  return (
+    <section className="relative overflow-hidden pt-24 md:pt-28">
+      <div className="mx-auto grid max-w-[1280px] grid-cols-1 items-end gap-6 px-6 md:px-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10">
+        <div className="pb-6 pt-10 lg:pb-24 lg:pt-20">
+          <p className="mb-6 text-lg text-muted-foreground">{hero.eyebrow} — with Dr. Mina Samuel</p>
+          <HeroTitle text={`${hero.title}\n${hero.highlight}`} className="font-display text-[2.9rem] font-light leading-[1.02] tracking-tight sm:text-6xl lg:text-[5.4rem]" />
+          <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground">{hero.subtitle}</p>
+          <div className="mt-10 flex flex-wrap items-center gap-3">
+            <Link href="/courses" className="inline-flex items-center justify-center rounded-full bg-foreground px-8 py-4 text-base font-medium text-background transition-opacity hover:opacity-85">
+              Explore courses
+            </Link>
+            <Link href={loggedIn ? "/dashboard" : "/register"} className="inline-flex items-center gap-2 px-6 py-4 text-base font-medium text-brand-600 transition-colors hover:text-brand-800">
+              {loggedIn ? "Go to my dashboard" : "Create a free account"} <ArrowRight className="size-4" />
+            </Link>
+          </div>
+          <div className="mt-14 flex flex-wrap gap-x-10 gap-y-6">
+            {stats.slice(0, 3).map((s, i) => (
+              <div key={s.label} className="opacity-0" style={{ animation: `fade-up 0.8s cubic-bezier(0.16,1,0.3,1) ${0.9 + i * 0.1}s forwards` }}>
+                <div className="font-display text-3xl font-light tracking-tight sm:text-4xl">{s.value}</div>
+                <div className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">{s.label}</div>
               </div>
-            </div>
-          </TiltCard>
-        </Reveal>
-        <div>
-          <SectionHeading eyebrow="About" title={about.title} />
-          <Reveal delay={0.1}>
-            <p className="mt-5 text-[1.05rem] leading-relaxed text-muted-foreground">{about.body}</p>
-          </Reveal>
-          <Stagger className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {about.points.map((p) => (
-              <StaggerItem key={p}>
-                <div className="flex h-full items-start gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft">
-                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-500" />
-                  <span className="text-sm font-semibold">{p}</span>
-                </div>
-              </StaggerItem>
             ))}
-          </Stagger>
-          <Stagger className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {stats.map((s) => (
-              <StaggerItem key={s.label}>
-                <div className="rounded-2xl bg-gradient-to-b from-brand-600 to-brand-800 p-4 text-white shadow-[0_5px_0_0_#0b222e]">
-                  <p className="text-xl font-extrabold tracking-tight">{s.value}</p>
-                  <p className="mt-1 text-[0.7rem] font-medium text-brand-100/80">{s.label}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </Stagger>
+          </div>
         </div>
+
+        <div className="relative mx-auto w-full max-w-[540px] lg:max-w-none">
+          <MicroscopeOrb caption={false} className="absolute -right-[18%] top-[2%] w-[92%] opacity-95 lg:-right-[22%] lg:top-[4%]" />
+          <div className="relative z-10 mx-auto w-[78%] lg:w-[74%]">
+            <Image
+              src="/images/dr-mina-clean.webp"
+              alt="Dr. Mina Samuel"
+              width={393}
+              height={696}
+              priority
+              sizes="(min-width: 1024px) 420px, 70vw"
+              className="h-auto w-full [mask-image:linear-gradient(to_bottom,black_78%,transparent)]"
+            />
+          </div>
+
+        </div>
+      </div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+    </section>
+  );
+}
+
+/* ─── Marquee (agentic: two bordered rows) ───────────────────────────────── */
+
+const ROW_A = ["Cell Biology", "Molecular Genetics", "Human Systems", "Ecology", "Evolution", "Plant Biology", "Biochemistry", "Classification", "Heredity", "Homeostasis"];
+const ROW_B = ["Photosynthesis", "Cellular Respiration", "Mitosis & Meiosis", "Protein Synthesis", "Nervous System", "Circulation", "Biogeochemical Cycles", "Natural Selection", "Enzymes", "Punnett Squares"];
+
+export function TopicMarquee() {
+  return (
+    <section className="select-none overflow-hidden border-t border-border" aria-label="Topics covered">
+      <div className="flex border-b border-border" style={{ animation: "marqueeLeft 34s linear infinite" }}>
+        {[0, 1, 2].map((rep) => (
+          <div key={rep} className="flex shrink-0">
+            {ROW_A.map((t) => (
+              <div key={t} className="flex shrink-0 items-center gap-6 border-r border-border px-10 py-5">
+                <span className="size-1.5 shrink-0 rounded-full bg-foreground/20" />
+                <span className="whitespace-nowrap text-sm tracking-wide text-foreground/60">{t}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="flex border-b border-border" style={{ animation: "marqueeRight 28s linear infinite" }}>
+        {[0, 1, 2].map((rep) => (
+          <div key={rep} className="flex shrink-0">
+            {ROW_B.map((t) => (
+              <div key={t} className="flex shrink-0 items-center gap-6 border-r border-border px-10 py-5">
+                <span className="size-1.5 shrink-0 rounded-full bg-foreground/10" />
+                <span className="whitespace-nowrap text-sm tracking-wide text-foreground/40">{t}</span>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
+/* ─── About ──────────────────────────────────────────────────────────────── */
+
+export function AboutSection({ about }: { about: SiteSettings["about"]; stats?: SiteSettings["stats"] }) {
+  return (
+    <Section id="about" border={false}>
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <Tag>About</Tag>
+          <SectionTitle className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">{about.title}</SectionTitle>
+          <Reveal>
+            <p className="mt-6 leading-relaxed text-muted-foreground">{about.body}</p>
+          </Reveal>
+          <div className="mt-10 space-y-4">
+            {about.points.map((p) => (
+              <div key={p} className="flex gap-4">
+                <div className="w-px shrink-0 bg-foreground/15" />
+                <p className="text-sm text-foreground/80">{p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col justify-end">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <p className="eyebrow">How every chapter runs</p>
+            <ol className="mt-5 space-y-5">
+              {[
+                ["Live session", "Explained on Zoom, attendance taken automatically"],
+                ["Recording", "Uploaded to the lesson so you can re-watch it"],
+                ["Homework", "A short multiple-choice set after every lesson"],
+                ["Chapter quiz", "Timed, graded instantly, reviewed together"],
+              ].map(([t, d], i) => (
+                <li key={t} className="flex gap-4">
+                  <span className="font-mono text-[11px] text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+                  <span>
+                    <span className="block text-sm">{t}</span>
+                    <span className="block text-xs text-muted-foreground">{d}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div className="mt-3 rounded-2xl border border-border bg-card p-6">
+            <p className="eyebrow">At a glance</p>
+            <dl className="mt-4 divide-y divide-border text-sm">
+              {[
+                ["Profession", "Pharmacist"],
+                ["Teaches", "ACT2 & EST Biology"],
+                ["Students", "American Diploma"],
+                ["Format", "Online + centers in Cairo"],
+              ].map(([k, v]) => (
+                <div key={k} className="flex justify-between gap-4 py-3">
+                  <dt className="text-muted-foreground">{k}</dt>
+                  <dd>{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+/* ─── How enrollment works (agentic 4-step cards) ────────────────────────── */
+
 const STEPS = [
-  { icon: UserPlus, title: "Create your account", text: "Sign up with your full name, WhatsApp number and email. It takes 30 seconds." },
-  { icon: CreditCard, title: "Pay with InstaPay or Vodafone Cash", text: "Each course is paid separately. Transfer the course fee to the numbers shown at checkout." },
-  { icon: Upload, title: "Upload your screenshot", text: "Upload a clear screenshot of the transfer. Our team reviews it and approves your seat." },
-  { icon: GraduationCap, title: "Start learning", text: "Unlock lessons, recordings, PDFs, the full book, homework, quizzes, live sessions and the WhatsApp group." },
+  { n: "01", icon: UserPlus, title: "Create an account", text: "Sign up with your full name, WhatsApp number and email. It takes under a minute." },
+  { n: "02", icon: Smartphone, title: "Pay for the course", text: "Each course is paid separately with InstaPay or Vodafone Cash — the numbers are shown at checkout." },
+  { n: "03", icon: Upload, title: "Upload the screenshot", text: "Upload a clear screenshot of the transfer. The team reviews it and approves your seat." },
+  { n: "04", icon: GraduationCap, title: "Start learning", text: "Lessons, recordings, PDFs, the full book, homework, quizzes, live sessions and the WhatsApp group unlock." },
 ];
 
 export function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-muted/50 py-24">
-      <div className="container-x">
-        <SectionHeading center eyebrow="How enrollment works" title={<>Four steps to your <em className="text-ember-500">seat</em></>} description="Simple, manual and secure — no cards needed. Your payment screenshot is reviewed by the team before the course unlocks." />
-        <Stagger className="relative mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
-          <div className="absolute left-0 right-0 top-10 hidden h-0.5 bg-gradient-to-r from-transparent via-brand-300 to-transparent lg:block" />
-          {STEPS.map((s, i) => (
-            <StaggerItem key={s.title}>
-              <TiltCard className="h-full rounded-3xl" max={8}>
-                <div className="relative h-full rounded-3xl border border-border bg-card p-6 shadow-soft">
-                  <div className="flex items-center justify-between">
-                    <div className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white shadow-[0_5px_0_0_#123b4d] [transform:translateZ(40px)]">
-                      <s.icon className="size-6" />
-                    </div>
-                    <span className="font-display text-5xl font-semibold text-muted-foreground/25">0{i + 1}</span>
-                  </div>
-                  <h3 className="mt-5 text-lg font-bold">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
-                </div>
-              </TiltCard>
-            </StaggerItem>
-          ))}
-        </Stagger>
+    <Section id="enroll">
+      <SectionHead tag="Enrollment" title={<>From sign-up to your first<br className="hidden md:block" /> lesson in four steps.</>} description="Payments are manual and personal: your screenshot is checked by the team before the course unlocks." />
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+        {STEPS.map((s, i) => (
+          <Reveal key={s.n} delay={i * 0.08}>
+            <SpotlightCard className="flex h-full min-h-[300px] flex-col rounded-2xl border border-border bg-card p-7">
+              <div className="flex items-start justify-between">
+                <span className="font-mono text-[11px] tracking-widest text-muted-foreground">{s.n}</span>
+                <s.icon className="size-5 text-foreground/40" strokeWidth={1.5} />
+              </div>
+              <div className="mt-auto pt-16">
+                <h3 className="font-display text-2xl font-light tracking-tight">{s.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+              </div>
+            </SpotlightCard>
+          </Reveal>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }
 
+/* ─── Platform bento ─────────────────────────────────────────────────────── */
+
 const FEATURES = [
-  { icon: Video, title: "Live sessions on Zoom", text: "Join from the website with one tap — your attendance is recorded automatically.", span: "lg:col-span-2", tone: "from-brand-500 to-brand-700" },
-  { icon: MonitorPlay, title: "Recorded sessions", text: "Missed something? Re-watch every recording, protected and streamed.", span: "", tone: "from-ember-400 to-ember-600" },
-  { icon: ClipboardList, title: "Homework after every lesson", text: "Multiple-choice homework with instant, automatic grading.", span: "", tone: "from-emerald-400 to-emerald-600" },
-  { icon: FileCheck2, title: "Chapter quizzes", text: "A quiz closes every chapter — results go to you and to the team instantly.", span: "", tone: "from-violet-400 to-violet-600" },
-  { icon: BookMarked, title: "Lesson PDFs & the full book", text: "All notes, slides and the full course book in one place, for enrolled students only.", span: "", tone: "from-sky-400 to-sky-600" },
-  { icon: BarChart3, title: "Progress analytics", text: "See your scores, attendance and progress over time — and exactly what to revise next.", span: "lg:col-span-2", tone: "from-pink-400 to-rose-600" },
-  { icon: ShieldCheck, title: "Private & secure", text: "Your account works on one device at a time and content is visible only to paid students.", span: "", tone: "from-slate-500 to-slate-700" },
+  { icon: MonitorPlay, title: "Recorded sessions", text: "Re-watch every class whenever you need, streamed privately." },
+  { icon: ClipboardList, title: "Homework after every lesson", text: "Multiple-choice homework graded instantly, with deadlines." },
+  { icon: FileCheck2, title: "A quiz after every chapter", text: "Timed chapter quizzes — results go to you and the team." },
+  { icon: BookMarked, title: "Lesson PDFs & the full book", text: "All notes, slides and the course book in one place." },
+  { icon: BarChart3, title: "Progress analytics", text: "Scores, attendance and what to revise next." },
+  { icon: Lock, title: "Private & personal", text: "Content is visible only to enrolled students, one device per account." },
 ];
 
 export function Features() {
   return (
-    <section className="py-24">
-      <div className="container-x">
-        <SectionHeading eyebrow="Everything in one place" title={<>A complete study system,<br className="hidden sm:block" /> not just videos.</>} />
-        <Stagger className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURES.map((f) => (
-            <StaggerItem key={f.title} className={f.span}>
-              <div className="group relative h-full overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-lift">
-                <div className={`absolute -right-10 -top-10 size-36 rounded-full bg-gradient-to-br ${f.tone} opacity-10 blur-2xl transition-opacity duration-500 group-hover:opacity-30`} />
-                <div className={`relative grid size-12 place-items-center rounded-2xl bg-gradient-to-br ${f.tone} text-white shadow-[0_4px_0_0_rgb(0_0_0/0.25)] transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110`}>
-                  <f.icon className="size-5.5" />
-                </div>
-                <h3 className="relative mt-5 text-lg font-bold">{f.title}</h3>
-                <p className="relative mt-2 text-sm leading-relaxed text-muted-foreground">{f.text}</p>
+    <Section id="platform">
+      <SectionHead tag="The platform" title={<>Everything you need<br className="hidden md:block" /> to prepare properly.</>} />
+      <div className="grid grid-cols-12 gap-3">
+        <Reveal className="col-span-12">
+          <SpotlightCard className="relative flex min-h-[260px] flex-col justify-end overflow-hidden rounded-2xl border border-border bg-[#0b0b0a] p-8 text-white md:min-h-[300px]">
+            <Image src="/images/micrograph-endothelial.jpg" alt="Fluorescence micrograph of endothelial cells" fill sizes="100vw" className="object-cover opacity-80 [object-position:center_40%]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b0a] via-[#0b0b0a]/70 to-transparent" />
+            <div className="relative z-10 max-w-md">
+              <div className="mb-6 grid size-10 place-items-center rounded-xl border border-white/20">
+                <Video className="size-[18px]" />
               </div>
-            </StaggerItem>
-          ))}
-        </Stagger>
+              <h3 className="font-display text-2xl font-light">Live sessions on Zoom — attendance taken for you</h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/60">Students join from the website with one tap. That click marks them present; absent students can send an excuse before the session ends.</p>
+            </div>
+            <p className="absolute bottom-4 right-5 z-10 hidden font-mono text-[10px] uppercase tracking-[0.16em] text-white/40 md:block">Endothelial cells · fluorescence micrograph · NIH</p>
+          </SpotlightCard>
+        </Reveal>
+        {FEATURES.map((f, i) => (
+          <Reveal key={f.title} className="col-span-12 md:col-span-4" delay={(i % 3) * 0.06}>
+            <SpotlightCard className="h-full min-h-[200px] rounded-2xl border border-border bg-card p-8">
+              <div className="mb-5 grid size-10 place-items-center rounded-xl border border-border">
+                <f.icon className="size-[18px] text-foreground/70" strokeWidth={1.5} />
+              </div>
+              <h3 className="text-lg font-light">{f.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.text}</p>
+            </SpotlightCard>
+          </Reveal>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }
+
+/* ─── Schedule (agentic log list) ────────────────────────────────────────── */
 
 export function SchedulePreview({ sessions }: { sessions: { id: string; title: string; startsAt: Date; endsAt: Date; courseTitle: string }[] }) {
   return (
-    <section className="py-24">
-      <div className="container-x grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+    <Section id="schedule">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
         <div>
-          <SectionHeading eyebrow="Session schedule" title="Upcoming live sessions" description="All times are Cairo time. Zoom links unlock inside your dashboard for enrolled students." />
-          <Reveal delay={0.15}>
-            <ButtonLink href="/schedule" variant="secondary" className="mt-7">
-              Full schedule <ArrowRight className="size-4" />
-            </ButtonLink>
-          </Reveal>
+          <Tag>Schedule</Tag>
+          <SectionTitle className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">Upcoming live sessions</SectionTitle>
+          <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">All times are Cairo time. Zoom links are only available inside the dashboard, to enrolled students.</p>
+          <Link href="/schedule" className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-brand-600 hover:text-brand-800">
+            Full schedule <ArrowRight className="size-4" />
+          </Link>
         </div>
-        <Stagger className="space-y-3">
-          {sessions.length === 0 && (
-            <div className="rounded-3xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">New sessions will be announced soon.</div>
-          )}
-          {sessions.map((s) => (
-            <StaggerItem key={s.id}>
-              <div className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift">
-                <div className="grid w-16 shrink-0 place-items-center rounded-xl bg-gradient-to-b from-brand-500 to-brand-700 py-2 text-white shadow-[0_4px_0_0_#123b4d]">
-                  <span className="text-[0.65rem] font-bold uppercase tracking-widest text-brand-100">{fmt(s.startsAt, "MMM")}</span>
-                  <span className="text-2xl font-extrabold leading-none">{fmt(s.startsAt, "d")}</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-bold">{s.title}</p>
-                  <p className="mt-0.5 truncate text-sm text-muted-foreground">{s.courseTitle}</p>
-                  <p className="mt-0.5 text-xs font-semibold text-ember-600 sm:hidden">{fmt(s.startsAt, "EEE h:mm a")} – {fmt(s.endsAt, "h:mm a")}</p>
-                </div>
-                <div className="hidden shrink-0 text-right sm:block">
-                  <p className="inline-flex items-center gap-1.5 text-sm font-semibold">
-                    <CalendarClock className="size-4 text-ember-500" />
-                    {fmt(s.startsAt, "EEE h:mm a")}
-                  </p>
-                  <p className="text-xs text-muted-foreground">until {fmt(s.endsAt, "h:mm a")}</p>
-                </div>
+        <SpotlightCard className="rounded-2xl border border-border bg-card p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="eyebrow">Next sessions</span>
+            <span className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="size-1.5 animate-pulse-dot rounded-full bg-success" /> Cairo time
+            </span>
+          </div>
+          <div className="space-y-2">
+            {sessions.length === 0 && <p className="rounded-lg bg-foreground/[0.02] px-3 py-6 text-center text-sm text-muted-foreground">New sessions will be announced soon.</p>}
+            {sessions.map((s, i) => (
+              <div key={s.id} className="flex items-center gap-4 rounded-lg border border-border/70 bg-foreground/[0.015] px-3 py-3" style={{ animation: `fade-up 0.5s cubic-bezier(0.16,1,0.3,1) ${i * 80}ms both` }}>
+                <span className="min-w-[88px] font-mono text-[11px] text-muted-foreground">{fmt(s.startsAt, "EEE d MMM")}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm">{s.title}</span>
+                  <span className="block truncate text-xs text-muted-foreground">{s.courseTitle}</span>
+                </span>
+                <span className="font-mono text-[11px] text-muted-foreground">{fmt(s.startsAt, "h:mm a")}</span>
               </div>
-            </StaggerItem>
-          ))}
-        </Stagger>
+            ))}
+          </div>
+        </SpotlightCard>
       </div>
-    </section>
+    </Section>
   );
 }
+
+/* ─── Team ───────────────────────────────────────────────────────────────── */
 
 export function TeamSection({ team }: { team: SiteSettings["team"] }) {
   return (
-    <section className="relative overflow-hidden bg-muted/50 py-24">
-      <div className="container-x">
-        <SectionHeading center eyebrow="Team contacts" title="Questions? Our assistants are one message away." description="Chat with the Bioacademy team on WhatsApp about enrollment, payments or anything course-related." />
-        <Stagger className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {team.map((t) => (
-            <StaggerItem key={t.phone}>
-              <a
-                href={waLink(t.phone, "Hi! I have a question about Bioacademy courses.")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-[#25d366]/50 hover:shadow-lift"
-              >
-                <div className="relative grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#25d366] to-[#128c7e] text-white shadow-[0_4px_0_0_#0b5e55] transition-transform duration-300 group-hover:-rotate-6">
-                  <WhatsAppIcon className="size-6" />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-bold">{t.name}</p>
-                  <p className="text-sm text-muted-foreground">{formatPhone(t.phone)}</p>
-                  <p className="mt-0.5 text-xs font-semibold text-[#128c7e] dark:text-[#25d366]">Chat on WhatsApp →</p>
-                </div>
-              </a>
-            </StaggerItem>
-          ))}
-        </Stagger>
+    <Section id="team">
+      <SectionHead tag="Team contacts" title={<>Questions? Talk to<br className="hidden md:block" /> the assistant team.</>} description="Message any assistant on WhatsApp about enrollment, payments or anything course-related." />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {team.map((t, i) => (
+          <Reveal key={t.phone} delay={(i % 3) * 0.05}>
+            <a
+              href={waLink(t.phone, "Hi! I have a question about Bioacademy courses.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-between gap-4 rounded-2xl border border-border bg-card px-6 py-5 transition-colors hover:border-foreground/20"
+            >
+              <span>
+                <span className="block text-[0.95rem]">{t.name}</span>
+                <span className="mt-0.5 block font-mono text-xs text-muted-foreground">{formatPhone(t.phone)}</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors group-hover:text-[#128c7e]">
+                <WhatsAppIcon className="size-4" /> Chat
+              </span>
+            </a>
+          </Reveal>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }
+
+/* ─── Centers ────────────────────────────────────────────────────────────── */
 
 export function CentersSection({ centers }: { centers: SiteSettings["centers"] }) {
   return (
-    <section className="py-24">
-      <div className="container-x">
-        <SectionHeading eyebrow="Center locations" title="Prefer to visit? Find us at three centers." />
-        <Stagger className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
-          {centers.map((c, i) => (
-            <StaggerItem key={c.name}>
-              <TiltCard className="h-full rounded-3xl" max={7}>
-                <a href={c.mapUrl} target="_blank" rel="noopener noreferrer" className="group relative block h-full overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
-                  <div className={`relative h-36 overflow-hidden ${["bg-gradient-to-br from-brand-400 to-brand-700", "bg-gradient-to-br from-ember-300 to-ember-600", "bg-gradient-to-br from-emerald-400 to-teal-700"][i % 3]}`}>
-                    <svg className="absolute inset-0 size-full opacity-30" viewBox="0 0 200 100" preserveAspectRatio="none">
-                      <path d="M0 70 Q 40 40 80 60 T 160 50 T 200 40" stroke="white" strokeWidth="1.5" fill="none" />
-                      <path d="M0 30 Q 50 60 100 35 T 200 60" stroke="white" strokeWidth="1" fill="none" />
-                      <path d="M30 0 L 60 100 M 120 0 L 140 100 M 170 0 L 150 100" stroke="white" strokeWidth="0.8" />
-                    </svg>
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 [transform:translateZ(40px)]">
-                      <div className="absolute inset-0 animate-pulse-ring rounded-full bg-white/50" />
-                      <div className="relative grid size-14 place-items-center rounded-full bg-white text-ember-500 shadow-xl transition-transform duration-500 group-hover:-translate-y-2">
-                        <MapPin className="size-7" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-5">
-                    <p className="text-lg font-bold">📍 {c.name}</p>
-                    <p className="text-sm text-muted-foreground">{c.area}</p>
-                    <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 dark:text-brand-300">
-                      Open in Google Maps <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                    </p>
-                  </div>
-                </a>
-              </TiltCard>
-            </StaggerItem>
-          ))}
-        </Stagger>
+    <Section id="centers">
+      <SectionHead tag="Center locations" title="Prefer to visit in person?" />
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        {centers.map((c, i) => (
+          <Reveal key={c.name} delay={i * 0.06}>
+            <SpotlightCard className="h-full rounded-2xl border border-border bg-card">
+              <a href={c.mapUrl} target="_blank" rel="noopener noreferrer" className="flex h-full min-h-[220px] flex-col p-8">
+                <span className="font-mono text-[11px] tracking-widest text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+                <div className="mt-auto pt-12">
+                  <h3 className="font-display text-2xl font-light tracking-tight">{c.name}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{c.area}, Cairo</p>
+                  <span className="mt-6 inline-flex items-center gap-1 text-sm text-brand-600">
+                    Open in Google Maps <ArrowUpRight className="size-4" />
+                  </span>
+                </div>
+              </a>
+            </SpotlightCard>
+          </Reveal>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }
+
+/* ─── FAQ ────────────────────────────────────────────────────────────────── */
 
 export function FaqSection({ faqs }: { faqs: SiteSettings["faqs"] }) {
   return (
-    <section className="bg-muted/50 py-24">
-      <div className="container-x grid grid-cols-1 gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-        <SectionHeading eyebrow="FAQ" title="Good questions, clear answers." description="Can't find what you need? Message any of our assistants on WhatsApp." />
-        <Reveal delay={0.1}>
-          <FaqList faqs={faqs} />
-        </Reveal>
+    <Section id="faq">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <Tag>FAQ</Tag>
+          <SectionTitle className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">Good questions, clear answers.</SectionTitle>
+          <p className="mt-6 max-w-xs text-sm leading-relaxed text-muted-foreground">Can&apos;t find what you need? Message any of the assistants on WhatsApp.</p>
+        </div>
+        <FaqList faqs={faqs} />
       </div>
-    </section>
+    </Section>
   );
 }
+
+/* ─── Final call to action ───────────────────────────────────────────────── */
 
 export function CtaBand({ loggedIn }: { loggedIn: boolean }) {
   return (
-    <section className="py-20">
-      <div className="container-x">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-600 via-brand-800 to-brand-950 px-6 py-14 text-center text-white shadow-[0_10px_0_0_#07161e,0_40px_80px_-30px_rgb(31_96_124/0.8)] sm:px-14">
-            <div className="bg-grid absolute inset-0 opacity-30" />
-            <div className="absolute -right-24 -top-24 size-80 rounded-full bg-ember-500/30 blur-3xl" />
-            <div className="relative">
-              <h2 className="font-display text-3xl font-semibold sm:text-5xl">
-                Ready to ace <em className="text-ember-300">Biology</em>?
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-brand-100/80">Create your account today, enroll in the current course and join the next live session.</p>
-              <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <ButtonLink href={loggedIn ? "/dashboard/courses" : "/register"} variant="accent" size="lg">
-                  {loggedIn ? "Browse & enroll" : "Create my account"} <ArrowRight className="size-4" />
-                </ButtonLink>
-                <ButtonLink href="/courses" variant="glass" size="lg">
-                  View courses
-                </ButtonLink>
-              </div>
-            </div>
-          </div>
-        </Reveal>
+    <section className="relative overflow-hidden border-t border-border px-6 py-32 md:px-12">
+      <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_bottom,black,transparent_70%)]" />
+      <div className="relative z-10 mx-auto max-w-2xl text-center">
+        <SectionTitle className="font-display text-4xl font-light leading-[1.05] tracking-tight md:text-6xl">Start your Biology preparation today.</SectionTitle>
+        <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">Create your account, enroll in the current course and join the next live session.</p>
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link href={loggedIn ? "/dashboard/courses" : "/register"} className="inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-8 py-4 text-base font-medium text-background transition-opacity hover:opacity-85">
+            {loggedIn ? "Browse & enroll" : "Create my account"} <ArrowUpRight className="size-4" />
+          </Link>
+          <Link href="/courses" className="inline-flex items-center justify-center rounded-full border border-border px-8 py-4 text-base font-medium transition-colors hover:border-foreground/25">
+            View courses
+          </Link>
+        </div>
       </div>
     </section>
   );
 }
 
+/* ─── Inner-page header ──────────────────────────────────────────────────── */
+
 export function PageHero({ eyebrow, title, description }: { eyebrow: string; title: React.ReactNode; description?: React.ReactNode }) {
   return (
-    <section className="relative overflow-hidden bg-brand-950 pb-16 pt-36 text-white">
-      <div className="bg-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" />
-      <div className="absolute -left-20 top-0 size-96 rounded-full bg-brand-500/25 blur-[100px]" />
-      <div className="absolute right-0 top-20 size-80 rounded-full bg-ember-500/15 blur-[100px]" />
-      <div className="container-x relative">
-        <Reveal>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-ember-400">{eyebrow}</p>
-          <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight sm:text-6xl">{title}</h1>
-          {description && <p className="mt-4 max-w-2xl text-brand-100/80">{description}</p>}
-        </Reveal>
+    <section className="px-6 pb-4 pt-36 md:px-12 md:pt-44">
+      <div className="mx-auto max-w-6xl">
+        <Tag>{eyebrow}</Tag>
+        <SectionTitle as="h1" className="mt-6 max-w-3xl font-display text-5xl font-light leading-[1.02] tracking-tight md:text-7xl">
+          {title}
+        </SectionTitle>
+        {description && <p className="mt-6 max-w-xl text-[0.95rem] leading-relaxed text-muted-foreground">{description}</p>}
       </div>
     </section>
   );

@@ -28,7 +28,7 @@ export default async function AdminLessonPage({ params }: { params: Promise<{ id
       <Link href={`/admin/courses/${id}`} className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" /> {lesson.chapter.title}
       </Link>
-      <h2 className="mb-5 text-xl font-extrabold">{lesson.title}</h2>
+      <h2 className="mb-5 text-xl font-display font-light">{lesson.title}</h2>
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_380px]">
         <div className="space-y-6">
           <Card>

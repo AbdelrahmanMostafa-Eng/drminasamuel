@@ -67,7 +67,7 @@ export default async function AdminAssessmentPage({ params, searchParams }: { pa
             {!a.isPublished && <Badge tone="warning">Draft — hidden from students</Badge>}
             <Badge tone={phase === "closed" ? "danger" : phase === "open" ? "success" : "brand"}>{phase === "closed" ? "Closed" : phase === "open" ? "Open" : "Scheduled"}</Badge>
           </div>
-          <h1 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">{a.title}</h1>
+          <h1 className="mt-2 text-2xl font-display font-light tracking-tight sm:text-3xl">{a.title}</h1>
           <p className="text-sm text-muted-foreground">
             Deadline {fmt(a.dueAt)} ({relative(a.dueAt)}) · {a.durationMinutes ? `${a.durationMinutes} min timer` : "no timer"} · {a.maxAttempts} attempt{a.maxAttempts > 1 ? "s" : ""}
           </p>

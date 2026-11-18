@@ -58,7 +58,7 @@ export default async function AdminSessionPage({ params }: { params: Promise<{ i
             )}
             <Badge tone="neutral">{s.course.title}</Badge>
           </div>
-          <h1 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">{s.title}</h1>
+          <h1 className="mt-2 text-2xl font-display font-light tracking-tight sm:text-3xl">{s.title}</h1>
           <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarClock className="size-4" /> {fmt(s.startsAt, "EEEE d MMMM · h:mm a")} – {fmt(end, "h:mm a")}
             {s.endedAt && s.endedAt < s.endsAt && " (ended early)"}
@@ -172,7 +172,7 @@ export default async function AdminSessionPage({ params }: { params: Promise<{ i
               </div>
               {s.meetingId && <p>Meeting ID: <b className="font-mono">{s.meetingId}</b></p>}
               {s.passcode && <p className="flex items-center gap-1.5"><KeyRound className="size-4 text-muted-foreground" /> Passcode: <b className="font-mono">{s.passcode}</b></p>}
-              <a href={s.zoomUrl} target="_blank" rel="noopener noreferrer" className="btn-3d btn-depth-brand inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brand-500 to-brand-600 text-sm font-semibold text-white">
+              <a href={s.zoomUrl} target="_blank" rel="noopener noreferrer" className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background hover:opacity-85">
                 Start / open Zoom <ExternalLink className="size-4" />
               </a>
               <p className="text-xs text-muted-foreground">Students never see this link directly — they use the Join button, which records attendance first. Join opens {s.joinOpensMinutes} min before start.</p>

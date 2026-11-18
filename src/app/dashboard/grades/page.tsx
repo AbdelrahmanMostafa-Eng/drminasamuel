@@ -38,7 +38,7 @@ export default async function GradesPage() {
       {rows.length === 0 ? (
         <EmptyState icon={<ClipboardCheck />} title="No graded work yet" description="Your homework and quiz results will show up here." />
       ) : (
-        <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] text-sm">
               <thead>
@@ -70,7 +70,7 @@ export default async function GradesPage() {
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         {best ? (
-                          <span className={`font-extrabold ${pct >= 75 ? "text-emerald-600 dark:text-emerald-400" : pct >= 50 ? "text-amber-600 dark:text-amber-400" : "text-danger"}`}>
+                          <span className={`font-semibold ${pct >= 75 ? "text-emerald-600 dark:text-emerald-400" : pct >= 50 ? "text-amber-600 dark:text-amber-400" : "text-danger"}`}>
                             {best.score}/{best.total} <span className="text-xs font-semibold text-muted-foreground">({pct}%)</span>
                           </span>
                         ) : closed && !na ? (

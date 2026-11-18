@@ -53,21 +53,21 @@ export function SessionGuard() {
   return (
     <AnimatePresence>
       {msg && (
-        <motion.div className="fixed inset-0 z-[90] grid place-items-center bg-brand-950/70 p-4 backdrop-blur-md" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <motion.div className="fixed inset-0 z-[90] grid place-items-center bg-[#111]/40 p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <motion.div
-            initial={{ y: 30, scale: 0.92, rotateX: 12 }}
-            animate={{ y: 0, scale: 1, rotateX: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className="w-full max-w-md rounded-3xl border border-border bg-card p-7 text-center shadow-2xl"
+            initial={{ y: 12, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-lift"
           >
-            <div className="mx-auto mb-4 grid size-16 place-items-center rounded-2xl bg-gradient-to-br from-ember-300 to-ember-500 text-white shadow-[0_5px_0_0_#b94a07]">
-              <MonitorSmartphone className="size-8" />
+            <div className="mx-auto mb-5 grid size-12 place-items-center rounded-xl border border-border text-foreground/70">
+              <MonitorSmartphone className="size-6" strokeWidth={1.5} />
             </div>
-            <h2 className="text-xl font-extrabold">{msg.title}</h2>
+            <h2 className="font-display text-2xl font-light tracking-tight">{msg.title}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{msg.body}</p>
             <button
               onClick={() => window.location.assign(`/login?reason=${reason}`)}
-              className="btn-3d btn-depth-brand mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-gradient-to-b from-brand-500 to-brand-600 px-6 font-semibold text-white"
+              className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-foreground px-6 text-sm font-medium text-background hover:opacity-85"
             >
               Go to sign in
             </button>

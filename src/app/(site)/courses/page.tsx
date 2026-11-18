@@ -15,13 +15,13 @@ export default async function CoursesPage() {
   const past = courses.filter((c) => c.status === "ENDED");
   return (
     <>
-      <PageHero eyebrow="Courses" title={<>Choose your <em className="text-ember-400">course</em></>} description="ACT2 & EST Biology — Basics builds the foundation, Advanced takes you to exam level. Every course is enrolled and paid for separately." />
-      <section className="py-16">
-        <div className="container-x">
+      <PageHero eyebrow="Courses" title="Choose your course." description="ACT2 & EST Biology. Basics builds the foundation, Advanced takes you to exam level. Every course is enrolled and paid for separately." />
+      <section className="px-6 pb-32 pt-12 md:px-12" data-gradient-bar>
+        <div className="mx-auto max-w-6xl">
           {open.length === 0 ? (
-            <EmptyState icon={<BookOpen />} title="No open courses right now" description="New batches are announced on our social pages and WhatsApp. Check back soon!" />
+            <EmptyState icon={<BookOpen />} title="No open courses right now" description="New batches are announced on social media and WhatsApp. Check back soon." />
           ) : (
-            <Stagger className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Stagger className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
               {open.map((c) => (
                 <StaggerItem key={c.id}>
                   <CourseCard course={c} />
@@ -30,9 +30,9 @@ export default async function CoursesPage() {
             </Stagger>
           )}
           {past.length > 0 && (
-            <div className="mt-16">
-              <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground">Past courses</h2>
-              <div className="mt-5 grid grid-cols-1 gap-6 opacity-80 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-20 border-t border-border pt-10">
+              <h2 className="eyebrow">Past courses</h2>
+              <div className="mt-6 grid grid-cols-1 gap-3 opacity-75 md:grid-cols-2 lg:grid-cols-3">
                 {past.map((c) => (
                   <CourseCard key={c.id} course={c} />
                 ))}

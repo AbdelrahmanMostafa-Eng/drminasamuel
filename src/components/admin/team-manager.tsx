@@ -27,7 +27,7 @@ function PermissionPicker({ value, onChange }: { value: string[]; onChange: (v: 
     <div>
       <div className="mb-3 flex flex-wrap gap-2">
         {PERMISSION_PRESETS.map((p) => (
-          <button key={p.name} type="button" onClick={() => onChange(p.permissions)} className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold transition hover:-translate-y-0.5 hover:border-brand-300">
+          <button key={p.name} type="button" onClick={() => onChange(p.permissions)} className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold transition hover:border-brand-300">
             <Wand2 className="size-3.5 text-ember-500" /> {p.name}
           </button>
         ))}
@@ -72,12 +72,12 @@ export function TeamManager({ assistants }: { assistants: AssistantRow[] }) {
       {assistants.length === 0 && <EmptyState icon={<ShieldCheck />} title="No assistants yet" description="Create accounts for your assistants with a username & password, and choose exactly what each one can do." />}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {assistants.map((a, i) => (
-          <motion.div key={a.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }} className="rounded-3xl border border-border bg-card p-5 shadow-soft">
+          <motion.div key={a.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }} className="rounded-2xl border border-border bg-card p-5 shadow-soft">
             <div className="flex items-start gap-4">
               <Avatar name={a.fullName} src={a.avatar} size={52} />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-lg font-extrabold">{a.fullName}</p>
+                  <p className="text-lg font-semibold">{a.fullName}</p>
                   {a.isActive ? <Badge tone="success" dot>Active</Badge> : <Badge tone="danger">Suspended</Badge>}
                 </div>
                 <p className="text-sm text-muted-foreground">@{a.username}{a.whatsapp ? ` · ${formatPhone(a.whatsapp)}` : ""}</p>

@@ -19,7 +19,7 @@ export function PdfTabs({ items, watermark }: { items: MediaItem[]; watermark: s
               onClick={() => setActive(i.id)}
               className={cn(
                 "inline-flex shrink-0 items-center gap-2 rounded-xl border px-3.5 py-2 text-sm font-semibold transition",
-                i.id === cur.id ? "border-brand-500 bg-brand-50 text-brand-700 shadow-[0_3px_0_0_var(--color-brand-500)] dark:bg-brand-900/40 dark:text-brand-100" : "border-border bg-card text-muted-foreground hover:text-foreground",
+                i.id === cur.id ? "border-foreground bg-foreground text-background" : "border-border bg-card text-muted-foreground hover:text-foreground",
               )}
             >
               <FileText className="size-4" /> {i.title}

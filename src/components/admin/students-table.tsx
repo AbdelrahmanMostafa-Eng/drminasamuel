@@ -71,7 +71,7 @@ export function StudentsTable({ rows, courses, fixedCourseId }: { rows: StudentR
       {list.length === 0 ? (
         <EmptyState icon={<Users />} title="No students match" />
       ) : (
-        <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] text-sm">
               <thead>

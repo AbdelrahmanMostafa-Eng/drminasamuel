@@ -1,95 +1,121 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
-import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
-export function Helix({ className, count = 12 }: { className?: string; count?: number }) {
+/** Three quiet dots — replaces the old helix spinner. */
+export function Helix({ className }: { className?: string; count?: number }) {
   return (
-    <div className={cn("helix", className)} aria-hidden>
-      {Array.from({ length: count }).map((_, i) => (
-        <span key={i} style={{ ["--i" as string]: i } as React.CSSProperties}>
-          <i />
-        </span>
+    <span className={cn("inline-flex items-center gap-1.5", className)} aria-hidden>
+      {[0, 1, 2].map((i) => (
+        <span key={i} className="size-1.5 animate-pulse-dot rounded-full bg-foreground/50" style={{ animationDelay: `${i * 0.18}s` }} />
       ))}
-    </div>
+    </span>
   );
 }
 
-export function InlineLoader({ label = "Loading…" }: { label?: string }) {
+export function InlineLoader({ label = "Loading" }: { label?: string }) {
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
-      <Helix count={10} />
-      <p className="text-sm font-medium text-muted-foreground">{label}</p>
+      <div className="relative h-px w-40 overflow-hidden bg-foreground/10">
+        <span className="absolute inset-y-0 w-1/3 animate-[loader-slide_1.1s_cubic-bezier(0.65,0,0.35,1)_infinite] bg-foreground/70" />
+      </div>
+      <p className="eyebrow">{label}</p>
+      <style>{`@keyframes loader-slide { from { left: -35%; } to { left: 100%; } }`}</style>
     </div>
   );
 }
 
-/** Full-screen brand loader shown on first paint, fades out once the page is ready. */
+const LETTERS = "BIOACADEMY".split("");
+const IN_STAGGER = 80;
+const IN_DUR = 650;
+const HOLD = 250;
+const IN_TOTAL = IN_STAGGER * (LETTERS.length - 1) + IN_DUR + HOLD;
+const OUT_STAGGER = 45;
+const OUT_DUR = 420;
+const CURTAIN_DELAY = IN_TOTAL + 80;
+const CURTAIN_DUR = 1200;
+const REVEAL_AT = CURTAIN_DELAY + CURTAIN_DUR - 250;
+const TOTAL = CURTAIN_DELAY + OUT_STAGGER * (LETTERS.length - 1) + OUT_DUR + 1300;
+
+type Phase = "idle" | "in" | "out" | "done";
+
+/**
+ * Intro from the agentic template: the wordmark blurs in letter by letter,
+ * then a curtain lifts to reveal the page. Shown once per browser session.
+ */
 export function PageLoader() {
-  const [show, setShow] = React.useState(true);
-  const [progress, setProgress] = React.useState(8);
+  const [phase, setPhase] = React.useState<Phase>("idle");
+  const [curtainUp, setCurtainUp] = React.useState(false);
+
   React.useEffect(() => {
-    let p = 8;
-    const iv = setInterval(() => {
-      p = Math.min(92, p + Math.random() * 18);
-      setProgress(p);
-    }, 160);
-    const finish = () => {
-      setProgress(100);
-      setTimeout(() => setShow(false), 380);
-    };
+    const root = document.documentElement;
+    if (root.classList.contains("ba-noloader")) {
+      setPhase("done");
+      return;
+    }
     try {
       sessionStorage.setItem("ba_loaded", "1");
     } catch {
       /* private mode */
     }
-    const minTime = new Promise((r) => setTimeout(r, 700));
-    const loaded = document.readyState === "complete" ? Promise.resolve() : new Promise((r) => window.addEventListener("load", r, { once: true }));
-    Promise.all([minTime, loaded]).then(finish);
-    const failSafe = setTimeout(finish, 4000);
+    const release = () => {
+      delete root.dataset.intro;
+      window.dispatchEvent(new Event("ba:intro-done"));
+    };
+    const t = [
+      setTimeout(() => setPhase("in"), 60),
+      setTimeout(() => setPhase("out"), IN_TOTAL),
+      setTimeout(() => setCurtainUp(true), CURTAIN_DELAY),
+      setTimeout(release, REVEAL_AT),
+      setTimeout(() => setPhase("done"), TOTAL),
+    ];
     return () => {
-      clearInterval(iv);
-      clearTimeout(failSafe);
+      t.forEach(clearTimeout);
+      release();
     };
   }, []);
+
+  if (phase === "done") return null;
+
   return (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          id="ba-loader"
-          className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-brand-950"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.04, filter: "blur(6px)" }}
-          transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
-        >
-          <div className="bg-grid absolute inset-0 opacity-40" />
-          <div className="absolute left-1/2 top-1/2 size-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-500/20 blur-3xl" />
-          <div className="absolute left-[60%] top-[40%] size-72 rounded-full bg-ember-500/20 blur-3xl" />
-          <div className="relative flex flex-col items-center">
-            <motion.div
-              initial={{ rotateY: -90, opacity: 0 }}
-              animate={{ rotateY: 0, opacity: 1 }}
-              transition={{ duration: 0.8, ease: [0.2, 0.9, 0.3, 1.2] }}
-              className="relative mb-6 [perspective:600px]"
-            >
-              <div className="absolute inset-0 animate-pulse-ring rounded-3xl bg-ember-400/30" />
-              <div className="relative grid size-24 place-items-center rounded-3xl border border-white/10 bg-gradient-to-br from-brand-600 to-brand-800 shadow-[0_10px_0_0_#07161e,0_30px_60px_-20px_rgb(0_0_0/0.8)]">
-                <Image src="/brand/logo-mark-white.png" alt="Bioacademy" width={60} height={56} priority className="h-14 w-auto" />
-              </div>
-            </motion.div>
-            <Helix count={14} />
-            <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mt-5 font-display text-2xl font-semibold tracking-tight text-white">
-              Bio<span className="text-ember-400">academy</span>
-            </motion.p>
-            <p className="mt-1 text-xs font-medium uppercase tracking-[0.3em] text-brand-200/70">Dr. Mina Samuel</p>
-            <div className="mt-6 h-1 w-48 overflow-hidden rounded-full bg-white/10">
-              <motion.div className="h-full rounded-full bg-gradient-to-r from-ember-400 to-brand-300" animate={{ width: `${progress}%` }} transition={{ ease: "easeOut" }} />
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div id="ba-loader" className="pointer-events-none fixed inset-0 z-[100]" aria-hidden="true">
+      <div
+        className="absolute inset-x-0 top-0 bg-background"
+        style={{ bottom: curtainUp ? "100%" : "0%", transition: curtainUp ? `bottom ${CURTAIN_DUR}ms cubic-bezier(0.76, 0, 0.24, 1)` : "none" }}
+      />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="flex" style={{ gap: "0.04em" }}>
+          {LETTERS.map((letter, i) => {
+            const opacity = phase === "in" ? 1 : 0;
+            const blur = phase === "idle" ? 32 : phase === "in" ? 0 : 20;
+            const y = phase === "idle" ? 40 : phase === "in" ? 0 : -18;
+            const transition =
+              phase === "out"
+                ? `opacity ${OUT_DUR}ms cubic-bezier(0.4,0,1,1) ${i * OUT_STAGGER}ms, filter ${OUT_DUR}ms cubic-bezier(0.4,0,1,1) ${i * OUT_STAGGER}ms, transform ${OUT_DUR}ms cubic-bezier(0.4,0,1,1) ${i * OUT_STAGGER}ms`
+                : phase === "in"
+                  ? `opacity ${IN_DUR}ms cubic-bezier(0.16,1,0.3,1) ${i * IN_STAGGER}ms, filter ${IN_DUR}ms cubic-bezier(0.16,1,0.3,1) ${i * IN_STAGGER}ms, transform ${IN_DUR}ms cubic-bezier(0.16,1,0.3,1) ${i * IN_STAGGER}ms`
+                  : "none";
+            return (
+              <span
+                key={i}
+                className="select-none font-display font-light leading-none text-foreground"
+                style={{
+                  fontSize: `calc((100vw - 48px) / ${LETTERS.length + 1})`,
+                  letterSpacing: "-0.02em",
+                  opacity,
+                  filter: `blur(${blur}px)`,
+                  transform: `translateY(${y}px)`,
+                  transition,
+                  willChange: "opacity, filter, transform",
+                }}
+              >
+                {letter}
+              </span>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 }

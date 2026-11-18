@@ -88,13 +88,13 @@ export function PdfCanvas({ src, watermark }: { src: string; watermark: string }
           {Array.from({ length: pages }, (_, i) => (
             <div key={i} className="relative overflow-hidden rounded-lg bg-white shadow-soft">
               <canvas data-page={i + 1} className="block select-none" />
-              <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[24deg] whitespace-nowrap text-2xl font-extrabold text-brand-900/[0.07] sm:text-4xl">{watermark}</span>
+              <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[24deg] whitespace-nowrap text-2xl font-display font-light text-brand-900/[0.07] sm:text-4xl">{watermark}</span>
             </div>
           ))}
         </div>
       </div>
       {pages > 0 && (
-        <div className="absolute bottom-3 right-3 flex items-center gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-lift backdrop-blur">
+        <div className="absolute bottom-3 right-3 flex items-center gap-1 rounded-xl border border-border bg-card p-1 shadow-lift">
           <button onClick={() => setZoom((z) => Math.max(0.5, +(z - 0.25).toFixed(2)))} className="grid size-8 place-items-center rounded-lg hover:bg-muted" aria-label="Zoom out">
             <Minus className="size-4" />
           </button>

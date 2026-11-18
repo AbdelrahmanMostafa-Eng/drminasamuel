@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import confetti from "canvas-confetti";
 import { Play } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,7 @@ export function StartButton({ assessmentId, label, resume, timed }: { assessment
   return (
     <Button
       size="lg"
-      variant="accent"
+      variant="primary"
       loading={pending}
       onClick={async () => {
         if (!resume && timed) {
@@ -35,15 +34,7 @@ export function StartButton({ assessmentId, label, resume, timed }: { assessment
   );
 }
 
+/** Previously fired confetti; kept as a no-op so callers don't change. */
 export function Celebrate() {
-  React.useEffect(() => {
-    const end = Date.now() + 1200;
-    const colors = ["#ff8a1a", "#4396b6", "#ffd2a3", "#0f9d6b"];
-    (function frame() {
-      confetti({ particleCount: 4, angle: 60, spread: 60, origin: { x: 0 }, colors });
-      confetti({ particleCount: 4, angle: 120, spread: 60, origin: { x: 1 }, colors });
-      if (Date.now() < end) requestAnimationFrame(frame);
-    })();
-  }, []);
   return null;
 }

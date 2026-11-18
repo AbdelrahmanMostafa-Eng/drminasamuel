@@ -15,7 +15,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     <button
       type="button"
       onClick={() => setTheme(dark ? "light" : "dark")}
-      className={cn("relative grid size-10 place-items-center overflow-hidden rounded-xl border border-border bg-card text-foreground/80 transition hover:-translate-y-0.5 hover:text-foreground", className)}
+      className={cn("relative grid size-9 place-items-center overflow-hidden rounded-lg border border-border bg-card text-foreground/70 transition-colors hover:text-foreground", className)}
       aria-label="Toggle dark mode"
     >
       <AnimatePresence mode="wait" initial={false}>

@@ -19,9 +19,9 @@ export default async function CourseStudentsPage({ params }: { params: Promise<{
   ]);
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-3 rounded-3xl border border-border bg-card p-5 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 shadow-soft sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <span className="grid size-11 place-items-center rounded-xl bg-gradient-to-br from-[#25d366] to-[#128c7e] text-white shadow-[0_3px_0_0_#0b5e55]">
+          <span className="grid size-11 place-items-center rounded-lg bg-[#1f9d55] text-white">
             <WhatsAppIcon className="size-5" />
           </span>
           <div>
@@ -32,7 +32,7 @@ export default async function CourseStudentsPage({ params }: { params: Promise<{
         <div className="flex flex-wrap gap-2">
           {course.whatsappGroupUrl && <CopyButton value={course.whatsappGroupUrl} label="Group link" />}
           {pending > 0 && (
-            <Link href="/admin/payments" className="rounded-lg bg-ember-500 px-3 py-1 text-xs font-bold text-white shadow-[0_2px_0_0_#b94a07]">
+            <Link href="/admin/payments" className="rounded-full bg-foreground px-3 py-1 text-xs font-medium text-background">
               {pending} payment{pending > 1 ? "s" : ""} to review
             </Link>
           )}

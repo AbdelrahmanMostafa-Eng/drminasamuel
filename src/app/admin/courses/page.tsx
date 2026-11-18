@@ -51,8 +51,8 @@ export default async function AdminCourses() {
             const pending = c.enrollments.filter((e) => e.status === "PENDING").length;
             return (
               <StaggerItem key={c.id}>
-                <TiltCard className="h-full rounded-3xl" max={5}>
-                  <Link href={`/admin/courses/${c.id}`} className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition hover:shadow-lift">
+                <TiltCard className="h-full rounded-2xl">
+                  <Link href={`/admin/courses/${c.id}`} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition hover:border-foreground/20">
                     <div className="relative">
                       <CourseCover coverKey={c.coverKey} level={c.level} title={c.title} className="aspect-[16/8]" />
                       <div className="absolute left-3 top-3 flex gap-1.5">
@@ -63,7 +63,7 @@ export default async function AdminCourses() {
                       {pending > 0 && <Badge tone="ember" className="absolute right-3 top-3">{pending} pending payment{pending > 1 ? "s" : ""}</Badge>}
                     </div>
                     <div className="flex flex-1 flex-col p-5">
-                      <p className="text-lg font-extrabold leading-snug">{c.title}</p>
+                      <p className="text-lg font-semibold leading-snug">{c.title}</p>
                       <p className="mt-1 text-sm text-muted-foreground">{c.batchLabel ?? c.track} · {formatEGP(c.price)}</p>
                       <div className="mt-4 grid grid-cols-4 gap-2 text-center">
                         {[
@@ -76,7 +76,7 @@ export default async function AdminCourses() {
                           return (
                             <div key={i} className="rounded-xl bg-muted/60 py-2">
                               <I className="mx-auto size-4 text-muted-foreground" />
-                              <p className="mt-1 text-sm font-extrabold">{n as number}</p>
+                              <p className="mt-1 text-sm font-semibold">{n as number}</p>
                               <p className="text-[0.62rem] text-muted-foreground">{l as string}</p>
                             </div>
                           );

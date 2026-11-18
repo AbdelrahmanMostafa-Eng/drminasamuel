@@ -115,7 +115,7 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
       <PageHeader eyebrow="Overview" title="Study-progress analytics" description="Attendance, scores, completion and who needs help — per course." />
       <div className="mb-6 flex flex-wrap gap-2">
         {courses.map((c) => (
-          <Link key={c.id} href={`/admin/analytics?course=${c.id}`} className={cn("rounded-xl border px-3.5 py-2 text-sm font-semibold transition", c.id === courseId ? "border-brand-500 bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-[0_3px_0_0_#123b4d]" : "border-border bg-card text-muted-foreground hover:text-foreground")}>
+          <Link key={c.id} href={`/admin/analytics?course=${c.id}`} className={cn("rounded-full border px-3.5 py-2 text-sm font-medium transition", c.id === courseId ? "border-foreground bg-foreground text-background" : "border-border bg-card text-muted-foreground hover:text-foreground")}>
             {c.title}
           </Link>
         ))}
@@ -161,7 +161,7 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
                 { name: "Pending", value: statusCounts.PENDING, color: C.amber },
                 { name: "Rejected", value: statusCounts.REJECTED, color: C.red },
               ]}
-              center={<p className="text-lg font-extrabold">{enrollments.length}</p>}
+              center={<p className="text-lg font-semibold">{enrollments.length}</p>}
             />
           </CardBody>
         </Card>
@@ -171,7 +171,7 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
             {top.length === 0 && <p className="text-sm text-muted-foreground">No graded work yet.</p>}
             {top.map((s, i) => (
               <Link key={s.id} href={`/admin/students/${s.id}`} className="flex items-center gap-3 rounded-2xl p-2 hover:bg-muted/50">
-                <span className={cn("grid size-8 place-items-center rounded-lg text-sm font-extrabold", i === 0 ? "bg-gradient-to-b from-amber-300 to-amber-500 text-white shadow-[0_2px_0_0_#b45309]" : i === 1 ? "bg-slate-300 text-slate-700" : i === 2 ? "bg-orange-300 text-orange-800" : "bg-muted text-muted-foreground")}>{i + 1}</span>
+                <span className={cn("grid size-8 place-items-center rounded-lg text-sm font-semibold", i < 3 ? "border border-foreground/30 text-foreground" : "bg-muted text-muted-foreground")}>{i + 1}</span>
                 <Avatar name={s.name} size={32} />
                 <span className="flex-1 truncate font-semibold">{s.name}</span>
                 <Badge tone="success">{s.avg}%</Badge>
@@ -182,7 +182,7 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
         <Card>
           <CardHeader title="Students who need attention" description="Average below 50% or attendance below 60%" icon={<AlertTriangle />} />
           <CardBody className="space-y-2">
-            {risk.length === 0 && <p className="text-sm text-muted-foreground">Everyone is on track. 🎉</p>}
+            {risk.length === 0 && <p className="text-sm text-muted-foreground">Everyone is on track.</p>}
             {risk.map((s) => (
               <Link key={s.id} href={`/admin/students/${s.id}`} className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50/40 p-2.5 hover:bg-red-50 dark:border-red-900/50 dark:bg-red-950/20">
                 <Avatar name={s.name} size={32} />
@@ -198,7 +198,7 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
           <CardBody className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {hardest.length === 0 && <p className="text-sm text-muted-foreground">Not enough data yet.</p>}
             {hardest.map((q) => (
-              <Link key={q.id} href={`/admin/assessments/${q.assessmentId}?tab=insights`} className="rounded-2xl border border-border p-4 transition hover:-translate-y-0.5 hover:shadow-soft">
+              <Link key={q.id} href={`/admin/assessments/${q.assessmentId}?tab=insights`} className="rounded-2xl border border-border p-4 transition hover:border-foreground/20">
                 <div className="flex items-start justify-between gap-3">
                   <p className="line-clamp-2 text-sm font-semibold">{q.text}</p>
                   <Badge tone={q.pct < 50 ? "danger" : "warning"}>{q.pct}%</Badge>
