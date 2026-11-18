@@ -119,7 +119,7 @@ function Bellmenu({ notifications, unread }: { notifications: ShellNotification[
     <Dropdown>
       <DropdownTrigger asChild>
         <button className="relative grid size-10 place-items-center rounded-xl border border-border bg-card text-foreground/80 transition hover:text-foreground" aria-label="Notifications">
-          <Bell className={cn("size-[1.1rem]", count > 0 && "origin-top animate-[wiggle_1.2s_ease-in-out_2]")} />
+          <Bell className={cn("size-[1.1rem]")} />
           {count > 0 && <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-foreground px-1 font-mono text-[0.6rem] leading-5 text-background">{count > 9 ? "9+" : count}</span>}
         </button>
       </DropdownTrigger>

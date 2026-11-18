@@ -7,16 +7,18 @@ import { getSettings } from "@/lib/settings";
 import { CalendarOff } from "lucide-react";
 
 export const metadata: Metadata = { title: "Session schedule" };
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function SchedulePage() {
   const settings = await getSettings();
   const sessions = settings.showPublicSchedule
-    ? await db.liveSession.findMany({
-        where: { course: { status: { in: ["PUBLISHED"] } }, startsAt: { gte: new Date(Date.now() - 60 * 86400_000) } },
-        orderBy: { startsAt: "asc" },
-        include: { course: { select: { title: true } } },
-      })
+    ? await db.liveSession
+        .findMany({
+          where: { course: { status: { in: ["PUBLISHED"] } }, startsAt: { gte: new Date(Date.now() - 60 * 86400_000) } },
+          orderBy: { startsAt: "asc" },
+          include: { course: { select: { title: true } } },
+        })
+        .catch(() => [])
     : [];
   return (
     <>

@@ -13,7 +13,7 @@ export default async function RegisterPage({ searchParams }: { searchParams: Pro
   return (
     <FadeIn>
       <h1 className="font-display text-4xl font-light tracking-tight">Create your account</h1>
-      <p className="mt-2 text-muted-foreground">Free to create — you only pay when you enroll in a course.</p>
+      <p className="mt-2 text-muted-foreground">Create your account, then enroll in the course you want.</p>
       <div className="mt-8">
         <RegisterForm next={sp.next} />
       </div>

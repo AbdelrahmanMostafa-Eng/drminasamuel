@@ -1,19 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArrowUpRight, Lock } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { db } from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth";
-import { isStaff } from "@/lib/permissions";
 import { formatEGP, toEmbedUrl } from "@/lib/utils";
 import { fmtDate } from "@/lib/time";
 import { CourseCover } from "@/components/site/course-card";
-import { ButtonLink } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { Tag } from "@/components/ui/misc";
 import { SectionTitle } from "@/components/site/text-anim";
 import { FaqList } from "@/components/site/faq";
+import { CourseCta } from "@/components/site/course-cta";
 
-export const dynamic = "force-dynamic";
+/** Course pages are served from cache; only the enroll button is personal (see CourseCta). */
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const courses = await db.course.findMany({ where: { status: { in: ["PUBLISHED", "ENDED"] } }, select: { slug: true } }).catch(() => []);
+  return courses.map((c) => ({ slug: c.slug }));
+}
 
 async function load(slug: string) {
   return db.course.findFirst({
@@ -35,7 +39,7 @@ async function load(slug: string) {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const c = await db.course.findUnique({ where: { slug }, select: { title: true, subtitle: true } });
+  const c = await db.course.findUnique({ where: { slug }, select: { title: true, subtitle: true } }).catch(() => null);
   return c ? { title: c.title, description: c.subtitle ?? undefined } : {};
 }
 
@@ -43,64 +47,10 @@ export default async function CoursePublicPage({ params }: { params: Promise<{ s
   const { slug } = await params;
   const course = await load(slug);
   if (!course) notFound();
-  const user = await getCurrentUser();
-  const enrollment = user && user.role === "STUDENT" ? await db.enrollment.findUnique({ where: { userId_courseId: { userId: user.id, courseId: course.id } } }) : null;
-  let prereqOk = true;
-  if (course.prerequisiteId && user?.role === "STUDENT") {
-    const p = await db.enrollment.findUnique({ where: { userId_courseId: { userId: user.id, courseId: course.prerequisiteId } } });
-    prereqOk = p?.status === "APPROVED";
-  }
   const lessons = course.chapters.reduce((s, c) => s + c.lessons.length, 0);
   const quizzes = course.chapters.reduce((s, c) => s + c._count.assessments, 0);
   const embed = course.introVideoUrl ? toEmbedUrl(course.introVideoUrl) : null;
   const open = course.status === "PUBLISHED" && course.enrollmentOpen;
-
-  const full = "w-full rounded-full";
-  let cta: React.ReactNode;
-  if (!user) {
-    cta = (
-      <>
-        <ButtonLink href={`/register?next=/dashboard/enroll/${course.id}`} size="lg" className={full}>
-          Create account &amp; enroll
-        </ButtonLink>
-        <ButtonLink href={`/login?next=/dashboard/enroll/${course.id}`} variant="secondary" size="lg" className={`mt-2 ${full}`}>
-          I already have an account
-        </ButtonLink>
-      </>
-    );
-  } else if (isStaff(user)) {
-    cta = (
-      <ButtonLink href={`/admin/courses/${course.id}`} size="lg" className={full}>
-        Manage this course
-      </ButtonLink>
-    );
-  } else if (enrollment?.status === "APPROVED") {
-    cta = (
-      <ButtonLink href={`/dashboard/courses/${course.id}`} size="lg" className={full}>
-        Open course
-      </ButtonLink>
-    );
-  } else if (enrollment?.status === "PENDING") {
-    cta = (
-      <ButtonLink href={`/dashboard/enroll/${course.id}`} variant="secondary" size="lg" className={full}>
-        Payment under review
-      </ButtonLink>
-    );
-  } else if (!open) {
-    cta = <p className="rounded-xl bg-foreground/[0.04] p-3 text-center text-sm text-muted-foreground">Enrollment is closed for this course.</p>;
-  } else if (!prereqOk) {
-    cta = (
-      <p className="flex items-start gap-2 rounded-xl bg-foreground/[0.04] p-3 text-sm text-muted-foreground">
-        <Lock className="mt-0.5 size-4 shrink-0" /> You need to be enrolled in &ldquo;{course.prerequisite?.title}&rdquo; first.
-      </p>
-    );
-  } else {
-    cta = (
-      <ButtonLink href={`/dashboard/enroll/${course.id}`} size="lg" className={full}>
-        {enrollment?.status === "REJECTED" ? "Resubmit payment" : "Enroll now"}
-      </ButtonLink>
-    );
-  }
 
   const includes = [
     `${course._count.liveSessions} live Zoom sessions with attendance`,
@@ -190,7 +140,9 @@ export default async function CoursePublicPage({ params }: { params: Promise<{ s
                 <p className="text-xs text-muted-foreground">Course fee</p>
                 <p className="mt-1 font-display text-4xl font-light tracking-tight">{formatEGP(course.price)}</p>
                 <p className="mt-1 text-xs text-muted-foreground">One payment via InstaPay or Vodafone Cash</p>
-                <div className="mt-6">{cta}</div>
+                <div className="mt-6">
+                  <CourseCta courseId={course.id} open={open} prereqTitle={course.prerequisite?.title ?? null} />
+                </div>
                 <ul className="mt-6 space-y-3 border-t border-border pt-6 text-sm">
                   {includes.map((t) => (
                     <li key={t} className="flex items-start gap-3">

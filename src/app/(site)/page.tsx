@@ -1,20 +1,20 @@
 import { AboutSection, CentersSection, CtaBand, FaqSection, Features, Hero, HowItWorks, SchedulePreview, Section, SectionHead, TeamSection, TopicMarquee } from "@/components/site/sections";
 import { StackingCourses } from "@/components/site/stacking-courses";
-import { getCurrentUser } from "@/lib/auth";
 import { getSettings } from "@/lib/settings";
 import { getPublicCourses, getUpcomingPublicSessions } from "@/lib/queries";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+/** Served from cache and refreshed at most every minute (and right away when staff edit content). */
+export const revalidate = 60;
 
 export default async function HomePage() {
-  const [user, settings, courses] = await Promise.all([getCurrentUser(), getSettings(), getPublicCourses()]);
+  const [settings, courses] = await Promise.all([getSettings(), getPublicCourses()]);
   const sessions = settings.showPublicSchedule ? await getUpcomingPublicSessions(5) : [];
   const open = courses.filter((c) => c.status === "PUBLISHED").sort((a, b) => (a.level === b.level ? 0 : a.level === "BASICS" ? -1 : 1));
   return (
     <>
-      <Hero hero={settings.hero} stats={settings.stats} loggedIn={!!user} />
+      <Hero hero={settings.hero} stats={settings.stats} />
       <TopicMarquee />
       <AboutSection about={settings.about} stats={settings.stats} />
       <Section id="courses" gradientBar>
@@ -34,7 +34,7 @@ export default async function HomePage() {
       <TeamSection team={settings.team} />
       <CentersSection centers={settings.centers} />
       <FaqSection faqs={settings.faqs} />
-      <CtaBand loggedIn={!!user} />
+      <CtaBand />
     </>
   );
 }

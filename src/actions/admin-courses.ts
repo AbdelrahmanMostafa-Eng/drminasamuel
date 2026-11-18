@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidatePublic } from "@/lib/revalidate";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { ActionError, actionMaster, actionStaff, run } from "@/lib/auth";
@@ -68,6 +69,7 @@ export async function createCourseAction(input: z.input<typeof courseSchema>) {
     const d = courseSchema.parse(input);
     const course = await db.course.create({ data: { ...courseData(d), slug: await uniqueSlug(d.title) } });
     await audit(me, "course.created", course.title);
+    revalidatePublic();
     revalidatePath("/admin/courses");
     return course.id;
   }, "Course created");
@@ -84,6 +86,7 @@ export async function updateCourseAction(id: string, input: z.input<typeof cours
     const course = await db.course.update({ where: { id }, data: { ...data, slug: before.title !== d.title ? await uniqueSlug(d.title, id) : before.slug } });
     if (before.coverKey && before.coverKey !== data.coverKey) await deleteObject(before.coverKey);
     await audit(me, "course.updated", course.title);
+    revalidatePublic();
     revalidatePath("/admin/courses");
     revalidatePath(`/admin/courses/${id}`, "layout");
     revalidatePath("/courses");
@@ -98,6 +101,7 @@ export async function deleteCourseAction(id: string) {
     await deleteObject(c.coverKey);
     await db.course.delete({ where: { id } });
     await audit(me, "course.deleted", c.title);
+    revalidatePublic();
     revalidatePath("/admin/courses");
   }, "Course deleted");
 }
@@ -142,6 +146,7 @@ export async function archiveCourseAction(id: string) {
 
     await db.course.update({ where: { id }, data: { status: "ARCHIVED", archivedAt: now, enrollmentOpen: false, finalStudentCount: approved.length, finalRevenue: revenue } });
     await audit(me, "course.archived", `${course.title} — ${toDelete.length} accounts deleted, ${keep.size} kept (enrolled elsewhere)`);
+    revalidatePublic();
     revalidatePath("/admin", "layout");
     return { deleted: toDelete.length, kept: keep.size };
   });
@@ -169,6 +174,7 @@ export async function saveChapterAction(courseId: string, chapterId: string | nu
       await db.chapter.create({ data: { ...data, courseId, sortOrder: (max._max.sortOrder ?? 0) + 1 } });
       await audit(me, "chapter.created", d.title);
     }
+    revalidatePublic();
     revalidatePath(`/admin/courses/${courseId}`);
   }, chapterId ? "Chapter saved" : "Chapter added");
 }
@@ -180,6 +186,7 @@ export async function deleteChapterAction(id: string) {
     for (const l of ch.lessons) for (const r of l.resources) await deleteObject(r.storageKey);
     await db.chapter.delete({ where: { id } });
     await audit(me, "chapter.deleted", ch.title);
+    revalidatePublic();
     revalidatePath(`/admin/courses/${ch.courseId}`);
   }, "Chapter deleted");
 }
@@ -194,6 +201,7 @@ export async function moveChapterAction(id: string, dir: -1 | 1) {
     if (j < 0 || j >= list.length) return;
     [list[i], list[j]] = [list[j]!, list[i]!];
     await db.$transaction(list.map((c, k) => db.chapter.update({ where: { id: c.id }, data: { sortOrder: k + 1 } })));
+    revalidatePublic();
     revalidatePath(`/admin/courses/${ch.courseId}`);
   });
 }
@@ -226,6 +234,7 @@ export async function saveLessonAction(chapterId: string, lessonId: string | nul
       await audit(me, "lesson.created", d.title);
       if (d.isPublished) await notifyCourseStudents(ch.courseId, { title: "New lesson available", body: d.title, link: `/dashboard/courses/${ch.courseId}/lessons/${l.id}` });
     }
+    revalidatePublic();
     revalidatePath(`/admin/courses/${ch.courseId}`, "layout");
     return id!;
   }, lessonId ? "Lesson saved" : "Lesson added");
@@ -238,6 +247,7 @@ export async function deleteLessonAction(id: string) {
     for (const r of l.resources) await deleteObject(r.storageKey);
     await db.lesson.delete({ where: { id } });
     await audit(me, "lesson.deleted", l.title);
+    revalidatePublic();
     revalidatePath(`/admin/courses/${l.courseId}`);
   }, "Lesson deleted");
 }
@@ -252,6 +262,7 @@ export async function moveLessonAction(id: string, dir: -1 | 1) {
     if (j < 0 || j >= list.length) return;
     [list[i], list[j]] = [list[j]!, list[i]!];
     await db.$transaction(list.map((c, k) => db.lesson.update({ where: { id: c.id }, data: { sortOrder: k + 1 } })));
+    revalidatePublic();
     revalidatePath(`/admin/courses/${l.courseId}`);
   });
 }
@@ -297,6 +308,7 @@ export async function addResourceAction(courseId: string, lessonId: string | nul
     });
     await audit(me, lessonId ? "resource.added" : "book.added", d.title);
     if (!lessonId && d.isMainBook) await notifyCourseStudents(courseId, { title: "The course book is available", body: d.title, link: `/dashboard/courses/${courseId}` });
+    revalidatePublic();
     revalidatePath(`/admin/courses/${courseId}`, "layout");
   }, "Added");
 }
@@ -307,6 +319,7 @@ export async function updateResourceAction(id: string, input: { title: string; a
     const r = await db.resource.findUniqueOrThrow({ where: { id } });
     if (input.isMainBook && !r.lessonId) await db.resource.updateMany({ where: { courseId: r.courseId, lessonId: null }, data: { isMainBook: false } });
     await db.resource.update({ where: { id }, data: { title: input.title.trim() || r.title, allowDownload: input.allowDownload, isMainBook: !r.lessonId && !!input.isMainBook } });
+    revalidatePublic();
     revalidatePath(`/admin/courses/${r.courseId}`, "layout");
   }, "Saved");
 }
@@ -318,6 +331,7 @@ export async function deleteResourceAction(id: string) {
     await deleteObject(r.storageKey);
     await db.resource.delete({ where: { id } });
     await audit(me, "resource.deleted", r.title);
+    revalidatePublic();
     revalidatePath(`/admin/courses/${r.courseId}`, "layout");
   }, "Removed");
 }
@@ -329,6 +343,7 @@ export async function setCourseStatusAction(id: string, status: "DRAFT" | "PUBLI
     if (c.status === "ARCHIVED") throw new ActionError("This course is archived.");
     await db.course.update({ where: { id }, data: { status, ...(status === "ENDED" ? { enrollmentOpen: false } : {}) } });
     await audit(me, "course.status", `${c.title} → ${status}`);
+    revalidatePublic();
     revalidatePath("/admin", "layout");
   }, status === "ENDED" ? "Course marked as ended" : "Status updated");
 }

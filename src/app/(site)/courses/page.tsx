@@ -7,7 +7,7 @@ import { getPublicCourses } from "@/lib/queries";
 import { BookOpen } from "lucide-react";
 
 export const metadata: Metadata = { title: "Courses" };
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function CoursesPage() {
   const courses = await getPublicCourses();

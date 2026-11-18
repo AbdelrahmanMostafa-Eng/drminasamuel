@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useViewer } from "./viewer";
 
 const NAV = [
   { href: "/courses", label: "Courses", n: "01" },
@@ -24,8 +25,9 @@ export function Wordmark({ className }: { className?: string }) {
 }
 
 /** Header from the portfolio template: transparent at the top, frosted bar with a hairline once scrolled. */
-export function Header({ user }: { user: { name: string; role: string } | null }) {
+export function Header() {
   const pathname = usePathname();
+  const { viewer: user, ready } = useViewer();
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
 
@@ -66,7 +68,7 @@ export function Header({ user }: { user: { name: string; role: string } | null }
                 );
               })}
             </div>
-            <div className="hidden items-center gap-5 md:flex">
+            <div className={cn("hidden items-center gap-5 transition-opacity duration-300 md:flex", ready ? "opacity-100" : "opacity-0")}>
               {!user && (
                 <Link href="/login" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                   Sign in
@@ -102,7 +104,7 @@ export function Header({ user }: { user: { name: string; role: string } | null }
                 </Link>
               ))}
             </nav>
-            <div className="mt-auto flex flex-col gap-3">
+            <div className={cn("mt-auto flex flex-col gap-3 transition-opacity", ready ? "opacity-100" : "opacity-0")}>
               {!user && (
                 <Link href="/login" className="inline-flex w-full items-center justify-center rounded-full border border-border px-5 py-3 text-base font-medium">
                   Sign in
