@@ -10,9 +10,10 @@ import { useViewer } from "./viewer";
 
 const NAV = [
   { href: "/courses", label: "Courses", n: "01" },
-  { href: "/schedule", label: "Schedule", n: "02" },
-  { href: "/#about", label: "About", n: "03" },
-  { href: "/contact", label: "Contact", n: "04" },
+  { href: "/#pricing", label: "Pricing", n: "02" },
+  { href: "/schedule", label: "Schedule", n: "03" },
+  { href: "/#about", label: "About", n: "04" },
+  { href: "/contact", label: "Contact", n: "05" },
 ];
 
 export function Wordmark({ className }: { className?: string }) {
