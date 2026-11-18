@@ -72,9 +72,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     { name: "Youssef Girges", phone: "+201080884825" },
     { name: "Besada", phone: "+201221877099" },
     { name: "Retaj", phone: "+201080884875" },
-    { name: "Judy Haytham", phone: "+201157270078" },
-    { name: "Judy Nader", phone: "+201106234228" },
-    { name: "Martin", phone: "+201010309627" },
+    { name: "Selia", phone: "+201157270078" },
+    { name: "Mina Morcos", phone: "+201106234228" },
+    { name: "Jaiana", phone: "+201010309627" },
   ],
   centers: [
     { name: "OG Hub Center", area: "5th Settlement", mapUrl: "https://maps.app.goo.gl/387vWZGpXceUJyKc8" },
@@ -125,9 +125,11 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
   }
 });
 
+/** Stores only the sections that were edited, so untouched sections keep following the defaults above. */
 export async function saveSettings(patch: Partial<SiteSettings>) {
-  const current = await getSettings();
-  const next = { ...current, ...patch };
+  const row = await db.setting.findUnique({ where: { key: "site" } });
+  const stored = row?.value && typeof row.value === "object" && !Array.isArray(row.value) ? (row.value as Record<string, unknown>) : {};
+  const next = { ...stored, ...patch };
   await db.setting.upsert({
     where: { key: "site" },
     create: { key: "site", value: next as object },
