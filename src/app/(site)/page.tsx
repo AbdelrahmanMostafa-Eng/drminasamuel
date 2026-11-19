@@ -3,6 +3,7 @@ import { StackingCourses } from "@/components/site/stacking-courses";
 import { getSettings } from "@/lib/settings";
 import { getPublicCourses, getUpcomingPublicSessions } from "@/lib/queries";
 import Link from "next/link";
+import { RollText } from "@/components/site/roll-text";
 import { ArrowRight } from "lucide-react";
 
 /** Served from cache and refreshed at most every minute (and right away when staff edit content). */
@@ -26,7 +27,7 @@ export default async function HomePage() {
         />
         {open.length ? <StackingCourses courses={open} /> : <p className="text-muted-foreground">New courses will be announced soon.</p>}
         <Link href="/courses" className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-brand-600 hover:text-brand-800">
-          All courses <ArrowRight className="size-4" />
+          <RollText>All courses</RollText> <ArrowRight className="nudge nudge-x size-4" />
         </Link>
       </Section>
       <PricingSection pricing={settings.pricing} />

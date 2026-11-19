@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useViewer } from "./viewer";
+import { RollText } from "./roll-text";
 
 const NAV_ALL = [
   { href: "/courses", label: "Courses" },
@@ -86,7 +87,7 @@ export function Header({ showPricing = true }: { showPricing?: boolean }) {
                 const active = !item.href.includes("#") && pathname.startsWith(item.href);
                 return (
                   <Link key={item.href} href={item.href} className={cn("text-sm transition-colors hover:text-foreground", active ? "text-foreground" : "text-muted-foreground")}>
-                    {item.label}
+                    <RollText>{item.label}</RollText>
                     <span className="ml-1 text-xs opacity-50">({item.n})</span>
                   </Link>
                 );
@@ -95,11 +96,11 @@ export function Header({ showPricing = true }: { showPricing?: boolean }) {
             <div className={cn("hidden items-center gap-5 transition-opacity duration-300 md:flex", ready ? "opacity-100" : "opacity-0")}>
               {!user && (
                 <Link href="/login" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                  Sign in
+                  <RollText>Sign in</RollText>
                 </Link>
               )}
-              <Link href={cta.href} className="inline-flex items-center justify-center rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-85">
-                {cta.label}
+              <Link href={cta.href} className="inline-flex items-center justify-center rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-[opacity,transform] duration-300 hover:opacity-90 active:scale-[0.98]">
+                <RollText>{cta.label}</RollText>
               </Link>
             </div>
             <button onClick={() => setOpen((o) => !o)} className="-mr-2 grid size-10 place-items-center md:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open}>

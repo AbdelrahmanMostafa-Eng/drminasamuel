@@ -386,6 +386,87 @@
 .marquee-left { animation: marqueeLeft 38s linear infinite; will-change: transform; }
 .marquee-right { animation: marqueeRight 32s linear infinite; will-change: transform; }
 
+/* ── Footer wordmark ("BIOACADEMY") and its animals ─────────────────────────────── */
+.fw-stage { --fa: 1.75; font-size: min(14.6vw, 12.6rem); height: 1.12em; }
+@media (max-width: 640px) { .fw-stage { --fa: 2.7; height: 1.16em; } }
+.fw-word {
+  position: relative;
+  margin-top: 0.42em;
+  line-height: 1;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  --cap: 0.177em; /* top of the capitals inside the 1em line box (IBM Plex Sans) */
+}
+.fw-letter {
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 14%, transparent) 18%, transparent 88%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.fw-fly-a { animation: fw-cross 24s linear infinite; }
+.fw-fly-b { animation: fw-cross 33s linear infinite -14s; }
+@keyframes fw-cross { from { left: -8%; } to { left: 104%; } }
+.fw-bob { animation: fw-bob 2.8s ease-in-out infinite alternate; }
+@keyframes fw-bob { from { transform: translateY(-0.03em); } to { transform: translateY(0.05em); } }
+/* swallows: a burst of wingbeats, then a glide */
+.fw-flap { animation: fw-flap 2.2s ease-in-out infinite; }
+@keyframes fw-flap { 0%, 30%, 100% { transform: scaleY(1); } 5%, 15%, 25% { transform: scaleY(0.12); } 10%, 20% { transform: scaleY(1); } }
+.fw-flutter { animation: fw-flutter 0.17s ease-in-out infinite alternate; }
+@keyframes fw-flutter { from { transform: scaleX(1); } to { transform: scaleX(0.22); } }
+.fw-wander { animation: fw-wander 16s ease-in-out infinite; }
+@keyframes fw-wander {
+  0% { transform: translate(0, 0) rotate(-8deg); }
+  25% { transform: translate(-0.35em, -0.06em) rotate(6deg); }
+  50% { transform: translate(-0.6em, 0.07em) rotate(-5deg); }
+  75% { transform: translate(-0.22em, 0.1em) rotate(9deg); }
+  100% { transform: translate(0, 0) rotate(-8deg); }
+}
+.fw-walk { animation: fw-walk 64s linear infinite; }
+/* chameleons rock back and forth as they step */
+.fw-sway { animation: fw-sway 1.6s ease-in-out infinite; transform-origin: 50% 90%; }
+@keyframes fw-sway { 0%, 100% { transform: translateX(0) rotate(0); } 35% { transform: translateX(-2%) rotate(-1deg); } 70% { transform: translateX(1.5%) rotate(0.6deg); } }
+@keyframes fw-walk {
+  0% { left: 0.5%; transform: scaleX(1); }
+  47% { left: 31%; transform: scaleX(1); }
+  50% { left: 31%; transform: scaleX(-1); }
+  97% { left: 0.5%; transform: scaleX(-1); }
+  100% { left: 0.5%; transform: scaleX(1); }
+}
+.fw-leg-a { animation: fw-leg 0.8s ease-in-out infinite alternate; }
+.fw-leg-b { animation: fw-leg 0.8s ease-in-out infinite alternate-reverse; }
+@keyframes fw-leg { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+.fw-eye { animation: fw-eye 5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes fw-eye { 0%, 30% { transform: translate(0, 0); } 40%, 60% { transform: translate(-2.6px, 1px); } 70%, 90% { transform: translate(1.4px, -1.4px); } 100% { transform: translate(0, 0); } }
+.fw-crawl { animation: fw-crawl 28s ease-in-out infinite alternate; }
+@keyframes fw-crawl { from { left: 0.04em; } to { left: 0.24em; } }
+.fw-stalk { animation: fw-stalk 2.2s ease-in-out infinite alternate; }
+@keyframes fw-stalk { from { transform: rotate(-9deg); } to { transform: rotate(7deg); } }
+.fw-swing { animation: fw-swing 3.4s ease-in-out infinite alternate; transform-origin: 50% 0; }
+@keyframes fw-swing { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+.fw-thread { animation: fw-thread 4.4s ease-in-out infinite alternate; transform-origin: top; }
+@keyframes fw-thread { from { transform: scaleY(0.5); } to { transform: scaleY(1); } }
+.fw-spider { animation: fw-spider 4.4s ease-in-out infinite alternate; }
+@keyframes fw-spider { from { transform: translateY(-0.13em); } to { transform: translateY(0); } }
+.fw-legs { animation: fw-legs 1.6s ease-in-out infinite alternate; }
+@keyframes fw-legs { from { transform: scaleY(1); } to { transform: scaleY(0.88); } }
+
+/* ── Premium hover: letters roll up one after another (buttons & links) ───────────── */
+.roll { display: inline-flex; overflow: hidden; vertical-align: top; line-height: 1.3; user-select: none; -webkit-user-select: none; }
+.roll-ch { position: relative; display: inline-block; white-space: pre; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); transition-delay: calc(var(--i) * 14ms); }
+.roll-ch::after { content: attr(data-ch); position: absolute; left: 0; top: 100%; }
+a:hover .roll-ch,
+button:hover .roll-ch,
+a:focus-visible .roll-ch,
+button:focus-visible .roll-ch,
+.roll-group:hover .roll-ch { transform: translateY(-100%); }
+/* Arrow nudge used next to rolling labels */
+.nudge { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+a:hover .nudge, button:hover .nudge { transform: translate(2px, -2px); }
+a:hover .nudge-up, button:hover .nudge-up { transform: translateY(-3px); }
+a:hover .nudge-x, button:hover .nudge-x { transform: translateX(3px); }
+
 /* No visible page scrollbar — the page still scrolls with wheel, touch and keys. */
 html {
   scrollbar-width: none;
