@@ -44,7 +44,7 @@ export function Section({ id, children, className = "", border = true, gradientB
 export function Hero({ hero, stats }: { hero: SiteSettings["hero"]; stats: SiteSettings["stats"] }) {
   return (
     <section className="relative overflow-hidden pt-24 md:pt-28">
-      <div className="mx-auto grid max-w-[1280px] grid-cols-1 items-end gap-6 px-6 md:px-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10">
+      <div className="mx-auto grid max-w-[1280px] grid-cols-1 items-center gap-6 px-6 md:px-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10">
         <div className="pb-6 pt-10 lg:pb-24 lg:pt-20">
           <p className="mb-6 text-lg text-muted-foreground">{hero.eyebrow} — with Dr. Mina Samuel</p>
           <HeroTitle text={`${hero.title}\n${hero.highlight}`} className="font-display text-[2.9rem] font-light leading-[1.02] tracking-tight sm:text-6xl lg:text-[5.4rem]" />
