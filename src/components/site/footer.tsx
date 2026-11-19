@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Wordmark } from "./header";
+import { RollText } from "./roll-text";
+import { BackToTop } from "./back-to-top";
+import { FooterWordmark } from "./footer-wordmark";
 import { FacebookIcon, InstagramIcon, TikTokIcon, WhatsAppIcon, YouTubeIcon } from "@/components/brand/social-icons";
 import type { SiteSettings } from "@/lib/settings";
 import { formatPhone, waLink } from "@/lib/utils";
@@ -45,7 +48,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
   const phone = settings.teacherPhone || settings.team[0]?.phone;
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto max-w-[1280px] px-6 py-16 md:px-12 md:py-24">
+      <div className="mx-auto max-w-[1280px] px-6 pb-8 pt-16 md:px-12 md:pb-10 md:pt-24">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-4">
             <Link href="/" aria-label="Bioacademy home">
@@ -68,7 +71,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               {PAGES.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                    {l.label}
+                    <RollText>{l.label}</RollText>
                   </Link>
                 </li>
               ))}
@@ -81,7 +84,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               {settings.centers.map((c) => (
                 <li key={c.name}>
                   <a href={c.mapUrl} target="_blank" rel="noopener noreferrer" className="group block text-sm">
-                    <span className="block text-foreground">{c.name}</span>
+                    <RollText className="block text-foreground">{c.name}</RollText>
                     <span className="inline-flex items-center gap-1 text-muted-foreground group-hover:text-foreground">
                       {c.area} <ArrowUpRight className="size-3" />
                     </span>
@@ -100,7 +103,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               ].map(([label, href]) => (
                 <li key={label}>
                   <a href={href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
-                    {label} — {href!.replace(/^https?:\/\//, "")} <ArrowUpRight className="size-3" />
+                    <RollText>{`${label} — ${href!.replace(/^https?:\/\//, "")}`}</RollText> <ArrowUpRight className="nudge size-3" />
                   </a>
                 </li>
               ))}
@@ -110,9 +113,13 @@ export function Footer({ settings }: { settings: SiteSettings }) {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
           <p className="text-xs text-muted-foreground">© {year} Bioacademy · Dr. Mina Samuel. All rights reserved.</p>
-          <p className="text-xs text-muted-foreground">ACT® and EST are trademarks of their respective owners.</p>
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
+            <p className="text-xs text-muted-foreground">ACT® and EST are trademarks of their respective owners.</p>
+            <BackToTop />
+          </div>
         </div>
       </div>
+      <FooterWordmark />
     </footer>
   );
 }

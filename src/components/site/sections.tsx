@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, BarChart3, BookMarked, ClipboardList, FileChe
 import { HeroTitle, SectionTitle } from "./text-anim";
 import { HeroOrb } from "./orb";
 import { ViewerLink } from "./viewer";
+import { RollText } from "./roll-text";
 import { PixelAnim, type PixelScene } from "./pixel-anim";
 import { FaqList } from "./faq";
 import { Reveal } from "@/components/ui/reveal";
@@ -49,15 +50,15 @@ export function Hero({ hero, stats }: { hero: SiteSettings["hero"]; stats: SiteS
           <HeroTitle text={`${hero.title}\n${hero.highlight}`} className="font-display text-[2.9rem] font-light leading-[1.02] tracking-tight sm:text-6xl lg:text-[5.4rem]" />
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground">{hero.subtitle}</p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
-            <Link href="/courses" className="inline-flex items-center justify-center rounded-full bg-foreground px-8 py-4 text-base font-medium text-background transition-opacity hover:opacity-85">
-              Explore courses
+            <Link href="/courses" className="inline-flex items-center justify-center rounded-full bg-foreground px-8 py-4 text-base font-medium text-background transition-[opacity,transform] duration-300 hover:opacity-90 active:scale-[0.98]">
+              <RollText>Explore courses</RollText>
             </Link>
             <ViewerLink
               guest={{ href: "/register", label: "Create an account" }}
               member={{ href: "@dashboard", label: "Go to my dashboard" }}
               className="inline-flex items-center gap-2 px-6 py-4 text-base font-medium text-brand-600 transition-colors hover:text-brand-800"
             >
-              <ArrowRight className="size-4" />
+              <ArrowRight className="nudge nudge-x size-4" />
             </ViewerLink>
           </div>
           <div className="mt-14 flex flex-wrap gap-x-10 gap-y-6">
@@ -287,7 +288,7 @@ export function SchedulePreview({ sessions }: { sessions: { id: string; title: s
           <SectionTitle className="mt-5 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">Upcoming live sessions</SectionTitle>
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">All times are Cairo time. Zoom links are only available inside the dashboard, to enrolled students.</p>
           <Link href="/schedule" className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-brand-600 hover:text-brand-800">
-            Full schedule <ArrowRight className="size-4" />
+            <RollText>Full schedule</RollText> <ArrowRight className="nudge nudge-x size-4" />
           </Link>
         </div>
         <SpotlightCard className="rounded-2xl border border-border bg-card p-6">
@@ -408,10 +409,10 @@ export function CtaBand() {
             member={{ href: "@dashboard", label: "Go to my dashboard" }}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-8 py-4 text-base font-medium text-background transition-opacity hover:opacity-85"
           >
-            <ArrowUpRight className="size-4" />
+            <ArrowUpRight className="nudge size-4" />
           </ViewerLink>
           <Link href="/courses" className="inline-flex items-center justify-center rounded-full border border-border px-8 py-4 text-base font-medium transition-colors hover:border-foreground/25">
-            View courses
+            <RollText>View courses</RollText>
           </Link>
         </div>
       </div>
@@ -475,11 +476,11 @@ export function PricingSection({ pricing }: { pricing: SiteSettings["pricing"] }
                 </ul>
                 {external ? (
                   <a href={p.buttonLink} target="_blank" rel="noopener noreferrer" className={cls}>
-                    {p.buttonLabel}
+                    <RollText>{p.buttonLabel}</RollText>
                   </a>
                 ) : (
                   <Link href={p.buttonLink} className={cls}>
-                    {p.buttonLabel}
+                    <RollText>{p.buttonLabel}</RollText>
                   </Link>
                 )}
               </SpotlightCard>

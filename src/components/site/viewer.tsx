@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { RollText } from "./roll-text";
 
 export type Viewer = { name: string; role: string } | null;
 
@@ -51,7 +52,7 @@ export function ViewerLink({
   const href = t.href === "@dashboard" ? dashboardHref(viewer) : t.href;
   return (
     <Link href={href} className={className}>
-      {t.label}
+      <RollText>{t.label}</RollText>
       {children}
     </Link>
   );
