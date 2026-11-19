@@ -162,7 +162,7 @@ export default async function AdminAssessmentPage({ params, searchParams }: { pa
                     <tr key={e.id} className="border-b border-border last:border-0 hover:bg-muted/40">
                       <td className="px-5 py-3 text-muted-foreground">{i + 1}</td>
                       <td className="px-5 py-3">
-                        <Link href={`/admin/students/${e.userId}`} className="font-semibold hover:text-primary">{e.user.fullName}</Link>
+                        <Link prefetch={false} href={`/admin/students/${e.userId}`} className="font-semibold hover:text-primary">{e.user.fullName}</Link>
                         <p className="text-xs text-muted-foreground">{formatPhone(e.user.whatsapp)}</p>
                       </td>
                       <td className="px-5 py-3">{b ? <Badge tone="success">Done</Badge> : phase === "closed" ? <Badge tone="danger">Not done</Badge> : <Badge tone="warning">Pending</Badge>}</td>

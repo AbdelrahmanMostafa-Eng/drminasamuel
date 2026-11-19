@@ -64,7 +64,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
         <StudentActions
-          student={{ id: s.id, fullName: s.fullName, whatsapp: s.whatsapp, email: s.email, parentPhone: s.parentPhone, isActive: s.isActive }}
+          student={{ id: s.id, fullName: s.fullName, whatsapp: s.whatsapp, email: s.email, parentPhone: s.parentPhone, username: s.username, isActive: s.isActive }}
           courses={courses}
           canStudents={can(me, "students")}
           canPayments={can(me, "payments")}
@@ -123,7 +123,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
             {stats.assessments.filter((a) => a.dueAt <= now || a.submissions.some((x) => x.submittedAt)).reverse().map((a) => {
               const b = bestAttempts(a.submissions).get(s.id);
               return (
-                <Link key={a.id} href={`/admin/assessments/${a.id}?tab=results`} className="flex items-center justify-between gap-3 rounded-xl border border-border p-3 text-sm hover:bg-muted/40">
+                <Link prefetch={false} key={a.id} href={`/admin/assessments/${a.id}?tab=results`} className="flex items-center justify-between gap-3 rounded-xl border border-border p-3 text-sm hover:bg-muted/40">
                   <span className="min-w-0">
                     <span className="block truncate font-semibold">{a.title}</span>
                     <span className="text-xs text-muted-foreground">{a.type === "QUIZ" ? "Quiz" : "Homework"} · {fmt(a.dueAt, "d MMM")}</span>
@@ -142,7 +142,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
               const a = x.attendance[0];
               const present = a?.override ? a.override === "PRESENT" : !!a?.joinedAt;
               return (
-                <Link key={x.id} href={`/admin/sessions/${x.id}`} className="flex items-center justify-between gap-3 rounded-xl border border-border p-3 text-sm hover:bg-muted/40">
+                <Link prefetch={false} key={x.id} href={`/admin/sessions/${x.id}`} className="flex items-center justify-between gap-3 rounded-xl border border-border p-3 text-sm hover:bg-muted/40">
                   <span className="min-w-0">
                     <span className="block truncate font-semibold">{x.title}</span>
                     <span className="text-xs text-muted-foreground">{fmt(x.startsAt, "EEE d MMM")}</span>

@@ -24,7 +24,7 @@ export function AdminSessionList({ sessions, empty = "No sessions." }: { session
       {sessions.map((s) => {
         const phase = sessionPhase(s);
         return (
-          <Link key={s.id} href={`/admin/sessions/${s.id}`} className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-soft transition hover:border-foreground/20">
+          <Link prefetch={false} key={s.id} href={`/admin/sessions/${s.id}`} className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-soft transition hover:border-foreground/20">
             <div className={`grid w-14 shrink-0 place-items-center rounded-lg border border-border py-1.5 ${phase === "ended" ? "text-muted-foreground" : "text-foreground"}`}>
               <span className="text-[0.6rem] font-bold uppercase">{fmt(s.startsAt, "MMM")}</span>
               <span className="text-lg font-semibold leading-none">{fmt(s.startsAt, "d")}</span>

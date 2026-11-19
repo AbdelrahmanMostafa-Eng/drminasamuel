@@ -39,7 +39,7 @@ export default async function GradebookPage({ params }: { params: Promise<{ id: 
                 <th className="sticky left-0 z-10 bg-muted px-4 py-3 font-bold uppercase tracking-wider">Student</th>
                 {assessments.map((a) => (
                   <th key={a.id} className="min-w-28 px-3 py-3 font-semibold">
-                    <Link href={`/admin/assessments/${a.id}?tab=results`} className="block hover:text-primary">
+                    <Link prefetch={false} href={`/admin/assessments/${a.id}?tab=results`} className="block hover:text-primary">
                       <span className={cn("mr-1 inline-block rounded px-1 text-[0.6rem] font-bold text-white", a.type === "QUIZ" ? "bg-ember-500" : "bg-emerald-500")}>{a.type === "QUIZ" ? "Q" : "HW"}</span>
                       <span className="line-clamp-2">{a.title}</span>
                       <span className="block text-[0.65rem] font-normal">{fmt(a.dueAt, "d MMM")}</span>
@@ -73,7 +73,7 @@ export default async function GradebookPage({ params }: { params: Promise<{ id: 
                 return (
                   <tr key={e.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                     <td className="sticky left-0 z-10 bg-card px-4 py-2.5 font-semibold">
-                      <Link href={`/admin/students/${e.userId}`} className="hover:text-primary">{e.user.fullName}</Link>
+                      <Link prefetch={false} href={`/admin/students/${e.userId}`} className="hover:text-primary">{e.user.fullName}</Link>
                     </td>
                     {cells.map((c) => (
                       <td key={c.a.id} className={cn("px-3 py-2.5 text-center font-bold", color(c.pct))}>

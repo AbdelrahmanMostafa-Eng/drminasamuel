@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, BarChart3, BookMarked, ClipboardList, FileCheck2, GraduationCap, Lock, MonitorPlay, Smartphone, Upload, UserPlus, Video } from "lucide-react";
 import { HeroTitle, SectionTitle } from "./text-anim";
-import { FeatherOrb } from "./orb";
+import { HeroOrb } from "./orb";
 import { ViewerLink } from "./viewer";
 import { PixelAnim, type PixelScene } from "./pixel-anim";
 import { FaqList } from "./faq";
@@ -71,7 +71,8 @@ export function Hero({ hero, stats }: { hero: SiteSettings["hero"]; stats: SiteS
         </div>
 
         <div className="relative mx-auto w-full max-w-[540px] lg:max-w-none">
-          <FeatherOrb className="absolute -right-[18%] top-[2%] w-[92%] opacity-95 lg:-right-[22%] lg:top-[4%]" />
+          {/* Positions keep the whole circle on screen at every width; it stays behind the photo. */}
+          <HeroOrb className="absolute right-0 top-[2%] w-[88%] lg:-right-[8%] lg:top-[4%] lg:w-[92%] 2xl:-right-[20%]" />
           <div className="relative z-10 mx-auto w-[78%] lg:w-[74%]">
             <Image
               src="/images/dr-mina-clean.webp"
@@ -436,81 +437,55 @@ export function PageHero({ eyebrow, title, description }: { eyebrow: string; tit
 
 export { Link };
 
-/* ─── Pricing (agentic: three plain cards, middle one inked) ─────────────── */
+/* ─── Pricing (agentic: plain cards, highlighted one inked) — edited in Website settings ── */
 
-type PricingCourse = { id: string; slug: string; title: string; level: "BASICS" | "ADVANCED"; price: number; chapters: number; lessons: number; enrollmentOpen: boolean; prerequisiteTitle: string | null };
-
-const egp = (n: number) => new Intl.NumberFormat("en-US").format(n);
-const shortTitle = (t: string) => t.split(" — ")[0];
-
-export function PricingSection({ courses }: { courses: PricingCourse[] }) {
-  if (!courses.length) return null;
-  const plans = courses.slice(0, 2).map((c) => ({
-    key: c.id,
-    label: c.level === "BASICS" ? "Basics · Level 01" : "Advanced · Level 02",
-    price: egp(c.price),
-    unit: "EGP / course",
-    note: c.level === "BASICS" ? "Build the foundation" : "Take it to exam level",
-    items: [
-      `${c.chapters} chapters · ${c.lessons} lessons`,
-      "Live Zoom sessions + recordings",
-      "Homework after every lesson",
-      "A quiz after every chapter",
-      "Lesson PDFs & the full book",
-      c.prerequisiteTitle ? `Requires ${shortTitle(c.prerequisiteTitle)}` : "No prerequisite",
-    ],
-    cta: { href: `/courses/${c.slug}`, label: c.enrollmentOpen ? "Enroll" : "View course" },
-  }));
-  if (courses.length >= 2) {
-    plans.push({
-      key: "path",
-      label: "Full path",
-      price: egp(courses.slice(0, 2).reduce((s, c) => s + c.price, 0)),
-      unit: "EGP in total",
-      note: "Basics, then Advanced",
-      items: ["Everything in Basics and Advanced", "Each course is paid separately", "InstaPay or Vodafone Cash", "Cash at the center is also possible", "Questions? Talk to the team"],
-      cta: { href: "/contact", label: "Contact the team" },
-    });
-  }
-  const featured = plans.length === 3 ? 1 : 0;
+export function PricingSection({ pricing }: { pricing: SiteSettings["pricing"] }) {
+  const plans = pricing.plans;
+  if (!pricing.show || !plans.length) return null;
+  const cols = plans.length >= 4 ? "md:grid-cols-2 xl:grid-cols-4" : plans.length === 3 ? "md:grid-cols-3" : plans.length === 2 ? "mx-auto max-w-4xl md:grid-cols-2" : "mx-auto max-w-md";
   return (
     <Section id="pricing">
       <div className="mb-14 text-center md:mb-16">
         <PixelAnim scene="mitosis" className="mx-auto mb-6" />
         <Tag>Pricing</Tag>
-        <SectionTitle className="mt-6 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">Pay per course, as you progress.</SectionTitle>
+        <SectionTitle className="mt-6 font-display text-4xl font-light leading-[1.05] tracking-tight md:text-5xl">{pricing.title}</SectionTitle>
       </div>
-      <div className={`grid grid-cols-1 gap-3 ${plans.length === 3 ? "md:grid-cols-3" : plans.length === 2 ? "md:grid-cols-2" : "mx-auto max-w-md"}`}>
-        {plans.map((p, i) => (
-          <Reveal key={p.key} delay={i * 0.06} className="h-full">
-            <SpotlightCard className="flex h-full flex-col rounded-2xl border border-border bg-card p-8">
-              <p className="font-mono text-[11px] tracking-[0.08em] text-muted-foreground">{p.label}</p>
-              <p className="mt-6 flex items-baseline gap-2">
-                <span className="font-display text-5xl font-light tracking-tight">{p.price}</span>
-                <span className="text-sm text-muted-foreground">{p.unit}</span>
-              </p>
-              <p className="mt-2 text-xs text-muted-foreground">{p.note}</p>
-              <ul className="mb-10 mt-8 flex-1 space-y-3.5 text-sm text-foreground/70">
-                {p.items.map((it) => (
-                  <li key={it} className="flex items-center gap-3">
-                    <span className="size-1 shrink-0 rounded-full bg-foreground/30" />
-                    {it}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href={p.cta.href}
-                className={
-                  i === featured
-                    ? "inline-flex h-12 items-center justify-center rounded-xl bg-foreground text-[13px] font-medium uppercase tracking-[0.12em] text-background transition-opacity hover:opacity-85"
-                    : "inline-flex h-12 items-center justify-center rounded-xl border border-border text-[13px] uppercase tracking-[0.12em] text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground"
-                }
-              >
-                {p.cta.label}
-              </Link>
-            </SpotlightCard>
-          </Reveal>
-        ))}
+      <div className={`grid grid-cols-1 gap-3 ${cols}`}>
+        {plans.map((p, i) => {
+          const external = /^https?:/.test(p.buttonLink);
+          const cls = p.featured
+            ? "inline-flex h-12 items-center justify-center rounded-xl bg-foreground px-4 text-center text-[13px] font-medium uppercase tracking-[0.12em] text-background transition-opacity hover:opacity-85"
+            : "inline-flex h-12 items-center justify-center rounded-xl border border-border px-4 text-center text-[13px] uppercase tracking-[0.12em] text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground";
+          return (
+            <Reveal key={`${p.label}-${i}`} delay={i * 0.06} className="h-full">
+              <SpotlightCard className="flex h-full flex-col rounded-2xl border border-border bg-card p-8">
+                <p className="font-mono text-[11px] tracking-[0.08em] text-muted-foreground">{p.label}</p>
+                <p className="mt-6 flex flex-wrap items-baseline gap-x-2">
+                  <span className="font-display text-5xl font-light tracking-tight">{p.price}</span>
+                  {p.unit && <span className="text-sm text-muted-foreground">{p.unit}</span>}
+                </p>
+                {p.note && <p className="mt-2 text-xs text-muted-foreground">{p.note}</p>}
+                <ul className="mb-10 mt-8 flex-1 space-y-3.5 text-sm text-foreground/70">
+                  {p.features.map((it) => (
+                    <li key={it} className="flex items-start gap-3">
+                      <span className="mt-2 size-1 shrink-0 rounded-full bg-foreground/30" />
+                      {it}
+                    </li>
+                  ))}
+                </ul>
+                {external ? (
+                  <a href={p.buttonLink} target="_blank" rel="noopener noreferrer" className={cls}>
+                    {p.buttonLabel}
+                  </a>
+                ) : (
+                  <Link href={p.buttonLink} className={cls}>
+                    {p.buttonLabel}
+                  </Link>
+                )}
+              </SpotlightCard>
+            </Reveal>
+          );
+        })}
       </div>
     </Section>
   );

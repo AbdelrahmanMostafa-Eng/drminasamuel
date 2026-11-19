@@ -29,7 +29,7 @@ export default async function HomePage() {
           All courses <ArrowRight className="size-4" />
         </Link>
       </Section>
-      <PricingSection courses={open} />
+      <PricingSection pricing={settings.pricing} />
       <HowItWorks />
       <Features />
       {settings.showPublicSchedule && <SchedulePreview sessions={sessions} />}

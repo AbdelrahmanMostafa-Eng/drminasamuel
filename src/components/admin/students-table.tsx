@@ -87,7 +87,7 @@ export function StudentsTable({ rows, courses, fixedCourseId }: { rows: StudentR
                 {list.map((r) => (
                   <tr key={r.id} className="border-b border-border last:border-0 hover:bg-muted/40">
                     <td className="px-5 py-3">
-                      <Link href={`/admin/students/${r.id}`} className="flex items-center gap-3">
+                      <Link prefetch={false} href={`/admin/students/${r.id}`} className="flex items-center gap-3">
                         <Avatar name={r.name} src={r.avatar} size={36} />
                         <span className="min-w-0">
                           <span className="flex items-center gap-2 font-semibold hover:text-primary">
@@ -118,7 +118,7 @@ export function StudentsTable({ rows, courses, fixedCourseId }: { rows: StudentR
                     </td>
                     <td className="px-5 py-3 text-muted-foreground">{r.lastLogin ? df.format(new Date(r.lastLogin)) : "Never"}</td>
                     <td className="px-5 py-3 text-right">
-                      <Link href={`/admin/students/${r.id}`} className="inline-grid size-8 place-items-center rounded-lg hover:bg-muted">
+                      <Link prefetch={false} href={`/admin/students/${r.id}`} className="inline-grid size-8 place-items-center rounded-lg hover:bg-muted">
                         <ChevronRight className="size-4" />
                       </Link>
                     </td>
