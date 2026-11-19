@@ -95,7 +95,7 @@ export function PaymentsBoard({ items }: { items: PaymentCard[] }) {
                   <div className="flex min-w-0 flex-1 flex-col p-5">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <Link href={`/admin/students/${p.student.id}`} className="block truncate font-semibold hover:text-primary">{p.student.name}</Link>
+                        <Link prefetch={false} href={`/admin/students/${p.student.id}`} className="block truncate font-semibold hover:text-primary">{p.student.name}</Link>
                         <p className="truncate text-xs text-muted-foreground">{formatPhone(p.student.whatsapp)}</p>
                       </div>
                       <Badge tone={p.method === "INSTAPAY" ? "brand" : "danger"}>

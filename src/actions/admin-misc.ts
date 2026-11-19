@@ -56,6 +56,38 @@ export async function saveSettingsAction<K extends keyof SiteSettings>(key: K, v
     }
     if (key === "centers") v = (value as SiteSettings["centers"]).map((c) => ({ name: c.name.trim(), area: c.area.trim(), mapUrl: ensureUrl(c.mapUrl) }));
     if (key === "social") v = Object.fromEntries(Object.entries(value as SiteSettings["social"]).map(([k, u]) => [k, u ? ensureUrl(u) : ""]));
+    if (key === "teacherPhone") {
+      const raw = String(value ?? "").trim();
+      const phone = raw ? normalizePhone(raw) : "";
+      if (raw && !phone) throw new ActionError("That phone number looks invalid.");
+      v = phone;
+    }
+    if (key === "about") {
+      const ab = value as SiteSettings["about"];
+      v = { title: ab.title.trim(), body: ab.body.trim(), points: ab.points.map((x) => x.trim()).filter(Boolean) };
+    }
+    if (key === "pricing") {
+      const p = value as SiteSettings["pricing"];
+      if (p.plans.length > 4) throw new ActionError("Up to 4 price cards fit on the page.");
+      v = {
+        show: !!p.show,
+        title: p.title.trim() || "Pricing",
+        plans: p.plans.map((c, i) => {
+          if (!c.label.trim() || !c.price.trim()) throw new ActionError(`Card ${i + 1} needs a name and a price.`);
+          const link = c.buttonLink.trim() || "/courses";
+          return {
+            label: c.label.trim(),
+            price: c.price.trim(),
+            unit: c.unit.trim(),
+            note: c.note.trim(),
+            features: c.features.map((f) => f.trim()).filter(Boolean).slice(0, 10),
+            buttonLabel: c.buttonLabel.trim() || "Enroll",
+            buttonLink: link.startsWith("/") || link.startsWith("#") ? link : ensureUrl(link),
+            featured: !!c.featured,
+          };
+        }),
+      };
+    }
     if (key === "testSites") v = Object.fromEntries(Object.entries(value as SiteSettings["testSites"]).map(([k, u]) => [k, u ? ensureUrl(u) : ""]));
     await saveSettings({ [key]: v } as Partial<SiteSettings>);
     await audit(me, "settings.updated", String(key));

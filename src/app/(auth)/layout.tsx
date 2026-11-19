@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Wordmark } from "@/components/site/header";
-import { FeatherOrb } from "@/components/site/orb";
+import { HeroOrb } from "@/components/site/orb";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <Wordmark />
         </Link>
         <div className="relative my-auto">
-          <FeatherOrb className="absolute -right-[20%] top-[-6%] w-[85%] opacity-90" />
+          <HeroOrb className="absolute -right-[2%] top-0 w-[80%]" />
           <Image
             src="/images/dr-mina-clean.webp"
             alt="Dr. Mina Samuel"

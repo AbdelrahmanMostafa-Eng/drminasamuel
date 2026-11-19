@@ -114,7 +114,7 @@ export default async function AdminSessionPage({ params }: { params: Promise<{ i
                 {rows.map(({ e, a, present, later }) => (
                   <tr key={e.id} className="border-b border-border last:border-0 hover:bg-muted/40">
                     <td className="px-5 py-3">
-                      <Link href={`/admin/students/${e.userId}`} className="font-semibold hover:text-primary">{e.user.fullName}</Link>
+                      <Link prefetch={false} href={`/admin/students/${e.userId}`} className="font-semibold hover:text-primary">{e.user.fullName}</Link>
                       <p className="text-xs text-muted-foreground">{formatPhone(e.user.whatsapp)}</p>
                     </td>
                     <td className="px-5 py-3">

@@ -37,11 +37,22 @@ export async function reviewEnrollmentAction(id: string, decision: "APPROVE" | "
 
 // ─── Students ──────────────────────────────────────────────────────
 
+const usernameField = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .regex(/^[a-z0-9._-]{3,30}$/, "Username: 3–30 letters, numbers, dots, dashes or underscores (no spaces).")
+  .optional()
+  .or(z.literal(""));
+
 const studentSchema = z.object({
   fullName: z.string().trim().min(3, "Enter the full name.").max(80),
   whatsapp: z.string().trim().min(8, "Enter a WhatsApp number."),
   email: z.string().trim().toLowerCase().email("Invalid email.").optional().or(z.literal("")),
   parentPhone: z.string().trim().min(8, "Enter the parent's phone number."),
+  username: usernameField,
+  password: z.string().max(100).optional().or(z.literal("")),
+  mustChangePassword: z.boolean().optional(),
   courseId: z.string().optional().nullable(),
   amount: z.coerce.number().int().min(0).optional(),
 });
@@ -57,16 +68,22 @@ export async function createStudentAction(input: z.input<typeof studentSchema>) 
     if (!parentPhone) throw new ActionError("Parent's number looks invalid.");
     const dup = await db.user.findFirst({ where: { OR: [{ whatsapp }, ...(d.email ? [{ email: d.email }] : [])] } });
     if (dup) throw new ActionError("A user with this WhatsApp number or email already exists.");
-    const temp = generatePassword(10);
+    const username = d.username || null;
+    if (username && (await db.user.findUnique({ where: { username } }))) throw new ActionError("That username is taken — try another.");
+    const chosen = d.password?.trim() ?? "";
+    if (chosen && chosen.length < 8) throw new ActionError("Password must be at least 8 characters.");
+    const temp = chosen || generatePassword(10);
     const user = await db.user.create({
       data: {
         role: "STUDENT",
         fullName: d.fullName,
         whatsapp,
+        username,
         email: d.email || null,
         parentPhone,
         passwordHash: await hashPassword(temp),
-        mustChangePassword: true,
+        // A password the teacher chose is kept unless asked otherwise; a generated one must be changed.
+        mustChangePassword: chosen ? !!d.mustChangePassword : true,
       },
     });
     if (d.courseId) {
@@ -77,7 +94,7 @@ export async function createStudentAction(input: z.input<typeof studentSchema>) 
     }
     await audit(me, "student.created_manually", `${d.fullName} (${whatsapp})`);
     revalidatePath("/admin/students");
-    return { password: temp, login: whatsapp };
+    return { password: temp, login: username ?? whatsapp, whatsapp, temporary: !chosen || !!d.mustChangePassword };
   });
 }
 
@@ -121,6 +138,19 @@ export async function resetPasswordAction(userId: string) {
   });
 }
 
+/** Lets staff choose a student's password (e.g. for students who can't manage their own account). */
+export async function setStudentPasswordAction(userId: string, password: string, mustChange: boolean) {
+  return run(async () => {
+    const me = await actionStaff("students");
+    const u = await db.user.findUniqueOrThrow({ where: { id: userId } });
+    if (u.role !== "STUDENT") throw new ActionError("Use Team & permissions for staff passwords.");
+    if (password.length < 8) throw new ActionError("Password must be at least 8 characters.");
+    await db.user.update({ where: { id: userId }, data: { passwordHash: await hashPassword(password), mustChangePassword: mustChange } });
+    await revokeAllSessions(userId, "PASSWORD_CHANGED");
+    await audit(me, "user.password_set", u.fullName);
+  }, "Password updated");
+}
+
 export async function forceLogoutAction(userId: string) {
   return run(async () => {
     const me = await actionStaff("students");
@@ -145,17 +175,22 @@ export async function setUserActiveAction(userId: string, active: boolean) {
   }, active ? "Account activated" : "Account suspended");
 }
 
-export async function updateStudentAction(userId: string, input: { fullName: string; whatsapp: string; email?: string; parentPhone?: string }) {
+export async function updateStudentAction(userId: string, input: { fullName: string; whatsapp: string; email?: string; parentPhone?: string; username?: string }) {
   return run(async () => {
     const me = await actionStaff("students");
     const whatsapp = normalizePhone(input.whatsapp);
     if (!whatsapp) throw new ActionError("Invalid WhatsApp number.");
     const email = input.email?.trim().toLowerCase() || null;
-    const dup = await db.user.findFirst({ where: { NOT: { id: userId }, OR: [{ whatsapp }, ...(email ? [{ email }] : [])] } });
-    if (dup) throw new ActionError("Another account already uses this number or email.");
+    const parsedUsername = usernameField.safeParse(input.username ?? "");
+    if (!parsedUsername.success) throw new ActionError(parsedUsername.error.issues[0]?.message ?? "Invalid username.");
+    const username = parsedUsername.data || null;
+    const parentPhone = input.parentPhone ? normalizePhone(input.parentPhone) : null;
+    if (!parentPhone) throw new ActionError("Enter a valid parent's phone number.");
+    const dup = await db.user.findFirst({ where: { NOT: { id: userId }, OR: [{ whatsapp }, ...(email ? [{ email }] : []), ...(username ? [{ username }] : [])] } });
+    if (dup) throw new ActionError(username && dup.username === username ? "That username is taken — try another." : "Another account already uses this number or email.");
     await db.user.update({
       where: { id: userId },
-      data: { fullName: input.fullName.trim(), whatsapp, email, parentPhone: input.parentPhone ? normalizePhone(input.parentPhone) : null },
+      data: { fullName: input.fullName.trim(), whatsapp, email, username, parentPhone },
     });
     await audit(me, "student.updated", input.fullName);
     revalidatePath(`/admin/students/${userId}`);

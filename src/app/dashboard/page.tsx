@@ -159,7 +159,7 @@ export default async function StudentOverview() {
                 <CardBody className="space-y-2.5">
                   {due.length === 0 && <p className="text-sm text-muted-foreground">Nothing due right now.</p>}
                   {due.map((a) => (
-                    <Link key={a.id} href={`/dashboard/assessments/${a.id}`} className="flex items-center gap-3 rounded-xl border border-border p-3 transition hover:border-brand-300 hover:border-foreground/20">
+                    <Link prefetch={false} key={a.id} href={`/dashboard/assessments/${a.id}`} className="flex items-center gap-3 rounded-xl border border-border p-3 transition hover:border-brand-300 hover:border-foreground/20">
                       <span className={`grid size-9 place-items-center rounded-lg border border-border ${a.type === "QUIZ" ? "text-ember-600 dark:text-ember-400" : "text-success"}`}>
                         {a.type === "QUIZ" ? <FileQuestion className="size-4" /> : <ClipboardList className="size-4" />}
                       </span>

@@ -87,7 +87,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
               {sessions.map((s) => {
                 const phase = sessionPhase(s);
                 return (
-                  <Link key={s.id} href={`/admin/sessions/${s.id}`} className="flex items-center gap-4 rounded-2xl border border-border p-3.5 transition hover:border-foreground/20">
+                  <Link prefetch={false} key={s.id} href={`/admin/sessions/${s.id}`} className="flex items-center gap-4 rounded-2xl border border-border p-3.5 transition hover:border-foreground/20">
                     <div className="grid w-14 shrink-0 place-items-center rounded-lg border border-border py-1.5">
                       <span className="text-[0.6rem] font-bold uppercase">{fmt(s.startsAt, "EEE")}</span>
                       <span className="text-lg font-semibold leading-none">{fmt(s.startsAt, "d")}</span>
@@ -132,7 +132,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
               <CardBody className="space-y-2.5">
                 {pendingList.length === 0 && <p className="text-sm text-muted-foreground">No payments waiting.</p>}
                 {pendingList.map((e) => (
-                  <Link key={e.id} href="/admin/payments" className="flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:border-foreground/20">
+                  <Link prefetch={false} key={e.id} href="/admin/payments" className="flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:border-foreground/20">
                     {e.proofKey !== "manual" && (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={fileUrl(e.proofKey)!} alt="" className="size-11 rounded-xl border border-border object-cover" />
@@ -152,7 +152,7 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
             <CardBody className="space-y-2.5">
               {questions.length === 0 && <p className="text-sm text-muted-foreground">No open questions.</p>}
               {questions.map((q) => (
-                <Link key={q.id} href={`/admin/courses/${q.lesson.courseId}/lessons/${q.lessonId}#qa`} className="flex gap-3 rounded-2xl border border-border p-3 transition hover:border-foreground/20">
+                <Link prefetch={false} key={q.id} href={`/admin/courses/${q.lesson.courseId}/lessons/${q.lessonId}#qa`} className="flex gap-3 rounded-2xl border border-border p-3 transition hover:border-foreground/20">
                   <Avatar name={q.user.fullName} size={34} />
                   <div className="min-w-0">
                     <p className="text-sm"><b>{q.user.fullName}</b> <span className="text-muted-foreground">on {q.lesson.title}</span></p>

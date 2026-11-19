@@ -56,7 +56,7 @@ export function HomeworkPanel({
     <div className="space-y-3">
       {items.length === 0 && <p className="text-sm text-muted-foreground">No homework for this lesson yet.</p>}
       {items.map((a) => (
-        <Link key={a.id} href={`/admin/assessments/${a.id}`} className="flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:border-foreground/20">
+        <Link prefetch={false} key={a.id} href={`/admin/assessments/${a.id}`} className="flex items-center gap-3 rounded-2xl border border-border p-3 transition hover:border-foreground/20">
           <span className="grid size-10 place-items-center rounded-lg border border-border text-success">
             <ClipboardList className="size-5" />
           </span>

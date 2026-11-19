@@ -5,6 +5,16 @@ import { db } from "./db";
 export type TeamContact = { name: string; phone: string; role?: string };
 export type Center = { name: string; area: string; mapUrl: string };
 export type Faq = { q: string; a: string };
+export type PricingPlan = {
+  label: string;
+  price: string;
+  unit: string;
+  note: string;
+  features: string[];
+  buttonLabel: string;
+  buttonLink: string;
+  featured: boolean;
+};
 
 export type SiteSettings = {
   payment: {
@@ -19,10 +29,13 @@ export type SiteSettings = {
   about: { title: string; body: string; points: string[] };
   stats: { label: string; value: string }[];
   social: { facebook: string; instagram: string; tiktok: string; youtube: string };
+  /** Dr. Mina's own number, shown under the social links in the footer. */
+  teacherPhone: string;
   testSites: { act: string; est: string };
   team: TeamContact[];
   centers: Center[];
   faqs: Faq[];
+  pricing: { show: boolean; title: string; plans: PricingPlan[] };
   showPublicSchedule: boolean;
 };
 
@@ -66,6 +79,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     tiktok: "https://www.tiktok.com/@_minasamuel_",
     youtube: "https://www.youtube.com/channel/UCfzdNqwCfu470lgshJAHOhg",
   },
+  teacherPhone: "+201091711125",
   testSites: { act: "https://aist.act.org", est: "https://estests.com" },
   team: [
     { name: "Rosa", phone: "+201221877044" },
@@ -103,6 +117,42 @@ export const DEFAULT_SETTINGS: SiteSettings = {
       a: "Accounts are tied to the course you paid for. Once the course ends and final grades are archived, the account is removed — unless you're enrolled in the next course.",
     },
   ],
+  pricing: {
+    show: true,
+    title: "Pay per course, as you progress.",
+    plans: [
+      {
+        label: "Basics · Level 01",
+        price: "6,000",
+        unit: "EGP / course",
+        note: "Build the foundation",
+        features: ["Cell biology to genetics, chapter by chapter", "Live Zoom sessions + recordings", "Homework after every lesson", "A quiz after every chapter", "Lesson PDFs & the full book"],
+        buttonLabel: "Enroll",
+        buttonLink: "/courses",
+        featured: false,
+      },
+      {
+        label: "Advanced · Level 02",
+        price: "6,000",
+        unit: "EGP / course",
+        note: "Take it to exam level",
+        features: ["Exam-level practice", "Live Zoom sessions + recordings", "Homework after every lesson", "A quiz after every chapter", "Requires Biology Basics"],
+        buttonLabel: "Enroll",
+        buttonLink: "/courses",
+        featured: true,
+      },
+      {
+        label: "Full path",
+        price: "12,000",
+        unit: "EGP in total",
+        note: "Basics, then Advanced",
+        features: ["Everything in Basics and Advanced", "Each course is paid separately", "InstaPay or Vodafone Cash", "Cash at the center is also possible", "Questions? Talk to the team"],
+        buttonLabel: "Contact the team",
+        buttonLink: "/contact",
+        featured: false,
+      },
+    ],
+  },
   showPublicSchedule: true,
 };
 

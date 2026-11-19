@@ -110,7 +110,7 @@ export function ContentBuilder({ courseId, chapters, canContent, canAssess }: { 
               {ch.lessons.map((l, li) => (
                 <div key={l.id} className="group flex items-center gap-2 rounded-2xl p-2 transition hover:bg-muted/60">
                   <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-muted text-xs font-bold text-muted-foreground">{li + 1}</span>
-                  <Link href={`/admin/courses/${courseId}/lessons/${l.id}`} className="min-w-0 flex-1">
+                  <Link prefetch={false} href={`/admin/courses/${courseId}/lessons/${l.id}`} className="min-w-0 flex-1">
                     <p className="truncate font-semibold group-hover:text-primary">{l.title}</p>
                     <p className="text-xs text-muted-foreground">
                       {l.resources} materials · {l.homework ? `${l.homework} homework` : "no homework yet"}
@@ -138,13 +138,13 @@ export function ContentBuilder({ courseId, chapters, canContent, canAssess }: { 
                       </Button>
                     </div>
                   )}
-                  <Link href={`/admin/courses/${courseId}/lessons/${l.id}`} className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-card">
+                  <Link prefetch={false} href={`/admin/courses/${courseId}/lessons/${l.id}`} className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-card">
                     <ChevronRight className="size-4" />
                   </Link>
                 </div>
               ))}
               {ch.quizzes.map((q) => (
-                <Link key={q.id} href={`/admin/assessments/${q.id}`} className="flex items-center gap-3 rounded-2xl border border-ember-200 bg-ember-50/60 p-3 transition hover:border-foreground/20 dark:border-ember-800/40 dark:bg-ember-900/15">
+                <Link prefetch={false} key={q.id} href={`/admin/assessments/${q.id}`} className="flex items-center gap-3 rounded-2xl border border-ember-200 bg-ember-50/60 p-3 transition hover:border-foreground/20 dark:border-ember-800/40 dark:bg-ember-900/15">
                   <span className="grid size-9 place-items-center rounded-lg border border-border text-ember-600 dark:text-ember-400">
                     <FileQuestion className="size-4.5" />
                   </span>

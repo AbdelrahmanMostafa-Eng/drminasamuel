@@ -56,12 +56,15 @@ and study analytics.
   one-tap WhatsApp message to the student. Manual enrollment for cash payments at centers.
 - **Students**: search/filter, copy all WhatsApp numbers (for the group), CSV export, profile with grades,
   attendance & device, reset password (temporary password), reset device, suspend, delete.
+  Staff can also **create a student account with a username and password** (for students who can't sign up
+  themselves), add/change a student's username and **set a password** for them.
 - **Team & permissions (master only)**: create assistant accounts with **username + password** and tick exactly
   what each can do (12 permissions + presets), suspend, sign out, change password, remove.
 - **Analytics**: attendance per session, class averages, lesson completion, enrollment trend, top performers,
   students who need attention, weak topics.
 - **Announcements** (notify students), **Website settings** (payment numbers, homepage text, team contacts,
-  centers, social links, FAQ, public schedule toggle), **Activity log**.
+  centers, social links, Dr. Mina's footer number, FAQ, **pricing cards** — edit prices and features, add/remove/reorder
+  up to 4 cards, highlight one, or hide the section — and the public schedule toggle), **Activity log**.
 - **End of course**: *Mark as ended* → *Archive & delete student accounts*. Final attendance/grade/summary PDFs are
   generated automatically, then students' accounts are deleted — **except** students already enrolled in another
   active course (e.g. they moved on to Advanced), who keep their account.

@@ -170,7 +170,7 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
           <CardBody className="space-y-2">
             {top.length === 0 && <p className="text-sm text-muted-foreground">No graded work yet.</p>}
             {top.map((s, i) => (
-              <Link key={s.id} href={`/admin/students/${s.id}`} className="flex items-center gap-3 rounded-2xl p-2 hover:bg-muted/50">
+              <Link prefetch={false} key={s.id} href={`/admin/students/${s.id}`} className="flex items-center gap-3 rounded-2xl p-2 hover:bg-muted/50">
                 <span className={cn("grid size-8 place-items-center rounded-lg text-sm font-semibold", i < 3 ? "border border-foreground/30 text-foreground" : "bg-muted text-muted-foreground")}>{i + 1}</span>
                 <Avatar name={s.name} size={32} />
                 <span className="flex-1 truncate font-semibold">{s.name}</span>
@@ -184,7 +184,7 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
           <CardBody className="space-y-2">
             {risk.length === 0 && <p className="text-sm text-muted-foreground">Everyone is on track.</p>}
             {risk.map((s) => (
-              <Link key={s.id} href={`/admin/students/${s.id}`} className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50/40 p-2.5 hover:bg-red-50 dark:border-red-900/50 dark:bg-red-950/20">
+              <Link prefetch={false} key={s.id} href={`/admin/students/${s.id}`} className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50/40 p-2.5 hover:bg-red-50 dark:border-red-900/50 dark:bg-red-950/20">
                 <Avatar name={s.name} size={32} />
                 <span className="flex-1 truncate font-semibold">{s.name}</span>
                 {s.avg !== null && <Badge tone={s.avg < 50 ? "danger" : "neutral"}>Avg {s.avg}%</Badge>}
@@ -198,7 +198,7 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
           <CardBody className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {hardest.length === 0 && <p className="text-sm text-muted-foreground">Not enough data yet.</p>}
             {hardest.map((q) => (
-              <Link key={q.id} href={`/admin/assessments/${q.assessmentId}?tab=insights`} className="rounded-2xl border border-border p-4 transition hover:border-foreground/20">
+              <Link prefetch={false} key={q.id} href={`/admin/assessments/${q.assessmentId}?tab=insights`} className="rounded-2xl border border-border p-4 transition hover:border-foreground/20">
                 <div className="flex items-start justify-between gap-3">
                   <p className="line-clamp-2 text-sm font-semibold">{q.text}</p>
                   <Badge tone={q.pct < 50 ? "danger" : "warning"}>{q.pct}%</Badge>

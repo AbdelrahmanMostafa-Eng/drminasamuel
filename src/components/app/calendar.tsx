@@ -170,7 +170,7 @@ export function ScheduleCalendar({ events, emptyText = "Nothing scheduled on thi
               );
               return (
                 <motion.div key={e.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: i * 0.05 }}>
-                  {e.href ? <Link href={e.href}>{body}</Link> : body}
+                  {e.href ? <Link prefetch={false} href={e.href}>{body}</Link> : body}
                 </motion.div>
               );
             })}

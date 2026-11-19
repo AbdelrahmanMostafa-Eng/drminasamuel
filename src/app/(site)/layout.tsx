@@ -11,7 +11,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   return (
     <ViewerProvider>
       <MagneticCursor />
-      <Header />
+      <Header showPricing={settings.pricing.show && settings.pricing.plans.length > 0} />
       <GradientBar />
       <main>{children}</main>
       <Footer settings={settings} />

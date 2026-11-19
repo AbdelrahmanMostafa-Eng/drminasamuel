@@ -56,7 +56,7 @@ export default async function GradesPage() {
                   return (
                     <tr key={a.id} className="border-b border-border last:border-0 hover:bg-muted/40">
                       <td className="px-5 py-3.5">
-                        <Link href={`/dashboard/assessments/${a.id}`} className="font-semibold hover:text-primary">
+                        <Link prefetch={false} href={`/dashboard/assessments/${a.id}`} className="font-semibold hover:text-primary">
                           {a.title}
                         </Link>
                         <p className="text-xs text-muted-foreground">{a.type === "QUIZ" ? a.chapter?.title : a.lesson?.title} · {a.course.title}</p>

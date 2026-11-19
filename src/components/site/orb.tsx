@@ -2,15 +2,15 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
- * The portfolio template's slowly rotating orb behind Dr. Mina: a black-and-white study
- * of a single feather (public domain).
+ * The portfolio template's slowly rotating orb behind Dr. Mina: a scarlet macaw photo, built so
+ * the whole bird (beak to tail tip) sits inside the circle.
  */
-export function FeatherOrb({ className, rotate = true }: { className?: string; rotate?: boolean }) {
+export function HeroOrb({ className, rotate = true }: { className?: string; rotate?: boolean }) {
   return (
     <div className={cn("pointer-events-none select-none", className)} aria-hidden>
       <div className="relative aspect-square w-full">
         <div className={cn("absolute inset-0", rotate && "animate-orb-rotate")}>
-          <Image src="/images/feather-disc.webp" alt="" fill sizes="(min-width: 1024px) 640px, 90vw" className="object-contain" priority />
+          <Image src="/images/parrot-disc.webp" alt="" fill sizes="(min-width: 1024px) 640px, 90vw" className="object-contain" priority />
         </div>
       </div>
     </div>

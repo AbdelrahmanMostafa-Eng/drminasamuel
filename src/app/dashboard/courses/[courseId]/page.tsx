@@ -113,7 +113,7 @@ export default async function StudentCoursePage({ params }: { params: Promise<{ 
                   {ch.description && <p className="-mt-2 px-5 pb-3 text-sm text-muted-foreground">{ch.description}</p>}
                   <div className="space-y-2 border-t border-border p-3 sm:p-4">
                     {ch.lessons.map((l, li) => (
-                      <Link key={l.id} href={`/dashboard/courses/${courseId}/lessons/${l.id}`} className="group/l flex items-center gap-3 rounded-2xl p-3 transition hover:bg-muted/70">
+                      <Link prefetch={false} key={l.id} href={`/dashboard/courses/${courseId}/lessons/${l.id}`} className="group/l flex items-center gap-3 rounded-2xl p-3 transition hover:bg-muted/70">
                         {done.has(l.id) ? <CheckCircle2 className="size-6 shrink-0 text-emerald-500" /> : <PlayCircle className="size-6 shrink-0 text-brand-400" />}
                         <span className="min-w-0 flex-1">
                           <span className="block font-semibold">
@@ -131,7 +131,7 @@ export default async function StudentCoursePage({ params }: { params: Promise<{ 
                       const sub = q.submissions[0];
                       const phase = assessmentPhase(q);
                       return (
-                        <Link
+                        <Link prefetch={false}
                           key={q.id}
                           href={`/dashboard/assessments/${q.id}`}
                           className="mt-1 flex items-center gap-3 rounded-2xl border border-ember-200 bg-ember-50/60 p-3 transition hover:border-foreground/20 dark:border-ember-800/40 dark:bg-ember-900/15"

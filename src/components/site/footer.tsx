@@ -42,7 +42,7 @@ const PAGES = [
 /** Footer layout from the portfolio template, filled with Bioacademy's own links. */
 export function Footer({ settings }: { settings: SiteSettings }) {
   const year = new Date().getFullYear();
-  const primary = settings.team[0];
+  const phone = settings.teacherPhone || settings.team[0]?.phone;
   return (
     <footer className="border-t border-border">
       <div className="mx-auto max-w-[1280px] px-6 py-16 md:px-12 md:py-24">
@@ -55,9 +55,9 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               ACT2 &amp; EST Biology with Dr. Mina Samuel — comprehensive understanding and effective preparation strategies for American Diploma students.
             </p>
             <SocialLinks social={settings.social} className="mt-6" />
-            {primary && (
-              <a href={waLink(primary.phone)} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-brand-600 hover:underline">
-                <WhatsAppIcon className="size-4" /> {formatPhone(primary.phone)}
+            {phone && (
+              <a href={waLink(phone)} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-brand-600 hover:underline">
+                <WhatsAppIcon className="size-4" /> {formatPhone(phone)}
               </a>
             )}
           </div>
