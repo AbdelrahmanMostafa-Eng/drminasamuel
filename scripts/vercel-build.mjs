@@ -1,7 +1,9 @@
-// Vercel build: generate Prisma client → apply migrations (when a database is configured) → next build.
+// Vercel build: generate Prisma client → apply migrations (when a database is configured)
+// → make sure the master account exists → next build.
 // Never fails just because the database isn't connected yet, so the first deploy always succeeds.
 import { execSync } from "node:child_process";
 import { migrationDatabaseUrl, runtimeDatabaseUrl } from "./db-env.mjs";
+import { ensureMaster } from "./ensure-master.mjs";
 
 const run = (cmd, env = {}) => execSync(cmd, { stdio: "inherit", env: { ...process.env, ...env } });
 const banner = (msg) => console.log(`\n${"━".repeat(72)}\n${msg}\n${"━".repeat(72)}\n`);
@@ -22,6 +24,8 @@ if (!migrationUrl) {
 } else {
   try {
     run("npx prisma migrate deploy", { DATABASE_URL: migrationUrl });
+    // Dr. Mina's master account must exist before anyone can sign in to the admin dashboard.
+    await ensureMaster(migrationUrl);
   } catch {
     banner(
       "⚠️  Could not apply database migrations (see the error above).\n" +
