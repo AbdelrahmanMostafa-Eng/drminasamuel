@@ -449,3 +449,24 @@ model Setting {
   value     Json
   updatedAt DateTime @updatedAt
 }
+
+/// Uploaded files kept in the database when no S3/R2 storage is configured (e.g. on Vercel before
+/// Cloudflare R2 is set up). Large files are stored as ~3.5 MB chunks.
+model StoredFile {
+  key         String            @id
+  contentType String
+  size        Int               @default(0)
+  complete    Boolean           @default(false)
+  createdAt   DateTime          @default(now())
+  chunks      StoredFileChunk[]
+}
+
+model StoredFileChunk {
+  key   String
+  index Int
+  size  Int
+  data  Bytes
+  file  StoredFile @relation(fields: [key], references: [key], onDelete: Cascade)
+
+  @@id([key, index])
+}

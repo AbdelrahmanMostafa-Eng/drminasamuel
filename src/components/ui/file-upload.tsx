@@ -8,7 +8,7 @@ import { cn, formatBytes } from "@/lib/utils";
 export type UploadPurpose = "cover" | "course-file" | "payment-proof" | "avatar" | "question-image";
 export type UploadedFile = { key: string; name: string; size: number; type: string };
 
-/** Uploads a file directly to storage (S3/R2 presigned PUT or local endpoint) with progress. */
+/** Uploads a file to storage (S3/R2 presigned PUT, or this site's own endpoint for disk/database storage) with progress. */
 export async function uploadFile(
   file: File,
   purpose: UploadPurpose,
@@ -22,15 +22,38 @@ export async function uploadFile(
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error ?? "Upload failed");
-  await new Promise<void>((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("PUT", data.url);
-    Object.entries((data.headers ?? {}) as Record<string, string>).forEach(([k, v]) => xhr.setRequestHeader(k, v));
-    xhr.upload.onprogress = (e) => e.lengthComputable && opts.onProgress?.(Math.round((e.loaded / e.total) * 100));
-    xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error(parseErr(xhr.responseText) ?? "Upload failed")));
-    xhr.onerror = () => reject(new Error("Network error while uploading"));
-    xhr.send(file);
-  });
+  const put = (url: string, body: Blob, onProgress: (loaded: number) => void) =>
+    new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", url);
+      Object.entries((data.headers ?? {}) as Record<string, string>).forEach(([k, v]) => xhr.setRequestHeader(k, v));
+      xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(e.loaded);
+      xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error(parseErr(xhr.responseText) ?? "Upload failed")));
+      xhr.onerror = () => reject(new Error("Network error while uploading"));
+      xhr.send(body);
+    });
+  const total = Math.max(file.size, 1);
+  const chunk = typeof data.chunkSize === "number" && data.chunkSize > 0 ? (data.chunkSize as number) : 0;
+  if (!chunk) {
+    await put(data.url, file, (loaded) => opts.onProgress?.(Math.round((loaded / total) * 100)));
+  } else {
+    // Database storage (no S3 yet): send the file in pieces small enough for the server's request limit.
+    const parts = Math.max(1, Math.ceil(file.size / chunk));
+    const sep = String(data.url).includes("?") ? "&" : "?";
+    for (let i = 0; i < parts; i++) {
+      const from = i * chunk;
+      for (let attempt = 0; ; attempt++) {
+        try {
+          await put(`${data.url}${sep}part=${i}&parts=${parts}`, file.slice(from, from + chunk), (loaded) => opts.onProgress?.(Math.min(99, Math.round(((from + loaded) / total) * 100))));
+          break;
+        } catch (e) {
+          // A dropped connection on one piece is retried once; validation errors are not.
+          if (attempt >= 1 || !(e instanceof Error) || !/Network error/.test(e.message)) throw e;
+        }
+      }
+    }
+    opts.onProgress?.(100);
+  }
   return { key: data.key, name: file.name, size: file.size, type: contentType };
 }
 

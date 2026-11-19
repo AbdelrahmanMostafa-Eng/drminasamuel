@@ -140,13 +140,16 @@ All example content is labelled **Example** and can be removed in one click:
 | `DATABASE_URL` | `postgresql://…` | Postgres connection string (not needed if you connected Supabase/Neon through Vercel) |
 | `APP_SECRET` | 48+ random chars | `openssl rand -base64 48` |
 | `APP_URL` | `https://bioacademy.com` | Public URL |
-| `STORAGE_DRIVER` | `s3` | Must be `s3` on Vercel (its disk is temporary) |
+| `STORAGE_DRIVER` | `s3` | Optional. With the `S3_*` keys set, `s3` is used automatically. **Without them on Vercel, files are kept in the database** (up to 60 MB per file — add videos as YouTube/Vimeo/Drive links); switch to R2/S3 any time and older files keep working |
 | `S3_ENDPOINT` | `https://<account>.r2.cloudflarestorage.com` | R2 / S3 endpoint |
 | `S3_REGION` | `auto` | `auto` for R2 |
 | `S3_BUCKET` | `bioacademy` | Bucket name (keep it **private**) |
 | `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | | R2 API token |
 | `SEED_MASTER_USERNAME` / `SEED_MASTER_PASSWORD` / `SEED_MASTER_NAME` | | Master account created on the first deploy (defaults: `drmina` / `ChangeMe-2026!` / Dr. Mina Samuel) |
 | `MASTER_RESET_PASSWORD` | 8+ characters | Optional: resets the master password once on the next deploy |
+
+**Health check:** open `/api/health` on the live site — it shows (yes/no) whether the database, the master account and
+file storage are ready, and which version is deployed.
 
 Files are never public: every PDF, video, book and payment screenshot is served through `/api/files/…`, which checks
 the user's role and enrollment first, then streams the file (or hands out a 20-minute signed link).
