@@ -127,8 +127,12 @@ All example content is labelled **Example** and can be removed in one click:
      create (`POSTGRES_PRISMA_URL`, `POSTGRES_URL`, `POSTGRES_URL_NON_POOLING`) — no renaming needed.
    - If no database is connected yet, the deploy still succeeds and the build log says migrations were skipped;
      connect the database and redeploy. Set `STRICT_MIGRATIONS=1` to make a failed migration fail the deploy.
-4. **Create the master account** — run once from your computer with the production `DATABASE_URL`:
-   `SEED_SAMPLE_DATA=false npm run db:seed` (or keep the examples to explore, then remove them in settings).
+4. **Master account (automatic)** — every deploy makes sure Dr. Mina's master account exists. On the first
+   deploy with a database it creates **`drmina`** with the password in `SEED_MASTER_PASSWORD` (default
+   `ChangeMe-2026!`), and a new password is requested at the first sign-in at `/login`.
+   - **Locked out?** Add `MASTER_RESET_PASSWORD` (8+ characters) in Vercel → Settings → Environment Variables and
+     redeploy: the master password is reset once to that value (later deploys don't reset it again).
+   - Example courses/students are only added by `npm run db:seed` — the live site starts empty.
 5. Add your domain (e.g. `bioacademy.com`) in Vercel → Domains.
 
 | Variable | Example | Notes |
@@ -141,7 +145,8 @@ All example content is labelled **Example** and can be removed in one click:
 | `S3_REGION` | `auto` | `auto` for R2 |
 | `S3_BUCKET` | `bioacademy` | Bucket name (keep it **private**) |
 | `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | | R2 API token |
-| `SEED_MASTER_USERNAME` / `SEED_MASTER_PASSWORD` / `SEED_MASTER_NAME` | | Used only by `npm run db:seed` |
+| `SEED_MASTER_USERNAME` / `SEED_MASTER_PASSWORD` / `SEED_MASTER_NAME` | | Master account created on the first deploy (defaults: `drmina` / `ChangeMe-2026!` / Dr. Mina Samuel) |
+| `MASTER_RESET_PASSWORD` | 8+ characters | Optional: resets the master password once on the next deploy |
 
 Files are never public: every PDF, video, book and payment screenshot is served through `/api/files/…`, which checks
 the user's role and enrollment first, then streams the file (or hands out a 20-minute signed link).
