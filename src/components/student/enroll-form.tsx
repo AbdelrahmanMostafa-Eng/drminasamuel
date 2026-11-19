@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { InstaPayLogo, VodafoneLogo } from "@/components/brand/payment-logos";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
-import { ExternalLink, Hash, Phone, Send, Smartphone } from "lucide-react";
+import { ExternalLink, Hash, Phone, Send } from "lucide-react";
 import { toast } from "sonner";
 import { ChoiceCard } from "@/components/ui/checkbox";
 import { Field, TextArea } from "@/components/ui/input";
@@ -38,26 +39,24 @@ export function EnrollForm({ courseId, price, payment }: { courseId: string; pri
       className="space-y-8"
     >
       <section>
-        <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
-          <span className="grid size-6 place-items-center rounded-full bg-brand-600 text-xs text-white">1</span> Choose how you paid
+        <h3 className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+          <span className="grid size-6 place-items-center rounded-full border border-border text-[10px] text-foreground">1</span> Choose how you paid
         </h3>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <ChoiceCard selected={method === "INSTAPAY"} onSelect={() => setMethod("INSTAPAY")}>
             <div className="flex items-center gap-3">
-              <span className="grid size-10 place-items-center rounded-lg bg-[#4b1f6f] font-mono text-xs font-medium text-white">IP</span>
+              <InstaPayLogo className="size-11 shrink-0" />
               <div>
-                <p className="font-bold">InstaPay</p>
+                <p className="font-medium">InstaPay</p>
                 <p className="text-xs text-muted-foreground">Instant bank transfer</p>
               </div>
             </div>
           </ChoiceCard>
           <ChoiceCard selected={method === "VODAFONE_CASH"} onSelect={() => setMethod("VODAFONE_CASH")}>
             <div className="flex items-center gap-3">
-              <span className="grid size-10 place-items-center rounded-lg bg-[#c70000] text-white">
-                <Smartphone className="size-4" />
-              </span>
+              <VodafoneLogo className="size-11 shrink-0" />
               <div>
-                <p className="font-bold">Vodafone Cash</p>
+                <p className="font-medium">Vodafone Cash</p>
                 <p className="text-xs text-muted-foreground">Mobile wallet transfer</p>
               </div>
             </div>
@@ -66,8 +65,8 @@ export function EnrollForm({ courseId, price, payment }: { courseId: string; pri
       </section>
 
       <section>
-        <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
-          <span className="grid size-6 place-items-center rounded-full bg-brand-600 text-xs text-white">2</span> Transfer exactly {formatEGP(price)}
+        <h3 className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+          <span className="grid size-6 place-items-center rounded-full border border-border text-[10px] text-foreground">2</span> Transfer exactly {formatEGP(price)}
         </h3>
         <motion.div key={method} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 rounded-2xl border border-border bg-muted/40 p-5">
           {method === "INSTAPAY" ? (
@@ -106,8 +105,8 @@ export function EnrollForm({ courseId, price, payment }: { courseId: string; pri
       </section>
 
       <section>
-        <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
-          <span className="grid size-6 place-items-center rounded-full bg-brand-600 text-xs text-white">3</span> Upload the payment screenshot
+        <h3 className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+          <span className="grid size-6 place-items-center rounded-full border border-border text-[10px] text-foreground">3</span> Upload the payment screenshot
         </h3>
         <FileDrop
           className="mt-4"

@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { InstaPayLogo, VodafoneLogo } from "@/components/brand/payment-logos";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { AlertTriangle, Check, Clock, CreditCard, Search, Smartphone, X, ZoomIn } from "lucide-react";
+import { AlertTriangle, Check, Clock, CreditCard, Search, X, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StateTabs } from "@/components/ui/tabs";
@@ -98,8 +99,8 @@ export function PaymentsBoard({ items }: { items: PaymentCard[] }) {
                         <Link prefetch={false} href={`/admin/students/${p.student.id}`} className="block truncate font-semibold hover:text-primary">{p.student.name}</Link>
                         <p className="truncate text-xs text-muted-foreground">{formatPhone(p.student.whatsapp)}</p>
                       </div>
-                      <Badge tone={p.method === "INSTAPAY" ? "brand" : "danger"}>
-                        <Smartphone className="size-3" /> {p.method === "INSTAPAY" ? "InstaPay" : "Vodafone Cash"}
+                      <Badge tone="neutral">
+                        {p.method === "INSTAPAY" ? <InstaPayLogo className="size-4" /> : <VodafoneLogo className="size-4" />} {p.method === "INSTAPAY" ? "InstaPay" : "Vodafone Cash"}
                       </Badge>
                     </div>
                     <p className="mt-2 truncate text-sm font-semibold">{p.course.title}</p>
