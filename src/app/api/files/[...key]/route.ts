@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { can, isStaff } from "@/lib/permissions";
-import { localPath, mimeFromKey, storageDriver, getSignedDownloadUrl } from "@/lib/storage";
+import { getDbFile, localPath, mimeFromKey, storageDriver, getSignedDownloadUrl, streamDbFile } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +37,33 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ key: string
   const download = req.nextUrl.searchParams.get("download") === "1";
   const name = req.nextUrl.searchParams.get("name") ?? key.split("/").pop()!;
   const isPublic = key.startsWith("public/");
+
+  const headersFor = (type: string) => ({
+    "Content-Type": type,
+    "Accept-Ranges": "bytes",
+    "Cache-Control": isPublic ? "public, max-age=31536000, immutable" : "private, max-age=600",
+    "Content-Disposition": `${download ? "attachment" : "inline"}; filename="${name.replace(/"/g, "")}"`,
+  });
+
+  // Files kept in the database (Vercel without S3 — and older uploads after S3 is switched on).
+  const stored = storageDriver === "local" ? null : await getDbFile(key);
+  if (stored) {
+    if (!stored.complete) return new NextResponse("Not found", { status: 404 });
+    const headers = headersFor(stored.contentType || mimeFromKey(key));
+    const size = stored.size;
+    const range = req.headers.get("range")?.match(/bytes=(\d*)-(\d*)/);
+    if (range && size > 0) {
+      const start = range[1] ? parseInt(range[1], 10) : range[2] ? Math.max(0, size - parseInt(range[2], 10)) : 0;
+      const end = range[1] && range[2] ? Math.min(parseInt(range[2], 10), size - 1) : size - 1;
+      if (start >= size || start > end) return new NextResponse(null, { status: 416, headers: { "Content-Range": `bytes */${size}` } });
+      return new NextResponse(streamDbFile(key, stored.chunks, start, end), {
+        status: 206,
+        headers: { ...headers, "Content-Range": `bytes ${start}-${end}/${size}`, "Content-Length": String(end - start + 1) },
+      });
+    }
+    return new NextResponse(streamDbFile(key, stored.chunks, 0, Math.max(0, size - 1)), { headers: { ...headers, "Content-Length": String(size) } });
+  }
+  if (storageDriver === "db") return new NextResponse("Not found", { status: 404 });
 
   if (storageDriver === "s3") {
     const url = await getSignedDownloadUrl(key, { download, filename: name });

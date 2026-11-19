@@ -29,12 +29,22 @@ export async function POST(req: NextRequest) {
     avatar: { ok: true, max: 5 * MB, type: IMAGE },
     cover: { ok: can(user, "courses") || can(user, "content") || user.role === "MASTER", max: 8 * MB, type: IMAGE },
     "question-image": { ok: can(user, "assessments"), max: 8 * MB, type: IMAGE, needsCourse: true },
-    "course-file": { ok: can(user, "content"), max: (storageDriver === "s3" ? 5000 : 2000) * MB, needsCourse: true },
+    // Without S3/R2 on Vercel, files go into the database — keep them small (use video links for videos).
+    "course-file": { ok: can(user, "content"), max: (storageDriver === "s3" ? 5000 : storageDriver === "db" ? 60 : 2000) * MB, needsCourse: true },
   };
   const rule = rules[purpose];
   if (!rule.ok) return NextResponse.json({ error: "You don't have permission to upload this." }, { status: 403 });
   if (rule.type && !rule.type.test(contentType)) return NextResponse.json({ error: "This file type isn't allowed here." }, { status: 400 });
-  if (size > rule.max) return NextResponse.json({ error: `File is too large (max ${Math.round(rule.max / MB)} MB).` }, { status: 400 });
+  if (size > rule.max)
+    return NextResponse.json(
+      {
+        error:
+          storageDriver === "db" && purpose === "course-file"
+            ? `File is too large (max ${Math.round(rule.max / MB)} MB until cloud storage is connected). For videos, add a YouTube, Vimeo or Google Drive link instead.`
+            : `File is too large (max ${Math.round(rule.max / MB)} MB).`,
+      },
+      { status: 400 },
+    );
   if (rule.needsCourse && !courseId) return NextResponse.json({ error: "Missing course." }, { status: 400 });
 
   const key = buildKey(purpose, filename, { courseId, userId: user.id });

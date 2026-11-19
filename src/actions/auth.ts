@@ -17,6 +17,7 @@ import {
 } from "@/lib/auth";
 import { normalizePhone } from "@/lib/utils";
 import { audit } from "@/lib/audit";
+import { repairMasterForLogin } from "@/lib/master-account";
 
 const attempts = new Map<string, { n: number; at: number }>();
 function throttle(key: string) {
@@ -95,10 +96,15 @@ export async function loginAction(input: z.input<typeof loginSchema>) {
     throttle(`${d.identifier.toLowerCase()}|${h.get("x-forwarded-for") ?? ""}`);
     const id = d.identifier.toLowerCase();
     const phone = normalizePhone(d.identifier);
-    const user = await db.user.findFirst({
-      where: { OR: [{ email: id }, { username: id }, ...(phone ? [{ whatsapp: phone }] : [])] },
-    });
-    if (!user || !(await verifyPassword(d.password, user.passwordHash))) throw new ActionError("Incorrect login details. Please check and try again.");
+    const find = () => db.user.findFirst({ where: { OR: [{ email: id }, { username: id }, ...(phone ? [{ whatsapp: phone }] : [])] } });
+    let user = await find();
+    let ok = !!user && (await verifyPassword(d.password, user.passwordHash));
+    // The master account repairs itself if it was never created on this database (or MASTER_RESET_PASSWORD is used).
+    if (!ok && (await repairMasterForLogin(id, d.password))) {
+      user = await find();
+      ok = !!user && (await verifyPassword(d.password, user.passwordHash));
+    }
+    if (!user || !ok) throw new ActionError("Incorrect login details. Please check and try again.");
     if (!user.isActive) throw new ActionError("This account is suspended. Please contact the Bioacademy team on WhatsApp.");
     await createSession(user.id);
     attempts.delete(`${id}|${h.get("x-forwarded-for") ?? ""}`);
